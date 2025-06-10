@@ -6,6 +6,8 @@ import FlagModal from './FlagModal';
 import CommentsModal from './CommentsModal';
 import CreateEventModal from './CreateEventModal';
 import EventDetailsModal from './EventDetailsModal';
+import AttendeesModal from './AttendeesModal';
+import EventReviewModal from './EventReviewModal';
 
 interface NavigationProps {
   onNavigate: (screen: string) => void;
@@ -54,6 +56,8 @@ export default function ScoopApp() {
   const [profileTab, setProfileTab] = useState('posts');
   const [eventFilter, setEventFilter] = useState('upcoming');
   const [showEventDetails, setShowEventDetails] = useState(false);
+  const [showAttendees, setShowAttendees] = useState(false);
+  const [showEventReview, setShowEventReview] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   
   const [posts, setPosts] = useState<Post[]>([
@@ -181,9 +185,24 @@ export default function ScoopApp() {
     }));
   };
 
-  const handleRSVP = (eventId: string) => {
-    console.log(`RSVP to event ${eventId}`);
+  const handleRSVP = (eventId: string, status: 'going' | 'maybe' | 'not_going') => {
+    console.log(`RSVP to event ${eventId} with status: ${status}`);
     // In a real app, this would make an API call
+    alert(`You are now marked as "${status}" for this event!`);
+  };
+  
+  const handleViewAttendees = (eventId: string) => {
+    setShowAttendees(true);
+  };
+  
+  const handleEventReview = (eventTitle: string, eventId: string) => {
+    setSelectedEvent({ id: eventId, title: eventTitle } as Event);
+    setShowEventReview(true);
+  };
+  
+  const handleSubmitEventReview = (review: any) => {
+    console.log('Event review submitted:', review);
+    alert('Thank you for your review! It helps improve future events.');
   };
 
   return (
@@ -588,7 +607,7 @@ export default function ScoopApp() {
                 </div>
               </div>
               
-              <div className="flex-1 overflow-y-auto p-4">
+              <div className="flex-1 overflow-y-auto p-4 max-h-96">
                 <div className="space-y-3">
                   
                   {eventFilter === 'upcoming' && events.filter(event => event.date === 'Tomorrow' || event.date === 'Saturday' || event.date === 'Sunday').map((event) => (
@@ -608,7 +627,7 @@ export default function ScoopApp() {
                       <p className="text-sm mb-3 opacity-90">By {event.organizer}</p>
                       <div className="flex space-x-2">
                         <button 
-                          onClick={() => handleRSVP(event.id)}
+                          onClick={() => handleRSVP(event.id, 'going')}
                           className="flex-1 bg-white text-green-600 px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors"
                         >
                           RSVP Going
@@ -646,7 +665,10 @@ export default function ScoopApp() {
                           <button className="flex-1 bg-white bg-opacity-20 text-white px-4 py-2 rounded-lg font-medium">
                             ✓ Attended
                           </button>
-                          <button className="px-4 py-2 bg-white bg-opacity-20 text-white rounded-lg font-medium hover:bg-opacity-30 transition-colors">
+                          <button 
+                            onClick={() => handleEventReview('Phoenix Developers Mixer', '1')}
+                            className="px-4 py-2 bg-white bg-opacity-20 text-white rounded-lg font-medium hover:bg-opacity-30 transition-colors"
+                          >
                             Review
                           </button>
                         </div>
@@ -669,7 +691,10 @@ export default function ScoopApp() {
                           <button className="flex-1 bg-white bg-opacity-20 text-white px-4 py-2 rounded-lg font-medium">
                             ✓ Attended
                           </button>
-                          <button className="px-4 py-2 bg-white bg-opacity-20 text-white rounded-lg font-medium hover:bg-opacity-30 transition-colors">
+                          <button 
+                            onClick={() => handleEventReview('Startup Pitch Night', '2')}
+                            className="px-4 py-2 bg-white bg-opacity-20 text-white rounded-lg font-medium hover:bg-opacity-30 transition-colors"
+                          >
                             Review
                           </button>
                         </div>
@@ -865,6 +890,27 @@ export default function ScoopApp() {
             }}
             event={selectedEvent}
             onRSVP={handleRSVP}
+            onViewAttendees={handleViewAttendees}
+          />
+        )}
+        
+        {showAttendees && selectedEvent && (
+          <AttendeesModal 
+            onClose={() => setShowAttendees(false)}
+            eventTitle={selectedEvent.title}
+            eventId={selectedEvent.id}
+          />
+        )}
+        
+        {showEventReview && selectedEvent && (
+          <EventReviewModal 
+            onClose={() => {
+              setShowEventReview(false);
+              setSelectedEvent(null);
+            }}
+            eventTitle={selectedEvent.title}
+            eventId={selectedEvent.id}
+            onSubmitReview={handleSubmitEventReview}
           />
         )}
       </div>

@@ -14,45 +14,69 @@ interface SocialAccountsModalProps {
 
 const SocialAccountsModal: React.FC<SocialAccountsModalProps> = ({ onClose }) => {
   const [accounts, setAccounts] = useState<SocialAccount[]>([
-    { platform: 'Twitter', username: '@BigStinky', verified: true, icon: '🐦', color: 'bg-blue-400' },
-    { platform: 'LinkedIn', username: 'riesling-lefluuf', verified: true, icon: '💼', color: 'bg-blue-600' },
-    { platform: 'Instagram', username: '@wine_and_code', verified: true, icon: '📸', color: 'bg-pink-500' },
-    { platform: 'GitHub', username: 'RieslingCodes', verified: true, icon: '👨‍💻', color: 'bg-gray-800' },
-    { platform: 'TikTok', username: '@BigStinkyWines', verified: false, icon: '🎵', color: 'bg-gray-900' },
-    { platform: 'YouTube', username: 'Wine & Tech Reviews', verified: true, icon: '🎥', color: 'bg-red-500' },
-    { platform: 'Discord', username: 'BigStinky#1337', verified: true, icon: '🎮', color: 'bg-indigo-600' }
+    { platform: 'Twitter', username: '@BigStinky', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/twitter.svg', color: 'bg-blue-400' },
+    { platform: 'LinkedIn', username: 'riesling-lefluuf', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg', color: 'bg-blue-600' },
+    { platform: 'Instagram', username: '@wine_and_code', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/instagram.svg', color: 'bg-pink-500' },
+    { platform: 'GitHub', username: 'RieslingCodes', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg', color: 'bg-gray-800' },
+    { platform: 'TikTok', username: '@BigStinkyWines', verified: false, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/tiktok.svg', color: 'bg-gray-900' },
+    { platform: 'YouTube', username: 'Wine & Tech Reviews', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/youtube.svg', color: 'bg-red-500' },
+    { platform: 'Discord', username: 'BigStinky#1337', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/discord.svg', color: 'bg-indigo-600' }
   ]);
 
   const [showAddForm, setShowAddForm] = useState(false);
   const [newPlatform, setNewPlatform] = useState('');
   const [newUsername, setNewUsername] = useState('');
+  const [customPlatform, setCustomPlatform] = useState('');
+  const [customUrl, setCustomUrl] = useState('');
+  const [useCustomPlatform, setUseCustomPlatform] = useState(false);
 
   const availablePlatforms = [
-    { name: 'Twitter', icon: '🐦' },
-    { name: 'Facebook', icon: '👥' },
-    { name: 'TikTok', icon: '🎵' },
-    { name: 'Snapchat', icon: '👻' },
-    { name: 'Discord', icon: '🎮' },
-    { name: 'Twitch', icon: '🎮' }
+    { name: 'Twitter', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/twitter.svg', color: 'bg-blue-400' },
+    { name: 'Facebook', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg', color: 'bg-blue-600' },
+    { name: 'TikTok', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/tiktok.svg', color: 'bg-gray-900' },
+    { name: 'Snapchat', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/snapchat.svg', color: 'bg-yellow-400' },
+    { name: 'Discord', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/discord.svg', color: 'bg-indigo-600' },
+    { name: 'Twitch', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/twitch.svg', color: 'bg-purple-600' },
+    { name: 'Reddit', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/reddit.svg', color: 'bg-orange-500' },
+    { name: 'Pinterest', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/pinterest.svg', color: 'bg-red-500' }
   ];
 
   const handleAddAccount = () => {
-    if (newPlatform && newUsername) {
-      const platformColors = {
-        'Twitter': 'bg-blue-400',
-        'Facebook': 'bg-blue-600', 
-        'TikTok': 'bg-gray-900',
-        'Snapchat': 'bg-yellow-400',
-        'Discord': 'bg-indigo-600',
-        'Twitch': 'bg-purple-600'
+    if (useCustomPlatform) {
+      if (!customPlatform.trim() || !customUrl.trim() || !newUsername.trim()) {
+        alert('Please fill in all custom platform fields');
+        return;
+      }
+      
+      const newAccount = {
+        platform: customPlatform.trim(),
+        username: newUsername,
+        verified: false,
+        icon: '🔗',
+        color: 'bg-gray-500'
       };
       
+      setAccounts([...accounts, newAccount]);
+      setShowAddForm(false);
+      setNewPlatform('');
+      setNewUsername('');
+      setCustomPlatform('');
+      setCustomUrl('');
+      setUseCustomPlatform(false);
+      alert(`${customPlatform} account added! Verification pending.`);
+    } else {
+      if (!newPlatform || !newUsername) {
+        alert('Please select a platform and enter username');
+        return;
+      }
+      
+      const selectedPlatform = availablePlatforms.find(p => p.name === newPlatform);
       const newAccount = {
         platform: newPlatform,
         username: newUsername,
         verified: false,
-        icon: availablePlatforms.find(p => p.name === newPlatform)?.icon || '🔗',
-        color: platformColors[newPlatform as keyof typeof platformColors] || 'bg-gray-500'
+        icon: selectedPlatform?.icon || '🔗',
+        color: selectedPlatform?.color || 'bg-gray-500'
       };
       
       setAccounts([...accounts, newAccount]);
@@ -90,8 +114,12 @@ const SocialAccountsModal: React.FC<SocialAccountsModalProps> = ({ onClose }) =>
             {accounts.map((account, index) => (
               <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                 <div className="flex items-center space-x-3">
-                  <div className={`w-10 h-10 ${account.color} rounded-lg flex items-center justify-center text-white`}>
-                    <span className="text-lg">{account.icon}</span>
+                  <div className={`w-10 h-10 ${account.color} rounded-lg flex items-center justify-center text-white p-2`}>
+                    {account.icon.startsWith('http') ? (
+                      <img src={account.icon} alt={account.platform} className="w-6 h-6 filter invert" />
+                    ) : (
+                      <span className="text-lg">{account.icon}</span>
+                    )}
                   </div>
                   <div>
                     <div className="font-medium text-gray-800">{account.platform}</div>
@@ -129,18 +157,58 @@ const SocialAccountsModal: React.FC<SocialAccountsModalProps> = ({ onClose }) =>
             <div className="bg-gray-50 rounded-lg p-4">
               <h4 className="font-medium text-gray-800 mb-3">Add New Account</h4>
               <div className="space-y-3">
-                <select 
-                  value={newPlatform} 
-                  onChange={(e) => setNewPlatform(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
-                >
-                  <option value="">Select Platform</option>
-                  {availablePlatforms.map((platform) => (
-                    <option key={platform.name} value={platform.name}>
-                      {platform.icon} {platform.name}
-                    </option>
-                  ))}
-                </select>
+                {/* Platform Type Selection */}
+                <div className="flex space-x-2">
+                  <button
+                    onClick={() => setUseCustomPlatform(false)}
+                    className={`flex-1 py-2 px-3 rounded-lg text-xs font-medium transition-colors ${
+                      !useCustomPlatform ? 'bg-cyan-400 text-white' : 'bg-gray-200 text-gray-700'
+                    }`}
+                  >
+                    Popular Platforms
+                  </button>
+                  <button
+                    onClick={() => setUseCustomPlatform(true)}
+                    className={`flex-1 py-2 px-3 rounded-lg text-xs font-medium transition-colors ${
+                      useCustomPlatform ? 'bg-cyan-400 text-white' : 'bg-gray-200 text-gray-700'
+                    }`}
+                  >
+                    Custom Platform
+                  </button>
+                </div>
+                
+                {!useCustomPlatform ? (
+                  <select 
+                    value={newPlatform} 
+                    onChange={(e) => setNewPlatform(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                  >
+                    <option value="">Select Platform</option>
+                    {availablePlatforms.map((platform) => (
+                      <option key={platform.name} value={platform.name}>
+                        {platform.name}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <div className="space-y-2">
+                    <input 
+                      type="text"
+                      placeholder="Platform name (e.g., Mastodon, BeReal)"
+                      value={customPlatform}
+                      onChange={(e) => setCustomPlatform(e.target.value)}
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                    />
+                    <input 
+                      type="url"
+                      placeholder="Platform website (e.g., https://mastodon.social)"
+                      value={customUrl}
+                      onChange={(e) => setCustomUrl(e.target.value)}
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                    />
+                  </div>
+                )}
+                
                 <input 
                   type="text"
                   placeholder="Username or profile URL"
@@ -148,6 +216,7 @@ const SocialAccountsModal: React.FC<SocialAccountsModalProps> = ({ onClose }) =>
                   onChange={(e) => setNewUsername(e.target.value)}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
                 />
+                
                 <div className="flex space-x-2">
                   <button 
                     onClick={handleAddAccount}
@@ -156,7 +225,14 @@ const SocialAccountsModal: React.FC<SocialAccountsModalProps> = ({ onClose }) =>
                     Add
                   </button>
                   <button 
-                    onClick={() => setShowAddForm(false)}
+                    onClick={() => {
+                      setShowAddForm(false);
+                      setUseCustomPlatform(false);
+                      setNewPlatform('');
+                      setNewUsername('');
+                      setCustomPlatform('');
+                      setCustomUrl('');
+                    }}
                     className="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg font-medium hover:bg-gray-400 transition-colors"
                   >
                     Cancel

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 interface Event {
   id: string;
@@ -15,10 +15,12 @@ interface Event {
 interface EventDetailsModalProps {
   onClose: () => void;
   event: Event;
-  onRSVP: (eventId: string) => void;
+  onRSVP: (eventId: string, status: 'going' | 'maybe' | 'not_going') => void;
+  onViewAttendees: (eventId: string) => void;
 }
 
-const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ onClose, event, onRSVP }) => {
+const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ onClose, event, onRSVP, onViewAttendees }) => {
+  const [userStatus, setUserStatus] = useState<'going' | 'maybe' | 'not_going' | null>(null);
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg w-full max-w-sm max-h-[85vh] flex flex-col">
@@ -114,7 +116,10 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ onClose, event, o
           <div className="mb-4">
             <div className="flex items-center justify-between mb-2">
               <h4 className="font-medium text-gray-900">Attendees ({event.goingCount})</h4>
-              <button className="text-cyan-600 text-sm hover:text-cyan-700">
+              <button 
+                onClick={() => onViewAttendees(event.id)}
+                className="text-cyan-600 text-sm hover:text-cyan-700"
+              >
                 View All
               </button>
             </div>
@@ -135,23 +140,62 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ onClose, event, o
           </div>
         </div>
 
+        {/* Current Status */}
+        {userStatus && (
+          <div className="px-4 mb-4">
+            <div className={`p-3 rounded-lg text-center ${
+              userStatus === 'going' ? 'bg-green-100 text-green-800' :
+              userStatus === 'maybe' ? 'bg-yellow-100 text-yellow-800' :
+              'bg-red-100 text-red-800'
+            }`}>
+              You are: <strong>{userStatus === 'going' ? 'Going' : userStatus === 'maybe' ? 'Maybe' : 'Not Going'}</strong>
+            </div>
+          </div>
+        )}
+        
         {/* Footer */}
         <div className="p-4 border-t border-gray-200">
-          <div className="flex space-x-3">
+          <div className="flex flex-col space-y-2">
+            <div className="flex space-x-2">
+              <button
+                onClick={() => {
+                  setUserStatus('going');
+                  onRSVP(event.id, 'going');
+                }}
+                className={`flex-1 py-2 rounded-lg font-medium transition-colors ${
+                  userStatus === 'going' ? 'bg-green-600 text-white' : 'bg-green-500 text-white hover:bg-green-600'
+                }`}
+              >
+                ✓ Going
+              </button>
+              <button
+                onClick={() => {
+                  setUserStatus('maybe');
+                  onRSVP(event.id, 'maybe');
+                }}
+                className={`flex-1 py-2 rounded-lg font-medium transition-colors ${
+                  userStatus === 'maybe' ? 'bg-yellow-600 text-white' : 'bg-yellow-500 text-white hover:bg-yellow-600'
+                }`}
+              >
+                ? Maybe
+              </button>
+              <button
+                onClick={() => {
+                  setUserStatus('not_going');
+                  onRSVP(event.id, 'not_going');
+                }}
+                className={`flex-1 py-2 rounded-lg font-medium transition-colors ${
+                  userStatus === 'not_going' ? 'bg-red-600 text-white' : 'bg-red-500 text-white hover:bg-red-600'
+                }`}
+              >
+                ✗ Not Going
+              </button>
+            </div>
             <button
               onClick={onClose}
-              className="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg font-medium hover:bg-gray-400 transition-colors"
+              className="w-full bg-gray-300 text-gray-700 py-2 rounded-lg font-medium hover:bg-gray-400 transition-colors"
             >
               Close
-            </button>
-            <button
-              onClick={() => {
-                onRSVP(event.id);
-                onClose();
-              }}
-              className="flex-1 bg-green-500 text-white py-2 rounded-lg font-medium hover:bg-green-600 transition-colors"
-            >
-              RSVP Going
             </button>
           </div>
         </div>

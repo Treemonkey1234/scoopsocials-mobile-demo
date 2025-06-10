@@ -6,11 +6,13 @@ interface CreatePostModalProps {
 }
 
 const CreatePostModal: React.FC<CreatePostModalProps> = ({ onClose, onSubmit }) => {
-  const [reviewedPerson, setReviewedPerson] = useState('');
+  const [reviewedPersons, setReviewedPersons] = useState<string[]>([]);
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('General');
   const [location, setLocation] = useState('');
   const [showFriendsList, setShowFriendsList] = useState(false);
+  const [showReviewProcess, setShowReviewProcess] = useState(false);
+  const [acknowledgedWarning, setAcknowledgedWarning] = useState(false);
 
   const categories = ['Professional', 'Marketplace', 'Academic', 'Social/Events', 'Dating', 'Childcare', 'General'];
   
@@ -29,8 +31,17 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ onClose, onSubmit }) 
       return;
     }
 
-    if (!reviewedPerson.trim()) {
+    if (reviewedPersons.length === 0) {
       alert('Please specify who you are reviewing');
+      return;
+    }
+
+    setShowReviewProcess(true);
+  };
+  
+  const finalizePost = () => {
+    if (!acknowledgedWarning) {
+      alert('Please acknowledge the warning to continue');
       return;
     }
 
@@ -38,7 +49,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ onClose, onSubmit }) 
       id: Date.now().toString(),
       reviewer: 'Riesling LeFluuf',
       reviewerTrustScore: 95,
-      reviewedPerson: reviewedPerson,
+      reviewedPerson: reviewedPersons.join(', '),
       content: content.trim(),
       timestamp: 'Just now',
       votes: 0,
@@ -54,8 +65,14 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ onClose, onSubmit }) 
   };
   
   const selectFriend = (friend: any) => {
-    setReviewedPerson(friend.name);
+    if (!reviewedPersons.includes(friend.name)) {
+      setReviewedPersons([...reviewedPersons, friend.name]);
+    }
     setShowFriendsList(false);
+  };
+  
+  const removePerson = (personToRemove: string) => {
+    setReviewedPersons(reviewedPersons.filter(person => person !== personToRemove));
   };
 
   return (
@@ -74,15 +91,40 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ onClose, onSubmit }) 
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-4">
-          {/* Person Being Reviewed */}
+          {/* Person(s) Being Reviewed */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Person You're Reviewing</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">People You're Reviewing</label>
+            
+            {/* Selected People */}
+            {reviewedPersons.length > 0 && (
+              <div className="mb-3 flex flex-wrap gap-2">
+                {reviewedPersons.map((person, index) => (
+                  <div key={index} className="bg-cyan-100 text-cyan-800 px-3 py-1 rounded-full text-sm flex items-center">
+                    <span>{person}</span>
+                    <button
+                      onClick={() => removePerson(person)}
+                      className="ml-2 text-cyan-600 hover:text-cyan-800"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+            
             <div className="flex space-x-2">
               <input
                 type="text"
-                placeholder="Enter their name or @username"
-                value={reviewedPerson}
-                onChange={(e) => setReviewedPerson(e.target.value)}
+                placeholder="Enter name or @username"
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter' && e.currentTarget.value.trim()) {
+                    const name = e.currentTarget.value.trim();
+                    if (!reviewedPersons.includes(name)) {
+                      setReviewedPersons([...reviewedPersons, name]);
+                    }
+                    e.currentTarget.value = '';
+                  }
+                }}
                 className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
               />
               <button
@@ -149,7 +191,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ onClose, onSubmit }) 
               onClick={handleSubmit}
               className="flex-1 bg-cyan-400 text-white py-2 rounded-lg font-medium hover:bg-cyan-500 transition-colors"
             >
-              Post
+              Review & Post
             </button>
           </div>
         </div>
@@ -183,6 +225,84 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ onClose, onSubmit }) 
                     </div>
                   </button>
                 ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Review Process Modal */}
+      {showReviewProcess && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-60">
+          <div className="bg-white rounded-lg w-full max-w-sm max-h-[80vh] flex flex-col">
+            <div className="flex justify-between items-center p-4 border-b border-gray-200">
+              <h3 className="text-lg font-bold text-gray-800">Review Your Post</h3>
+              <button
+                onClick={() => setShowReviewProcess(false)}
+                className="text-gray-400 hover:text-gray-600 text-xl font-bold"
+              >
+                ×
+              </button>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-4">
+              {/* Post Preview */}
+              <div className="bg-gray-50 rounded-lg p-3 mb-4">
+                <div className="text-sm font-medium text-gray-900 mb-2">Post Preview:</div>
+                <div className="text-xs text-gray-600 mb-1">Reviewing: {reviewedPersons.join(', ')}</div>
+                <div className="text-xs text-gray-600 mb-2">Category: {category}</div>
+                <p className="text-sm text-gray-800">{content}</p>
+              </div>
+              
+              {/* Warning */}
+              <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
+                <div className="flex items-center mb-3">
+                  <span className="text-orange-500 text-xl mr-2">⚠️</span>
+                  <span className="font-bold text-orange-800">Important Notice</span>
+                </div>
+                <div className="text-sm text-orange-700 space-y-2">
+                  <p><strong>Impact on Others:</strong> Your review will be publicly visible and may affect the reviewed person's reputation and trust score.</p>
+                  <p><strong>Impact on You:</strong> False or malicious reviews may result in penalties to your own trust score and account restrictions.</p>
+                  <p><strong>Community Guidelines:</strong> Reviews should be honest, factual, and constructive. Personal attacks, harassment, or false information are prohibited.</p>
+                  <p><strong>Permanence:</strong> Once posted, reviews become part of the permanent community record.</p>
+                </div>
+              </div>
+              
+              {/* Acknowledgment */}
+              <div className="mb-4">
+                <label className="flex items-start">
+                  <input
+                    type="checkbox"
+                    checked={acknowledgedWarning}
+                    onChange={(e) => setAcknowledgedWarning(e.target.checked)}
+                    className="mr-3 mt-1 text-cyan-600 focus:ring-cyan-500"
+                  />
+                  <span className="text-sm text-gray-700">
+                    I understand the impact of my review and confirm that it is honest, accurate, and follows community guidelines.
+                  </span>
+                </label>
+              </div>
+            </div>
+            
+            <div className="p-4 border-t border-gray-200">
+              <div className="flex space-x-3">
+                <button
+                  onClick={() => setShowReviewProcess(false)}
+                  className="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg font-medium hover:bg-gray-400 transition-colors"
+                >
+                  Back to Edit
+                </button>
+                <button
+                  onClick={finalizePost}
+                  disabled={!acknowledgedWarning}
+                  className={`flex-1 py-2 rounded-lg font-medium transition-colors ${
+                    acknowledgedWarning 
+                      ? 'bg-cyan-500 text-white hover:bg-cyan-600' 
+                      : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                  }`}
+                >
+                  Publish Review
+                </button>
               </div>
             </div>
           </div>
