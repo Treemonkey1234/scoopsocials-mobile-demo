@@ -1,0 +1,40 @@
+{
+  "name": "scoopsocials-mobile-demo",
+  "version": "1.0.0",
+  "description": "ScoopSocials - Mobile Social Verification Platform",
+  "main": "index.js",
+  "scripts": {
+    "install-all": "npm install && cd web && npm install && cd ../mobile && npm install",
+    "web": "cd web && npm run dev",
+    "web-build": "cd web && npm run build",
+    "mobile": "cd mobile && npx react-native start",
+    "mobile-android": "cd mobile && npx react-native run-android",
+    "mobile-ios": "cd mobile && npx react-native run-ios",
+    "android-build": "cd mobile/android && ./gradlew assembleRelease",
+    "android-bundle": "cd mobile/android && ./gradlew bundleRelease",
+    "deploy-web": "cd web && npm run build && npm run export",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "keywords": [
+    "social-media",
+    "mobile-app",
+    "trust-verification",
+    "react-native",
+    "nextjs",
+    "social-verification",
+    "anti-catfishing",
+    "community-validation",
+    "mobile-demo"
+  ],
+  "author": "ScoopSocials Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Treemonkey1234/scoopsocials-mobile-demo.git"
+  },
+  "homepage": "https://treemonkey1234.github.io/scoopsocials-mobile-demo/",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
+}
