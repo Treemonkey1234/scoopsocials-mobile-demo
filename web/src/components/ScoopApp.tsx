@@ -5,6 +5,7 @@ import CreatePostModal from './CreatePostModal';
 import FlagModal from './FlagModal';
 import CommentsModal from './CommentsModal';
 import CreateEventModal from './CreateEventModal';
+import EventDetailsModal from './EventDetailsModal';
 
 interface NavigationProps {
   onNavigate: (screen: string) => void;
@@ -51,7 +52,9 @@ export default function ScoopApp() {
   const [showCreateEvent, setShowCreateEvent] = useState(false);
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const [profileTab, setProfileTab] = useState('posts');
-  const [eventFilter, setEventFilter] = useState('all');
+  const [eventFilter, setEventFilter] = useState('upcoming');
+  const [showEventDetails, setShowEventDetails] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   
   const [posts, setPosts] = useState<Post[]>([
     {
@@ -443,9 +446,9 @@ export default function ScoopApp() {
                 </div>
                 
                 {/* Tab Content */}
-                <div className="space-y-3">
+                <div className="h-32 overflow-y-auto">
                   {profileTab === 'posts' && (
-                    <div>
+                    <div className="space-y-3">
                       <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
                         <div className="text-sm font-medium text-gray-900 mb-1">Recent Review</div>
                         <p className="text-xs text-gray-600 mb-2">"Fantastic collaboration on the mobile app project. Sarah was professional and delivered quality work on time."</p>
@@ -456,19 +459,28 @@ export default function ScoopApp() {
                         </div>
                       </div>
                       <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
-                        <div className="text-sm font-medium text-gray-900 mb-1">Community Post</div>
-                        <p className="text-xs text-gray-600 mb-2">"Looking for iOS developers in Phoenix area for a fintech project. DM me if interested!"</p>
+                        <div className="text-sm font-medium text-gray-900 mb-1">Product Review</div>
+                        <p className="text-xs text-gray-600 mb-2">"Mike was incredibly honest about the car's condition. No hidden issues, fair price, smooth transaction."</p>
                         <div className="flex items-center text-xs text-gray-500">
-                          <span className="mr-2">💬 8</span>
-                          <span className="mr-2">👍 15</span>
+                          <span className="mr-2">⭐ 4.8</span>
+                          <span className="mr-2">👍 8</span>
                           <span>1 week ago</span>
+                        </div>
+                      </div>
+                      <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                        <div className="text-sm font-medium text-gray-900 mb-1">Academic Collaboration</div>
+                        <p className="text-xs text-gray-600 mb-2">"Emma helped me prepare for my certification exam. Patient teacher and shared great study materials."</p>
+                        <div className="flex items-center text-xs text-gray-500">
+                          <span className="mr-2">⭐ 5.0</span>
+                          <span className="mr-2">👍 15</span>
+                          <span>2 weeks ago</span>
                         </div>
                       </div>
                     </div>
                   )}
                   
                   {profileTab === 'groups' && (
-                    <div>
+                    <div className="space-y-3">
                       <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
                         <div className="flex items-center justify-between mb-2">
                           <div className="text-sm font-medium text-gray-900">Phoenix Tech Meetup</div>
@@ -485,11 +497,19 @@ export default function ScoopApp() {
                         <p className="text-xs text-gray-600 mb-2">Community for React Native developers to share knowledge and collaborate.</p>
                         <div className="text-xs text-gray-500">1,429 members • Joined 3 months ago</div>
                       </div>
+                      <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="text-sm font-medium text-gray-900">Phoenix Wine Enthusiasts</div>
+                          <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs">Member</span>
+                        </div>
+                        <p className="text-xs text-gray-600 mb-2">For wine lovers in the Phoenix area to share tastings and recommendations.</p>
+                        <div className="text-xs text-gray-500">89 members • Joined 1 month ago</div>
+                      </div>
                     </div>
                   )}
                   
                   {profileTab === 'likes' && (
-                    <div>
+                    <div className="space-y-3">
                       <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
                         <div className="text-sm font-medium text-gray-900 mb-1">Liked Review</div>
                         <p className="text-xs text-gray-600 mb-2">"Emma was incredibly helpful during our apartment hunt. Professional, patient, and found us the perfect place!"</p>
@@ -504,6 +524,15 @@ export default function ScoopApp() {
                         <p className="text-xs text-gray-600 mb-2">"Coffee & Code Session - Weekly meetup for developers to code together and share knowledge."</p>
                         <div className="flex items-center text-xs text-gray-500">
                           <span className="mr-2">Organized by Alex Rodriguez</span>
+                          <span>Liked 1 week ago</span>
+                        </div>
+                      </div>
+                      <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                        <div className="text-sm font-medium text-gray-900 mb-1">Liked Review</div>
+                        <p className="text-xs text-gray-600 mb-2">"David's food truck serves authentic tacos. Great prices, generous portions, friendly service!"</p>
+                        <div className="flex items-center text-xs text-gray-500">
+                          <span className="mr-2">By Mike Rodriguez</span>
+                          <span className="mr-2">⭐ 4.9</span>
                           <span>Liked 1 week ago</span>
                         </div>
                       </div>
@@ -533,14 +562,6 @@ export default function ScoopApp() {
                 
                 <div className="flex space-x-2 mb-4 overflow-x-auto">
                   <button 
-                    onClick={() => setEventFilter('all')}
-                    className={`px-3 py-1 rounded-full text-sm whitespace-nowrap ${
-                      eventFilter === 'all' ? 'bg-cyan-400 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                    }`}
-                  >
-                    All
-                  </button>
-                  <button 
                     onClick={() => setEventFilter('upcoming')}
                     className={`px-3 py-1 rounded-full text-sm whitespace-nowrap ${
                       eventFilter === 'upcoming' ? 'bg-cyan-400 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -569,33 +590,6 @@ export default function ScoopApp() {
               
               <div className="flex-1 overflow-y-auto p-4">
                 <div className="space-y-3">
-                  {eventFilter === 'all' && events.map((event) => (
-                    <div key={event.id} className="bg-gradient-to-r from-cyan-400 to-cyan-600 text-white rounded-xl p-4 shadow-lg">
-                      <div className="flex justify-between items-start mb-2">
-                        <div className="flex-1">
-                          <h3 className="font-bold text-lg">{event.title}</h3>
-                          <p className="text-sm opacity-90">{event.date}, {event.time}</p>
-                          <p className="text-xs opacity-75">{event.location}</p>
-                        </div>
-                        <div className="text-right">
-                          <span className="bg-white bg-opacity-20 px-2 py-1 rounded text-xs">{event.goingCount} going</span>
-                          <div className="text-xs mt-1 opacity-75">Min Trust: {event.trustRequired}</div>
-                        </div>
-                      </div>
-                      <p className="text-sm mb-3 opacity-90">By {event.organizer}</p>
-                      <div className="flex space-x-2">
-                        <button 
-                          onClick={() => handleRSVP(event.id)}
-                          className="flex-1 bg-white text-cyan-600 px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors"
-                        >
-                          RSVP Going
-                        </button>
-                        <button className="px-4 py-2 bg-white bg-opacity-20 text-white rounded-lg font-medium hover:bg-opacity-30 transition-colors">
-                          Maybe
-                        </button>
-                      </div>
-                    </div>
-                  ))}
                   
                   {eventFilter === 'upcoming' && events.filter(event => event.date === 'Tomorrow' || event.date === 'Saturday' || event.date === 'Sunday').map((event) => (
                     <div key={event.id} className="bg-gradient-to-r from-green-400 to-green-600 text-white rounded-xl p-4 shadow-lg">
@@ -619,8 +613,14 @@ export default function ScoopApp() {
                         >
                           RSVP Going
                         </button>
-                        <button className="px-4 py-2 bg-white bg-opacity-20 text-white rounded-lg font-medium hover:bg-opacity-30 transition-colors">
-                          Maybe
+                        <button 
+                          onClick={() => {
+                            setSelectedEvent(event);
+                            setShowEventDetails(true);
+                          }}
+                          className="px-4 py-2 bg-white bg-opacity-20 text-white rounded-lg font-medium hover:bg-opacity-30 transition-colors"
+                        >
+                          Details
                         </button>
                       </div>
                     </div>
@@ -679,12 +679,36 @@ export default function ScoopApp() {
                   
                   {eventFilter === 'discover' && (
                     <div className="space-y-3">
+                      {/* Map View */}
+                      <div className="bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-xl p-4 shadow-lg">
+                        <div className="flex items-center justify-between mb-3">
+                          <h4 className="font-bold text-lg">📍 Events Near You</h4>
+                          <button className="bg-white bg-opacity-20 text-white px-3 py-1 rounded-lg text-sm hover:bg-opacity-30 transition-colors">
+                            Full Map
+                          </button>
+                        </div>
+                        <div className="bg-white bg-opacity-90 rounded-lg p-3 text-gray-800">
+                          <div className="text-center text-xs text-gray-600 mb-2">Phoenix, AZ Area</div>
+                          <div className="grid grid-cols-3 gap-2 text-xs">
+                            <div className="bg-red-100 text-red-800 p-2 rounded text-center">
+                              📸 Photography<br/>Papago Park<br/>5 mi
+                            </div>
+                            <div className="bg-green-100 text-green-800 p-2 rounded text-center">
+                              📚 Book Club<br/>Central Library<br/>3 mi
+                            </div>
+                            <div className="bg-purple-100 text-purple-800 p-2 rounded text-center">
+                              🎨 Art Class<br/>Arts District<br/>7 mi
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
                       <div className="bg-gradient-to-r from-orange-400 to-orange-600 text-white rounded-xl p-4 shadow-lg">
                         <div className="flex justify-between items-start mb-2">
                           <div className="flex-1">
                             <h3 className="font-bold text-lg">Photography Meetup</h3>
                             <p className="text-sm opacity-90">Next Friday, 5:00 PM</p>
-                            <p className="text-xs opacity-75">Papago Park</p>
+                            <p className="text-xs opacity-75">Papago Park • 5 miles away</p>
                             <span className="inline-block bg-orange-200 text-orange-800 px-2 py-1 rounded-full text-xs font-medium mt-1">New Discovery</span>
                           </div>
                           <div className="text-right">
@@ -698,7 +722,7 @@ export default function ScoopApp() {
                             Join Event
                           </button>
                           <button className="px-4 py-2 bg-white bg-opacity-20 text-white rounded-lg font-medium hover:bg-opacity-30 transition-colors">
-                            Info
+                            Details
                           </button>
                         </div>
                       </div>
@@ -707,7 +731,7 @@ export default function ScoopApp() {
                           <div className="flex-1">
                             <h3 className="font-bold text-lg">Book Club Discussion</h3>
                             <p className="text-sm opacity-90">Next Wednesday, 7:30 PM</p>
-                            <p className="text-xs opacity-75">Central Library</p>
+                            <p className="text-xs opacity-75">Central Library • 3 miles away</p>
                             <span className="inline-block bg-pink-200 text-pink-800 px-2 py-1 rounded-full text-xs font-medium mt-1">Recommended</span>
                           </div>
                           <div className="text-right">
@@ -721,7 +745,7 @@ export default function ScoopApp() {
                             Join Event
                           </button>
                           <button className="px-4 py-2 bg-white bg-opacity-20 text-white rounded-lg font-medium hover:bg-opacity-30 transition-colors">
-                            Info
+                            Details
                           </button>
                         </div>
                       </div>
@@ -830,6 +854,17 @@ export default function ScoopApp() {
               setEvents([newEvent, ...events]);
               alert('Event created successfully! It will appear in the events list.');
             }}
+          />
+        )}
+        
+        {showEventDetails && selectedEvent && (
+          <EventDetailsModal 
+            onClose={() => {
+              setShowEventDetails(false);
+              setSelectedEvent(null);
+            }}
+            event={selectedEvent}
+            onRSVP={handleRSVP}
           />
         )}
       </div>

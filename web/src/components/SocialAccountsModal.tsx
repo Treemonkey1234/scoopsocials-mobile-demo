@@ -13,12 +13,14 @@ interface SocialAccountsModalProps {
 }
 
 const SocialAccountsModal: React.FC<SocialAccountsModalProps> = ({ onClose }) => {
-  const [accounts] = useState<SocialAccount[]>([
-    { platform: 'Twitter', username: '@nickhemingway9', verified: true, icon: '🐦', color: 'bg-blue-400' },
-    { platform: 'LinkedIn', username: 'nick-hemingway', verified: true, icon: '💼', color: 'bg-blue-600' },
-    { platform: 'Instagram', username: '@nick.codes', verified: false, icon: '📸', color: 'bg-pink-500' },
-    { platform: 'GitHub', username: 'nickhemingway', verified: true, icon: '👨‍💻', color: 'bg-gray-800' },
-    { platform: 'YouTube', username: 'NickTech', verified: false, icon: '🎥', color: 'bg-red-500' }
+  const [accounts, setAccounts] = useState<SocialAccount[]>([
+    { platform: 'Twitter', username: '@BigStinky', verified: true, icon: '🐦', color: 'bg-blue-400' },
+    { platform: 'LinkedIn', username: 'riesling-lefluuf', verified: true, icon: '💼', color: 'bg-blue-600' },
+    { platform: 'Instagram', username: '@wine_and_code', verified: true, icon: '📸', color: 'bg-pink-500' },
+    { platform: 'GitHub', username: 'RieslingCodes', verified: true, icon: '👨‍💻', color: 'bg-gray-800' },
+    { platform: 'TikTok', username: '@BigStinkyWines', verified: false, icon: '🎵', color: 'bg-gray-900' },
+    { platform: 'YouTube', username: 'Wine & Tech Reviews', verified: true, icon: '🎥', color: 'bg-red-500' },
+    { platform: 'Discord', username: 'BigStinky#1337', verified: true, icon: '🎮', color: 'bg-indigo-600' }
   ]);
 
   const [showAddForm, setShowAddForm] = useState(false);
@@ -36,10 +38,34 @@ const SocialAccountsModal: React.FC<SocialAccountsModalProps> = ({ onClose }) =>
 
   const handleAddAccount = () => {
     if (newPlatform && newUsername) {
-      console.log(`Adding ${newPlatform}: ${newUsername}`);
+      const platformColors = {
+        'Twitter': 'bg-blue-400',
+        'Facebook': 'bg-blue-600', 
+        'TikTok': 'bg-gray-900',
+        'Snapchat': 'bg-yellow-400',
+        'Discord': 'bg-indigo-600',
+        'Twitch': 'bg-purple-600'
+      };
+      
+      const newAccount = {
+        platform: newPlatform,
+        username: newUsername,
+        verified: false,
+        icon: availablePlatforms.find(p => p.name === newPlatform)?.icon || '🔗',
+        color: platformColors[newPlatform as keyof typeof platformColors] || 'bg-gray-500'
+      };
+      
+      setAccounts([...accounts, newAccount]);
       setShowAddForm(false);
       setNewPlatform('');
       setNewUsername('');
+      alert(`${newPlatform} account added! Verification pending.`);
+    }
+  };
+  
+  const handleRemoveAccount = (index: number) => {
+    if (confirm('Are you sure you want to remove this account?')) {
+      setAccounts(accounts.filter((_, i) => i !== index));
     }
   };
 
@@ -78,7 +104,10 @@ const SocialAccountsModal: React.FC<SocialAccountsModalProps> = ({ onClose }) =>
                       Verified
                     </span>
                   )}
-                  <button className="text-red-500 hover:text-red-700">
+                  <button 
+                    onClick={() => handleRemoveAccount(index)}
+                    className="text-red-500 hover:text-red-700"
+                  >
                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd"></path>
                     </svg>
@@ -140,9 +169,21 @@ const SocialAccountsModal: React.FC<SocialAccountsModalProps> = ({ onClose }) =>
 
         {/* Footer */}
         <div className="p-4 border-t border-gray-200 bg-gray-50">
-          <p className="text-xs text-gray-600 text-center">
-            Verified accounts boost your trust score by up to 20 points.
-          </p>
+          <div className="text-center">
+            <p className="text-xs text-gray-600 mb-2">
+              Verified accounts boost your trust score by up to 20 points.
+            </p>
+            <div className="flex items-center justify-center space-x-4 text-xs">
+              <div className="flex items-center">
+                <span className="w-2 h-2 bg-green-500 rounded-full mr-1"></span>
+                <span className="text-green-700">{accounts.filter(a => a.verified).length} Verified</span>
+              </div>
+              <div className="flex items-center">
+                <span className="w-2 h-2 bg-yellow-500 rounded-full mr-1"></span>
+                <span className="text-yellow-700">{accounts.filter(a => !a.verified).length} Pending</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
