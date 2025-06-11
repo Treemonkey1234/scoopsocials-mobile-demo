@@ -17,6 +17,7 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({ onClose, onSubmit }
   const [maxAttendees, setMaxAttendees] = useState('');
   const [isPrivate, setIsPrivate] = useState(false);
   const [selectedFriends, setSelectedFriends] = useState<string[]>([]);
+  const [friendSearchQuery, setFriendSearchQuery] = useState('');
 
   const categories = ['Social', 'Professional', 'Sports', 'Tech', 'Academic', 'Community Service', 'Arts & Culture'];
   
@@ -28,6 +29,10 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({ onClose, onSubmit }
     { id: '5', name: 'Rachel Brown', trustScore: 87, avatar: '👩' },
     { id: '6', name: 'Alex Martinez', trustScore: 89, avatar: '👨' }
   ];
+
+  const filteredFriends = friends.filter(friend =>
+    friend.name.toLowerCase().includes(friendSearchQuery.toLowerCase())
+  );
 
   const handleSubmit = () => {
     if (!title.trim()) {
@@ -222,9 +227,18 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({ onClose, onSubmit }
           {isPrivate && (
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 mb-2">Invite Friends</label>
+              <div className="mb-3">
+                <input
+                  type="text"
+                  placeholder="Search friends to invite..."
+                  value={friendSearchQuery}
+                  onChange={(e) => setFriendSearchQuery(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                />
+              </div>
               <div className="max-h-32 overflow-y-auto border border-gray-300 rounded-lg p-2">
                 <div className="space-y-2">
-                  {friends.map((friend) => (
+                  {filteredFriends.map((friend) => (
                     <label key={friend.id} className="flex items-center">
                       <input
                         type="checkbox"
@@ -245,6 +259,11 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({ onClose, onSubmit }
                       </div>
                     </label>
                   ))}
+                  {filteredFriends.length === 0 && friendSearchQuery && (
+                    <div className="text-sm text-gray-500 text-center py-2">
+                      No friends found matching "{friendSearchQuery}"
+                    </div>
+                  )}
                 </div>
               </div>
               {selectedFriends.length > 0 && (

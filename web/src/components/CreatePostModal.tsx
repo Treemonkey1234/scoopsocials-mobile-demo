@@ -13,6 +13,8 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ onClose, onSubmit }) 
   const [showFriendsList, setShowFriendsList] = useState(false);
   const [showReviewProcess, setShowReviewProcess] = useState(false);
   const [acknowledgedWarning, setAcknowledgedWarning] = useState(false);
+  const [friendSearchText, setFriendSearchText] = useState('');
+  const [filteredFriends, setFilteredFriends] = useState(friends);
 
   const categories = ['Professional', 'Marketplace', 'Academic', 'Social/Events', 'Dating', 'Childcare', 'General'];
   
@@ -68,7 +70,19 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ onClose, onSubmit }) 
     if (!reviewedPersons.includes(friend.name)) {
       setReviewedPersons([...reviewedPersons, friend.name]);
     }
-    setShowFriendsList(false);
+    // Don't close the modal - let user continue selecting
+  };
+  
+  const handleFriendSearch = (searchText: string) => {
+    setFriendSearchText(searchText);
+    if (searchText.trim() === '') {
+      setFilteredFriends(friends);
+    } else {
+      const filtered = friends.filter(friend => 
+        friend.name.toLowerCase().includes(searchText.toLowerCase())
+      );
+      setFilteredFriends(filtered);
+    }
   };
   
   const removePerson = (personToRemove: string) => {
@@ -116,7 +130,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ onClose, onSubmit }) 
               <input
                 type="text"
                 placeholder="Enter name or @username"
-                onKeyPress={(e) => {
+onKeyPress={(e) => {
                   if (e.key === 'Enter' && e.currentTarget.value.trim()) {
                     const name = e.currentTarget.value.trim();
                     if (!reviewedPersons.includes(name)) {
@@ -125,6 +139,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ onClose, onSubmit }) 
                     e.currentTarget.value = '';
                   }
                 }}
+                list="friends-datalist"
                 className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
               />
               <button
@@ -134,6 +149,13 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ onClose, onSubmit }) 
                 Add Friends
               </button>
             </div>
+            
+            {/* Friend suggestions datalist */}
+            <datalist id="friends-datalist">
+              {friends.map((friend) => (
+                <option key={friend.id} value={friend.name} />
+              ))}
+            </datalist>
           </div>
 
           {/* Content */}
@@ -202,30 +224,79 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ onClose, onSubmit }) 
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-60">
           <div className="bg-white rounded-lg w-full max-w-sm max-h-[70vh] flex flex-col">
             <div className="flex justify-between items-center p-4 border-b border-gray-200">
-              <h3 className="text-lg font-bold text-gray-800">Select Friend</h3>
+              <h3 className="text-lg font-bold text-gray-800">Select Friends</h3>
               <button
-                onClick={() => setShowFriendsList(false)}
+                onClick={() => {
+                  setShowFriendsList(false);
+                  setFriendSearchText('');
+                  setFilteredFriends(friends);
+                }}
                 className="text-gray-400 hover:text-gray-600 text-xl font-bold"
               >
                 ×
               </button>
             </div>
+            
+            {/* Search Bar */}
+            <div className="p-4 border-b border-gray-200">
+              <input
+                type="text"
+                placeholder="Search friends..."
+                value={friendSearchText}
+                onChange={(e) => handleFriendSearch(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
+              />
+            </div>
+            
             <div className="flex-1 overflow-y-auto p-4">
               <div className="space-y-3">
-                {friends.map((friend) => (
-                  <button
-                    key={friend.id}
-                    onClick={() => selectFriend(friend)}
-                    className="w-full flex items-center space-x-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                  >
-                    <span className="text-2xl">{friend.avatar}</span>
-                    <div className="flex-1 text-left">
-                      <div className="font-medium text-gray-900">{friend.name}</div>
-                      <div className="text-sm text-green-600">Trust: {friend.trustScore}</div>
-                    </div>
-                  </button>
-                ))}
+                {filteredFriends.map((friend) => {
+                  const isSelected = reviewedPersons.includes(friend.name);
+                  return (
+                    <button
+                      key={friend.id}
+                      onClick={() => selectFriend(friend)}
+                      disabled={isSelected}
+                      className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-colors ${
+                        isSelected 
+                          ? 'bg-green-100 border border-green-300 cursor-not-allowed' 
+                          : 'bg-gray-50 hover:bg-gray-100'
+                      }`}
+                    >
+                      <span className="text-2xl">{friend.avatar}</span>
+                      <div className="flex-1 text-left">
+                        <div className={`font-medium ${
+                          isSelected ? 'text-green-800' : 'text-gray-900'
+                        }`}>{friend.name}</div>
+                        <div className="text-sm text-green-600">Trust: {friend.trustScore}</div>
+                      </div>
+                      {isSelected && (
+                        <span className="text-green-600 text-lg">✓</span>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
+              
+              {filteredFriends.length === 0 && (
+                <div className="text-center text-gray-500 py-8">
+                  No friends found matching "{friendSearchText}"
+                </div>
+              )}
+            </div>
+            
+            {/* Footer with Done button */}
+            <div className="p-4 border-t border-gray-200">
+              <button
+                onClick={() => {
+                  setShowFriendsList(false);
+                  setFriendSearchText('');
+                  setFilteredFriends(friends);
+                }}
+                className="w-full bg-cyan-500 text-white py-2 rounded-lg font-medium hover:bg-cyan-600 transition-colors"
+              >
+                Done ({reviewedPersons.length} selected)
+              </button>
             </div>
           </div>
         </div>
