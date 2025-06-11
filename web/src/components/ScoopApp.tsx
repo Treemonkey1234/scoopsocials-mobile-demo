@@ -59,7 +59,6 @@ export default function ScoopApp() {
   const [showComments, setShowComments] = useState(false);
   const [showCreateEvent, setShowCreateEvent] = useState(false);
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
-  const [profileTab, setProfileTab] = useState('posts');
   const [eventFilter, setEventFilter] = useState('upcoming');
   const [showEventDetails, setShowEventDetails] = useState(false);
   const [showAttendees, setShowAttendees] = useState(false);
@@ -930,129 +929,31 @@ export default function ScoopApp() {
                   </div>
                 </div>
                 
-                {/* Profile Tabs */}
-                <div className="mb-4">
-                  <div className="flex space-x-1 bg-gray-100 rounded-lg p-1">
-                    <button 
-                      onClick={() => setProfileTab('posts')}
-                      className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
-                        profileTab === 'posts' ? 'bg-white text-cyan-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
-                      }`}
-                    >
-                      Posts
-                    </button>
-                    <button 
-                      onClick={() => setProfileTab('groups')}
-                      className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
-                        profileTab === 'groups' ? 'bg-white text-cyan-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
-                      }`}
-                    >
-                      Groups
-                    </button>
-                    <button 
-                      onClick={() => setProfileTab('likes')}
-                      className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
-                        profileTab === 'likes' ? 'bg-white text-cyan-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
-                      }`}
-                    >
-                      Likes
-                    </button>
+                {/* Recent Activity Overview */}
+                <div className="space-y-4 mb-6">
+                  <div className="bg-white rounded-lg p-4 border border-gray-200">
+                    <h3 className="text-sm font-semibold text-gray-800 mb-3">Recent Posts</h3>
+                    <div className="space-y-2">
+                      <div className="text-xs text-gray-600">Mobile app collaboration review • 2 days ago</div>
+                      <div className="text-xs text-gray-600">Marketplace transaction review • 1 week ago</div>
+                    </div>
                   </div>
-                </div>
-                
-                {/* Tab Content */}
-                <div className="h-48 overflow-y-auto">
-                  {profileTab === 'posts' && (
-                    <div className="space-y-3">
-                      <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
-                        <div className="text-sm font-medium text-gray-900 mb-1">Recent Review</div>
-                        <p className="text-xs text-gray-600 mb-2">"Fantastic collaboration on the mobile app project. Sarah was professional and delivered quality work on time."</p>
-                        <div className="flex items-center text-xs text-gray-500">
-                          <span className="mr-2">⭐ 5.0</span>
-                          <span className="mr-2">👍 12</span>
-                          <span>2 days ago</span>
-                        </div>
-                      </div>
-                      <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
-                        <div className="text-sm font-medium text-gray-900 mb-1">Product Review</div>
-                        <p className="text-xs text-gray-600 mb-2">"Mike was incredibly honest about the car's condition. No hidden issues, fair price, smooth transaction."</p>
-                        <div className="flex items-center text-xs text-gray-500">
-                          <span className="mr-2">⭐ 4.8</span>
-                          <span className="mr-2">👍 8</span>
-                          <span>1 week ago</span>
-                        </div>
-                      </div>
-                      <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
-                        <div className="text-sm font-medium text-gray-900 mb-1">Academic Collaboration</div>
-                        <p className="text-xs text-gray-600 mb-2">"Emma helped me prepare for my certification exam. Patient teacher and shared great study materials."</p>
-                        <div className="flex items-center text-xs text-gray-500">
-                          <span className="mr-2">⭐ 5.0</span>
-                          <span className="mr-2">👍 15</span>
-                          <span>2 weeks ago</span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
                   
-                  {profileTab === 'groups' && (
-                    <div className="space-y-3">
-                      <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="text-sm font-medium text-gray-900">Phoenix Tech Meetup</div>
-                          <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Organizer</span>
-                        </div>
-                        <p className="text-xs text-gray-600 mb-2">Monthly meetup for software developers and tech enthusiasts in Phoenix.</p>
-                        <div className="text-xs text-gray-500">247 members • 12 events hosted</div>
-                      </div>
-                      <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="text-sm font-medium text-gray-900">React Native Developers</div>
-                          <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">Member</span>
-                        </div>
-                        <p className="text-xs text-gray-600 mb-2">Community for React Native developers to share knowledge and collaborate.</p>
-                        <div className="text-xs text-gray-500">1,429 members • Joined 3 months ago</div>
-                      </div>
-                      <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="text-sm font-medium text-gray-900">Phoenix Wine Enthusiasts</div>
-                          <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs">Member</span>
-                        </div>
-                        <p className="text-xs text-gray-600 mb-2">For wine lovers in the Phoenix area to share tastings and recommendations.</p>
-                        <div className="text-xs text-gray-500">89 members • Joined 1 month ago</div>
-                      </div>
+                  <div className="bg-white rounded-lg p-4 border border-gray-200">
+                    <h3 className="text-sm font-semibold text-gray-800 mb-3">Groups</h3>
+                    <div className="space-y-2">
+                      <div className="text-xs text-gray-600">Phoenix Tech Meetup • Organizer</div>
+                      <div className="text-xs text-gray-600">React Native Developers • Member</div>
                     </div>
-                  )}
+                  </div>
                   
-                  {profileTab === 'likes' && (
-                    <div className="space-y-3">
-                      <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
-                        <div className="text-sm font-medium text-gray-900 mb-1">Liked Review</div>
-                        <p className="text-xs text-gray-600 mb-2">"Emma was incredibly helpful during our apartment hunt. Professional, patient, and found us the perfect place!"</p>
-                        <div className="flex items-center text-xs text-gray-500">
-                          <span className="mr-2">By Sarah Chen</span>
-                          <span className="mr-2">⭐ 5.0</span>
-                          <span>Liked 3 days ago</span>
-                        </div>
-                      </div>
-                      <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
-                        <div className="text-sm font-medium text-gray-900 mb-1">Liked Event</div>
-                        <p className="text-xs text-gray-600 mb-2">"Coffee & Code Session - Weekly meetup for developers to code together and share knowledge."</p>
-                        <div className="flex items-center text-xs text-gray-500">
-                          <span className="mr-2">Organized by Alex Rodriguez</span>
-                          <span>Liked 1 week ago</span>
-                        </div>
-                      </div>
-                      <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
-                        <div className="text-sm font-medium text-gray-900 mb-1">Liked Review</div>
-                        <p className="text-xs text-gray-600 mb-2">"David's food truck serves authentic tacos. Great prices, generous portions, friendly service!"</p>
-                        <div className="flex items-center text-xs text-gray-500">
-                          <span className="mr-2">By Mike Rodriguez</span>
-                          <span className="mr-2">⭐ 4.9</span>
-                          <span>Liked 1 week ago</span>
-                        </div>
-                      </div>
+                  <div className="bg-white rounded-lg p-4 border border-gray-200">
+                    <h3 className="text-sm font-semibold text-gray-800 mb-3">Recent Likes</h3>
+                    <div className="space-y-2">
+                      <div className="text-xs text-gray-600">Apartment hunt review • 3 days ago</div>
+                      <div className="text-xs text-gray-600">Coffee & Code event • 1 week ago</div>
                     </div>
-                  )}
+                  </div>
                 </div>
               </div>
             </div>
