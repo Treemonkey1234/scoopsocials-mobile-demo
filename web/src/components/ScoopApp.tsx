@@ -60,7 +60,6 @@ export default function ScoopApp() {
   const [showCreateEvent, setShowCreateEvent] = useState(false);
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const [profileTab, setProfileTab] = useState('posts');
-  const [isProfileTabExpanded, setIsProfileTabExpanded] = useState(false);
   const [eventFilter, setEventFilter] = useState('upcoming');
   const [showEventDetails, setShowEventDetails] = useState(false);
   const [showAttendees, setShowAttendees] = useState(false);
@@ -862,7 +861,7 @@ export default function ScoopApp() {
                 </div>
 
                 {/* Social Accounts Preview - Side by Side */}
-                <div className={`mb-4 transition-opacity duration-300 ${isProfileTabExpanded ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+                <div className="mb-4">
                   <div className="flex justify-between items-center mb-3">
                     <h3 className="font-semibold text-gray-800">Social Accounts</h3>
                     <button 
@@ -932,34 +931,10 @@ export default function ScoopApp() {
                 </div>
                 
                 {/* Profile Tabs */}
-                <div className={`transition-all duration-300 ease-in-out ${
-                  isProfileTabExpanded ? 'fixed top-32 left-4 right-4 z-40 bg-white shadow-lg rounded-lg' : 'relative'
-                } mb-4`}>
-                  {isProfileTabExpanded && (
-                    <div className="px-6 pt-4 pb-2">
-                      <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-lg font-bold text-gray-800">Activity</h2>
-                        <button 
-                          onClick={() => setIsProfileTabExpanded(false)}
-                          className="text-gray-400 hover:text-gray-600 text-xl font-bold"
-                        >
-                          ×
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                  <div className={`flex space-x-1 bg-gray-100 rounded-lg p-1 ${
-                    isProfileTabExpanded ? 'mx-6' : ''
-                  }`}>
+                <div className="mb-4">
+                  <div className="flex space-x-1 bg-gray-100 rounded-lg p-1">
                     <button 
-                      onClick={() => {
-                        if (profileTab === 'posts' && isProfileTabExpanded) {
-                          setIsProfileTabExpanded(false);
-                        } else {
-                          setProfileTab('posts');
-                          setIsProfileTabExpanded(true);
-                        }
-                      }}
+                      onClick={() => setProfileTab('posts')}
                       className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
                         profileTab === 'posts' ? 'bg-white text-cyan-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
                       }`}
@@ -967,14 +942,7 @@ export default function ScoopApp() {
                       Posts
                     </button>
                     <button 
-                      onClick={() => {
-                        if (profileTab === 'groups' && isProfileTabExpanded) {
-                          setIsProfileTabExpanded(false);
-                        } else {
-                          setProfileTab('groups');
-                          setIsProfileTabExpanded(true);
-                        }
-                      }}
+                      onClick={() => setProfileTab('groups')}
                       className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
                         profileTab === 'groups' ? 'bg-white text-cyan-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
                       }`}
@@ -982,14 +950,7 @@ export default function ScoopApp() {
                       Groups
                     </button>
                     <button 
-                      onClick={() => {
-                        if (profileTab === 'likes' && isProfileTabExpanded) {
-                          setIsProfileTabExpanded(false);
-                        } else {
-                          setProfileTab('likes');
-                          setIsProfileTabExpanded(true);
-                        }
-                      }}
+                      onClick={() => setProfileTab('likes')}
                       className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
                         profileTab === 'likes' ? 'bg-white text-cyan-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
                       }`}
@@ -1000,17 +961,7 @@ export default function ScoopApp() {
                 </div>
                 
                 {/* Tab Content */}
-                <div 
-                  className={`overflow-y-auto transition-all duration-300 ease-in-out ${
-                    isProfileTabExpanded 
-                      ? 'fixed top-52 left-4 right-4 bottom-16 z-30 bg-white rounded-lg shadow-lg' 
-                      : 'h-48'
-                  }`}
-                  style={{
-                    maxHeight: isProfileTabExpanded ? 'calc(100vh - 300px)' : '200px',
-                    padding: isProfileTabExpanded ? '16px' : '0'
-                  }}
-                >
+                <div className="h-48 overflow-y-auto">
                   {profileTab === 'posts' && (
                     <div className="space-y-3">
                       <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
