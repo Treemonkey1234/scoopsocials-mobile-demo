@@ -6,6 +6,7 @@ interface SocialAccount {
   verified: boolean;
   icon: string;
   color: string;
+  connectedSince: string;
 }
 
 interface SocialAccountsModalProps {
@@ -14,78 +15,14 @@ interface SocialAccountsModalProps {
 
 const SocialAccountsModal: React.FC<SocialAccountsModalProps> = ({ onClose }) => {
   const [accounts, setAccounts] = useState<SocialAccount[]>([
-    { platform: 'Twitter', username: '@BigStinky', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/twitter.svg', color: 'bg-blue-400' },
-    { platform: 'LinkedIn', username: 'riesling-lefluuf', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg', color: 'bg-blue-600' },
-    { platform: 'Instagram', username: '@wine_and_code', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/instagram.svg', color: 'bg-pink-500' },
-    { platform: 'GitHub', username: 'RieslingCodes', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg', color: 'bg-gray-800' },
-    { platform: 'TikTok', username: '@BigStinkyWines', verified: false, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/tiktok.svg', color: 'bg-gray-900' },
-    { platform: 'YouTube', username: 'Wine & Tech Reviews', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/youtube.svg', color: 'bg-red-500' },
-    { platform: 'Discord', username: 'BigStinky#1337', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/discord.svg', color: 'bg-indigo-600' }
+    { platform: 'Twitter', username: '@BigStinky', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/twitter.svg', color: 'bg-blue-400', connectedSince: 'Mar 2024' },
+    { platform: 'LinkedIn', username: 'riesling-lefluuf', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg', color: 'bg-blue-600', connectedSince: 'Jan 2024' },
+    { platform: 'Instagram', username: '@wine_and_code', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/instagram.svg', color: 'bg-pink-500', connectedSince: 'Dec 2023' },
+    { platform: 'GitHub', username: 'RieslingCodes', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg', color: 'bg-gray-800', connectedSince: 'Feb 2024' },
+    { platform: 'TikTok', username: '@BigStinkyWines', verified: false, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/tiktok.svg', color: 'bg-gray-900', connectedSince: 'Oct 2023' },
+    { platform: 'YouTube', username: 'Wine & Tech Reviews', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/youtube.svg', color: 'bg-red-500', connectedSince: 'Sep 2023' },
+    { platform: 'Discord', username: 'BigStinky#1337', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/discord.svg', color: 'bg-indigo-600', connectedSince: 'Nov 2023' }
   ]);
-
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [newPlatform, setNewPlatform] = useState('');
-  const [newUsername, setNewUsername] = useState('');
-  const [customPlatform, setCustomPlatform] = useState('');
-  const [customUrl, setCustomUrl] = useState('');
-  const [useCustomPlatform, setUseCustomPlatform] = useState(false);
-
-  const availablePlatforms = [
-    { name: 'Twitter', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/twitter.svg', color: 'bg-blue-400' },
-    { name: 'Facebook', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg', color: 'bg-blue-600' },
-    { name: 'TikTok', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/tiktok.svg', color: 'bg-gray-900' },
-    { name: 'Snapchat', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/snapchat.svg', color: 'bg-yellow-400' },
-    { name: 'Discord', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/discord.svg', color: 'bg-indigo-600' },
-    { name: 'Twitch', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/twitch.svg', color: 'bg-purple-600' },
-    { name: 'Reddit', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/reddit.svg', color: 'bg-orange-500' },
-    { name: 'Pinterest', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/pinterest.svg', color: 'bg-red-500' }
-  ];
-
-  const handleAddAccount = () => {
-    if (useCustomPlatform) {
-      if (!customPlatform.trim() || !customUrl.trim() || !newUsername.trim()) {
-        alert('Please fill in all custom platform fields');
-        return;
-      }
-      
-      const newAccount = {
-        platform: customPlatform.trim(),
-        username: newUsername,
-        verified: false,
-        icon: '🔗',
-        color: 'bg-gray-500'
-      };
-      
-      setAccounts([...accounts, newAccount]);
-      setShowAddForm(false);
-      setNewPlatform('');
-      setNewUsername('');
-      setCustomPlatform('');
-      setCustomUrl('');
-      setUseCustomPlatform(false);
-      alert(`${customPlatform} account added! Verification pending.`);
-    } else {
-      if (!newPlatform || !newUsername) {
-        alert('Please select a platform and enter username');
-        return;
-      }
-      
-      const selectedPlatform = availablePlatforms.find(p => p.name === newPlatform);
-      const newAccount = {
-        platform: newPlatform,
-        username: newUsername,
-        verified: false,
-        icon: selectedPlatform?.icon || '🔗',
-        color: selectedPlatform?.color || 'bg-gray-500'
-      };
-      
-      setAccounts([...accounts, newAccount]);
-      setShowAddForm(false);
-      setNewPlatform('');
-      setNewUsername('');
-      alert(`${newPlatform} account added! Verification pending.`);
-    }
-  };
   
   const handleRemoveAccount = (index: number) => {
     if (confirm('Are you sure you want to remove this account?')) {
@@ -98,7 +35,7 @@ const SocialAccountsModal: React.FC<SocialAccountsModalProps> = ({ onClose }) =>
       <div className="bg-white rounded-lg w-full max-w-sm max-h-[85vh] flex flex-col">
         {/* Header */}
         <div className="flex justify-between items-center p-4 border-b border-gray-200">
-          <h2 className="text-xl font-bold text-gray-800">Social Accounts</h2>
+          <h2 className="text-xl font-bold text-gray-800">All Social Accounts</h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 text-xl font-bold"
@@ -124,6 +61,7 @@ const SocialAccountsModal: React.FC<SocialAccountsModalProps> = ({ onClose }) =>
                   <div>
                     <div className="font-medium text-gray-800">{account.platform}</div>
                     <div className="text-sm text-gray-600">{account.username}</div>
+                    <div className="text-xs text-gray-500">Connected since {account.connectedSince}</div>
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -144,103 +82,6 @@ const SocialAccountsModal: React.FC<SocialAccountsModalProps> = ({ onClose }) =>
               </div>
             ))}
           </div>
-
-          {/* Add New Account */}
-          {!showAddForm ? (
-            <button 
-              onClick={() => setShowAddForm(true)}
-              className="w-full bg-cyan-400 text-white py-3 rounded-lg font-medium hover:bg-cyan-500 transition-colors"
-            >
-              + Add Account
-            </button>
-          ) : (
-            <div className="bg-gray-50 rounded-lg p-4">
-              <h4 className="font-medium text-gray-800 mb-3">Add New Account</h4>
-              <div className="space-y-3">
-                {/* Platform Type Selection */}
-                <div className="flex space-x-2">
-                  <button
-                    onClick={() => setUseCustomPlatform(false)}
-                    className={`flex-1 py-2 px-3 rounded-lg text-xs font-medium transition-colors ${
-                      !useCustomPlatform ? 'bg-cyan-400 text-white' : 'bg-gray-200 text-gray-700'
-                    }`}
-                  >
-                    Popular Platforms
-                  </button>
-                  <button
-                    onClick={() => setUseCustomPlatform(true)}
-                    className={`flex-1 py-2 px-3 rounded-lg text-xs font-medium transition-colors ${
-                      useCustomPlatform ? 'bg-cyan-400 text-white' : 'bg-gray-200 text-gray-700'
-                    }`}
-                  >
-                    Custom Platform
-                  </button>
-                </div>
-                
-                {!useCustomPlatform ? (
-                  <select 
-                    value={newPlatform} 
-                    onChange={(e) => setNewPlatform(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
-                  >
-                    <option value="">Select Platform</option>
-                    {availablePlatforms.map((platform) => (
-                      <option key={platform.name} value={platform.name}>
-                        {platform.name}
-                      </option>
-                    ))}
-                  </select>
-                ) : (
-                  <div className="space-y-2">
-                    <input 
-                      type="text"
-                      placeholder="Platform name (e.g., Mastodon, BeReal)"
-                      value={customPlatform}
-                      onChange={(e) => setCustomPlatform(e.target.value)}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
-                    />
-                    <input 
-                      type="url"
-                      placeholder="Platform website (e.g., https://mastodon.social)"
-                      value={customUrl}
-                      onChange={(e) => setCustomUrl(e.target.value)}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
-                    />
-                  </div>
-                )}
-                
-                <input 
-                  type="text"
-                  placeholder="Username or profile URL"
-                  value={newUsername}
-                  onChange={(e) => setNewUsername(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
-                />
-                
-                <div className="flex space-x-2">
-                  <button 
-                    onClick={handleAddAccount}
-                    className="flex-1 bg-cyan-400 text-white py-2 rounded-lg font-medium hover:bg-cyan-500 transition-colors"
-                  >
-                    Add
-                  </button>
-                  <button 
-                    onClick={() => {
-                      setShowAddForm(false);
-                      setUseCustomPlatform(false);
-                      setNewPlatform('');
-                      setNewUsername('');
-                      setCustomPlatform('');
-                      setCustomUrl('');
-                    }}
-                    className="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg font-medium hover:bg-gray-400 transition-colors"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Footer */}

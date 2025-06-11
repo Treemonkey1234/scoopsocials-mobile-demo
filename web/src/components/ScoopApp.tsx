@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import TrustScoreBreakdown from './TrustScoreBreakdown';
 import SocialAccountsModal from './SocialAccountsModal';
+import AddAccountModal from './AddAccountModal';
 import CreatePostModal from './CreatePostModal';
 import FlagModal from './FlagModal';
 import CommentsModal from './CommentsModal';
@@ -51,6 +52,7 @@ export default function ScoopApp() {
   const [currentScreen, setCurrentScreen] = useState('home');
   const [showTrustBreakdown, setShowTrustBreakdown] = useState(false);
   const [showSocialAccounts, setShowSocialAccounts] = useState(false);
+  const [showAddAccount, setShowAddAccount] = useState(false);
   const [showEventModal, setShowEventModal] = useState(false);
   const [showCreatePost, setShowCreatePost] = useState(false);
   const [showFlagModal, setShowFlagModal] = useState(false);
@@ -859,7 +861,7 @@ export default function ScoopApp() {
                   <span className="bg-orange-500 text-white px-2 py-1 rounded text-xs">RELIABLE</span>
                 </div>
 
-                {/* Social Accounts Preview */}
+                {/* Social Accounts Preview - Side by Side */}
                 <div className="mb-4">
                   <div className="flex justify-between items-center mb-3">
                     <h3 className="font-semibold text-gray-800">Social Accounts</h3>
@@ -870,73 +872,46 @@ export default function ScoopApp() {
                       View all
                     </button>
                   </div>
-                  <div className="space-y-3 mb-4">
-                    {/* Twitter */}
-                    <div className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-blue-400 rounded-lg flex items-center justify-center text-white text-sm p-1.5 relative">
-                          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/twitter.svg" alt="Twitter" className="w-full h-full filter invert" />
-                          <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
-                            <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
-                            </svg>
-                          </div>
-                        </div>
-                        <div>
-                          <div className="text-sm font-medium text-gray-800">Twitter</div>
-                          <div className="text-xs text-gray-500">Connected since Mar 2024</div>
+                  <div className="flex items-center justify-between mb-4">
+                    {/* Connected Accounts - Side by Side */}
+                    <div className="flex space-x-3">
+                      {/* Twitter */}
+                      <div className="w-12 h-12 bg-blue-400 rounded-lg flex items-center justify-center text-white text-sm p-1.5 relative">
+                        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/twitter.svg" alt="Twitter" className="w-full h-full filter invert" />
+                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                          <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
+                          </svg>
                         </div>
                       </div>
-                    </div>
-                    
-                    {/* LinkedIn */}
-                    <div className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white text-sm p-1.5 relative">
-                          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg" alt="LinkedIn" className="w-full h-full filter invert" />
-                          <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
-                            <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
-                            </svg>
-                          </div>
-                        </div>
-                        <div>
-                          <div className="text-sm font-medium text-gray-800">LinkedIn</div>
-                          <div className="text-xs text-gray-500">Connected since Jan 2024</div>
+                      
+                      {/* LinkedIn */}
+                      <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white text-sm p-1.5 relative">
+                        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg" alt="LinkedIn" className="w-full h-full filter invert" />
+                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                          <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
+                          </svg>
                         </div>
                       </div>
-                    </div>
-                    
-                    {/* GitHub */}
-                    <div className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center text-white text-sm p-1.5 relative">
-                          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg" alt="GitHub" className="w-full h-full filter invert" />
-                          <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
-                            <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
-                            </svg>
-                          </div>
-                        </div>
-                        <div>
-                          <div className="text-sm font-medium text-gray-800">GitHub</div>
-                          <div className="text-xs text-gray-500">Connected since Feb 2024</div>
+                      
+                      {/* GitHub */}
+                      <div className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center text-white text-sm p-1.5 relative">
+                        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg" alt="GitHub" className="w-full h-full filter invert" />
+                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                          <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
+                          </svg>
                         </div>
                       </div>
                     </div>
                     
                     {/* Add Account Button */}
                     <button 
-                      onClick={() => {
-                        setShowSocialAccounts(true);
-                        // Auto-direct to add section (we'll implement this in the modal)
-                      }}
-                      className="flex items-center justify-center w-full p-2 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 hover:border-cyan-400 hover:bg-cyan-50 transition-colors"
+                      onClick={() => setShowAddAccount(true)}
+                      className="w-12 h-12 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 hover:border-cyan-400 hover:bg-cyan-50 transition-colors flex items-center justify-center"
                     >
-                      <div className="flex items-center space-x-2 text-gray-600 hover:text-cyan-600">
-                        <div className="w-6 h-6 rounded-full bg-gray-400 flex items-center justify-center text-white text-sm">+</div>
-                        <span className="text-sm font-medium">Add account</span>
-                      </div>
+                      <div className="w-6 h-6 rounded-full bg-gray-400 flex items-center justify-center text-white text-sm hover:bg-cyan-500 transition-colors">+</div>
                     </button>
                   </div>
                 </div>
@@ -1007,11 +982,11 @@ export default function ScoopApp() {
                 
                 {/* Tab Content */}
                 <div 
-                  className="overflow-y-auto transition-all duration-300 ease-in-out" 
-                  style={{ 
-                    height: isProfileTabExpanded ? 'calc(100vh - 350px)' : 'calc(100vh - 500px)', 
-                    minHeight: isProfileTabExpanded ? '400px' : '200px',
-                    maxHeight: isProfileTabExpanded ? '500px' : '300px'
+                  className={`overflow-y-auto transition-all duration-300 ease-in-out ${
+                    isProfileTabExpanded ? 'h-96' : 'h-48'
+                  }`}
+                  style={{
+                    maxHeight: isProfileTabExpanded ? '400px' : '200px'
                   }}
                 >
                   {profileTab === 'posts' && (
@@ -1901,6 +1876,16 @@ export default function ScoopApp() {
         {showSocialAccounts && (
           <SocialAccountsModal 
             onClose={() => setShowSocialAccounts(false)} 
+          />
+        )}
+        
+        {showAddAccount && (
+          <AddAccountModal 
+            onClose={() => setShowAddAccount(false)}
+            onAddAccount={(account) => {
+              // Handle adding account (could update state here if needed)
+              console.log('Account added:', account);
+            }}
           />
         )}
 
