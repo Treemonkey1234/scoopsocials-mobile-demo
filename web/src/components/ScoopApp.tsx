@@ -862,7 +862,7 @@ export default function ScoopApp() {
                 </div>
 
                 {/* Social Accounts Preview - Side by Side */}
-                <div className="mb-4">
+                <div className={`mb-4 transition-opacity duration-300 ${isProfileTabExpanded ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
                   <div className="flex justify-between items-center mb-3">
                     <h3 className="font-semibold text-gray-800">Social Accounts</h3>
                     <button 
@@ -932,61 +932,85 @@ export default function ScoopApp() {
                 </div>
                 
                 {/* Profile Tabs */}
-                <div className="flex space-x-1 mb-4 bg-gray-100 rounded-lg p-1">
-                  <button 
-                    onClick={() => {
-                      if (profileTab === 'posts') {
-                        setIsProfileTabExpanded(!isProfileTabExpanded);
-                      } else {
-                        setProfileTab('posts');
-                        setIsProfileTabExpanded(false);
-                      }
-                    }}
-                    className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
-                      profileTab === 'posts' ? 'bg-white text-cyan-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
-                    }`}
-                  >
-                    Posts {profileTab === 'posts' && (isProfileTabExpanded ? '▼' : '▲')}
-                  </button>
-                  <button 
-                    onClick={() => {
-                      if (profileTab === 'groups') {
-                        setIsProfileTabExpanded(!isProfileTabExpanded);
-                      } else {
-                        setProfileTab('groups');
-                        setIsProfileTabExpanded(false);
-                      }
-                    }}
-                    className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
-                      profileTab === 'groups' ? 'bg-white text-cyan-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
-                    }`}
-                  >
-                    Groups {profileTab === 'groups' && (isProfileTabExpanded ? '▼' : '▲')}
-                  </button>
-                  <button 
-                    onClick={() => {
-                      if (profileTab === 'likes') {
-                        setIsProfileTabExpanded(!isProfileTabExpanded);
-                      } else {
-                        setProfileTab('likes');
-                        setIsProfileTabExpanded(false);
-                      }
-                    }}
-                    className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
-                      profileTab === 'likes' ? 'bg-white text-cyan-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
-                    }`}
-                  >
-                    Likes {profileTab === 'likes' && (isProfileTabExpanded ? '▼' : '▲')}
-                  </button>
+                <div className={`transition-all duration-300 ease-in-out ${
+                  isProfileTabExpanded ? 'fixed top-0 left-0 right-0 z-40 bg-white shadow-lg' : 'relative'
+                } mb-4`}>
+                  {isProfileTabExpanded && (
+                    <div className="px-6 pt-4 pb-2">
+                      <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-lg font-bold text-gray-800">Activity</h2>
+                        <button 
+                          onClick={() => setIsProfileTabExpanded(false)}
+                          className="text-gray-400 hover:text-gray-600 text-xl font-bold"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                  <div className={`flex space-x-1 bg-gray-100 rounded-lg p-1 ${
+                    isProfileTabExpanded ? 'mx-6' : ''
+                  }`}>
+                    <button 
+                      onClick={() => {
+                        if (profileTab === 'posts' && isProfileTabExpanded) {
+                          setIsProfileTabExpanded(false);
+                        } else {
+                          setProfileTab('posts');
+                          setIsProfileTabExpanded(true);
+                        }
+                      }}
+                      className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
+                        profileTab === 'posts' ? 'bg-white text-cyan-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
+                      }`}
+                    >
+                      Posts {profileTab === 'posts' && (isProfileTabExpanded ? '▼' : '▲')}
+                    </button>
+                    <button 
+                      onClick={() => {
+                        if (profileTab === 'groups' && isProfileTabExpanded) {
+                          setIsProfileTabExpanded(false);
+                        } else {
+                          setProfileTab('groups');
+                          setIsProfileTabExpanded(true);
+                        }
+                      }}
+                      className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
+                        profileTab === 'groups' ? 'bg-white text-cyan-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
+                      }`}
+                    >
+                      Groups {profileTab === 'groups' && (isProfileTabExpanded ? '▼' : '▲')}
+                    </button>
+                    <button 
+                      onClick={() => {
+                        if (profileTab === 'likes' && isProfileTabExpanded) {
+                          setIsProfileTabExpanded(false);
+                        } else {
+                          setProfileTab('likes');
+                          setIsProfileTabExpanded(true);
+                        }
+                      }}
+                      className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
+                        profileTab === 'likes' ? 'bg-white text-cyan-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
+                      }`}
+                    >
+                      Likes {profileTab === 'likes' && (isProfileTabExpanded ? '▼' : '▲')}
+                    </button>
+                  </div>
                 </div>
                 
                 {/* Tab Content */}
                 <div 
                   className={`overflow-y-auto transition-all duration-300 ease-in-out ${
-                    isProfileTabExpanded ? 'h-96' : 'h-48'
+                    isProfileTabExpanded 
+                      ? 'fixed top-20 left-0 right-0 bottom-0 z-30 bg-white' 
+                      : 'h-48'
                   }`}
                   style={{
-                    maxHeight: isProfileTabExpanded ? '400px' : '200px'
+                    maxHeight: isProfileTabExpanded ? 'calc(100vh - 80px)' : '200px',
+                    paddingLeft: isProfileTabExpanded ? '24px' : '0',
+                    paddingRight: isProfileTabExpanded ? '24px' : '0',
+                    paddingTop: isProfileTabExpanded ? '12px' : '0'
                   }}
                 >
                   {profileTab === 'posts' && (
