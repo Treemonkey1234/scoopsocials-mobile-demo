@@ -14,7 +14,6 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ onClose, onSubmit }) 
   const [showReviewProcess, setShowReviewProcess] = useState(false);
   const [acknowledgedWarning, setAcknowledgedWarning] = useState(false);
   const [friendSearchText, setFriendSearchText] = useState('');
-  const [filteredFriends, setFilteredFriends] = useState(friends);
 
   const categories = ['Professional', 'Marketplace', 'Academic', 'Social/Events', 'Dating', 'Childcare', 'General'];
   
@@ -26,6 +25,8 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ onClose, onSubmit }) 
     { id: '5', name: 'Rachel Brown', trustScore: 87, avatar: '👩' },
     { id: '6', name: 'Alex Martinez', trustScore: 89, avatar: '👨' }
   ];
+
+  const [filteredFriends, setFilteredFriends] = useState(friends);
 
   const handleSubmit = () => {
     if (!content.trim()) {
