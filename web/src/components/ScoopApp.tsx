@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TrustScoreBreakdown from './TrustScoreBreakdown';
 import SocialAccountsModal from './SocialAccountsModal';
 import CreatePostModal from './CreatePostModal';
@@ -8,6 +8,7 @@ import CreateEventModal from './CreateEventModal';
 import EventDetailsModal from './EventDetailsModal';
 import AttendeesModal from './AttendeesModal';
 import EventReviewModal from './EventReviewModal';
+import { getFakeUsers, getFriendsForUser, getRecommendedFriends, searchUsers, getNetworkAnalytics, FakeUser } from '../data/fakeUsers';
 
 interface NavigationProps {
   onNavigate: (screen: string) => void;
@@ -64,6 +65,103 @@ export default function ScoopApp() {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [showInbox, setShowInbox] = useState(false);
   const [showCreateDropdown, setShowCreateDropdown] = useState(false);
+  
+  // Fake user network state
+  const [allUsers, setAllUsers] = useState<FakeUser[]>([]);
+  const [currentUser, setCurrentUser] = useState<FakeUser | null>(null);
+  const [userFriends, setUserFriends] = useState<FakeUser[]>([]);
+  const [friendsFilter, setFriendsFilter] = useState('all');
+  const [friendsSearchQuery, setFriendsSearchQuery] = useState('');
+  const [networkStats, setNetworkStats] = useState<any>(null);
+
+  // Initialize fake user network
+  useEffect(() => {
+    try {
+      const users = getFakeUsers();
+      const stats = getNetworkAnalytics();
+      setAllUsers(users);
+      setNetworkStats(stats);
+      
+      // Set the first user as current user for demo
+      if (users.length > 0) {
+        const user = users[0];
+        setCurrentUser(user);
+        const friends = getFriendsForUser(user.id);
+        setUserFriends(friends);
+      }
+    } catch (error) {
+      console.error('Error initializing fake user network:', error);
+    }
+  }, []);
+
+  // Filter friends based on search and filter criteria
+  const getFilteredFriends = () => {
+    let filtered = userFriends;
+
+    // Apply search filter
+    if (friendsSearchQuery.trim()) {
+      filtered = filtered.filter(friend => 
+        friend.name.toLowerCase().includes(friendsSearchQuery.toLowerCase()) ||
+        friend.username.toLowerCase().includes(friendsSearchQuery.toLowerCase()) ||
+        friend.location.city.toLowerCase().includes(friendsSearchQuery.toLowerCase())
+      );
+    }
+
+    // Apply category filter
+    switch (friendsFilter) {
+      case 'reciprocal':
+        // For demo, just show friends with high connection counts as "reciprocal"
+        filtered = filtered.filter(friend => friend.connectionCount > 20);
+        break;
+      case 'recent':
+        // Sort by join date (most recent first)
+        filtered = filtered.sort((a, b) => new Date(b.joinDate).getTime() - new Date(a.joinDate).getTime());
+        break;
+      default:
+        // Show all friends
+        break;
+    }
+
+    return filtered;
+  };
+
+  const getAvatarGradient = (name: string): string => {
+    const colors = [
+      'from-pink-400 to-purple-400',
+      'from-blue-400 to-cyan-400', 
+      'from-green-400 to-teal-400',
+      'from-yellow-400 to-orange-400',
+      'from-purple-400 to-pink-400',
+      'from-red-400 to-pink-400',
+      'from-teal-400 to-blue-400',
+      'from-indigo-400 to-purple-400',
+      'from-gray-400 to-gray-600',
+      'from-emerald-400 to-green-400',
+      'from-rose-400 to-red-400',
+      'from-amber-400 to-orange-400',
+      'from-sky-400 to-cyan-400',
+      'from-violet-400 to-purple-400',
+      'from-lime-400 to-green-400',
+      'from-fuchsia-400 to-pink-400'
+    ];
+    
+    // Use name hash to get consistent color for each user
+    const hash = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    return colors[hash % colors.length];
+  };
+
+  const formatLastSeen = (date: Date): string => {
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    
+    if (diffHours < 1) return 'Online';
+    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffDays < 7) return `${diffDays}d ago`;
+    if (diffDays < 30) return `${Math.floor(diffDays / 7)}w ago`;
+    return `${Math.floor(diffDays / 30)}mo ago`;
+  };
   
   const [posts, setPosts] = useState<Post[]>([
     {
@@ -494,7 +592,7 @@ export default function ScoopApp() {
                     <div className="text-xs text-gray-500">Reviews</div>
                   </div>
                   <div>
-                    <div className="text-xl font-bold text-cyan-600">89</div>
+                    <div className="text-xl font-bold text-cyan-600">{currentUser?.connectionCount || 0}</div>
                     <div className="text-xs text-gray-500">Connections</div>
                   </div>
                   <div>
@@ -685,23 +783,37 @@ export default function ScoopApp() {
                   <input
                     type="text"
                     placeholder="Search friends..."
+                    value={friendsSearchQuery}
+                    onChange={(e) => setFriendsSearchQuery(e.target.value)}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
                   />
                 </div>
                 
                 {/* Friend Categories */}
                 <div className="flex space-x-2 mb-4">
-                  <button className="px-3 py-1 rounded-full text-sm bg-cyan-400 text-white">
-                    All (89)
+                  <button 
+                    onClick={() => setFriendsFilter('all')}
+                    className={`px-3 py-1 rounded-full text-sm ${
+                      friendsFilter === 'all' ? 'bg-cyan-400 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                  >
+                    All ({userFriends.length})
                   </button>
-                  <button className="px-3 py-1 rounded-full text-sm bg-gray-200 text-gray-700 hover:bg-gray-300">
-                    Reciprocal (23)
+                  <button 
+                    onClick={() => setFriendsFilter('reciprocal')}
+                    className={`px-3 py-1 rounded-full text-sm ${
+                      friendsFilter === 'reciprocal' ? 'bg-cyan-400 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                  >
+                    Reciprocal ({userFriends.filter(f => f.connectionCount > 20).length})
                   </button>
-                  <button className="px-3 py-1 rounded-full text-sm bg-gray-200 text-gray-700 hover:bg-gray-300">
+                  <button 
+                    onClick={() => setFriendsFilter('recent')}
+                    className={`px-3 py-1 rounded-full text-sm ${
+                      friendsFilter === 'recent' ? 'bg-cyan-400 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                  >
                     Most Recent
-                  </button>
-                  <button className="px-3 py-1 rounded-full text-sm bg-gray-200 text-gray-700 hover:bg-gray-300">
-                    Online (12)
                   </button>
                 </div>
               </div>
@@ -709,113 +821,49 @@ export default function ScoopApp() {
               {/* Friends List */}
               <div className="flex-1 overflow-y-auto p-4" style={{ maxHeight: 'calc(100vh - 300px)' }}>
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full flex items-center justify-center text-white font-bold">
-                        SM
+                  {getFilteredFriends().map((friend) => (
+                    <div key={friend.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-12 h-12 bg-gradient-to-r ${getAvatarGradient(friend.name)} rounded-full flex items-center justify-center text-white font-bold`}>
+                          {friend.avatar}
+                        </div>
+                        <div>
+                          <div className="font-medium text-gray-800">{friend.name}</div>
+                          <div className="text-sm text-gray-600">
+                            Trust Score: {friend.trustScore} • {friend.isOnline ? 'Online' : formatLastSeen(friend.lastSeen)}
+                          </div>
+                          <div className="text-xs text-gray-500">{friend.location.city}, {friend.location.state}</div>
+                          {friend.occupation && (
+                            <div className="text-xs text-gray-400">{friend.occupation}</div>
+                          )}
+                        </div>
                       </div>
-                      <div>
-                        <div className="font-medium text-gray-800">Sarah Martinez</div>
-                        <div className="text-sm text-gray-600">Trust Score: 88 • Online</div>
-                        <div className="text-xs text-gray-500">Phoenix, AZ</div>
+                      <div className="flex space-x-2">
+                        <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded-lg text-xs hover:bg-gray-300">
+                          View Profile
+                        </button>
                       </div>
                     </div>
-                    <div className="flex space-x-2">
-                      <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded-lg text-xs hover:bg-gray-300">
-                        View Profile
-                      </button>
-                    </div>
-                  </div>
+                  ))}
                   
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full flex items-center justify-center text-white font-bold">
-                        MJ
-                      </div>
-                      <div>
-                        <div className="font-medium text-gray-800">Mike Johnson</div>
-                        <div className="text-sm text-gray-600">Trust Score: 92 • 2h ago</div>
-                        <div className="text-xs text-gray-500">Tempe, AZ</div>
-                      </div>
+                  {getFilteredFriends().length === 0 && (
+                    <div className="text-center py-8 text-gray-500">
+                      <div className="text-lg mb-2">🔍</div>
+                      <div>No friends found</div>
+                      <div className="text-sm">Try adjusting your search or filters</div>
                     </div>
-                    <div className="flex space-x-2">
-                      <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded-lg text-xs hover:bg-gray-300">
-                        View Profile
-                      </button>
-                    </div>
-                  </div>
+                  )}
                   
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 bg-gradient-to-r from-green-400 to-teal-400 rounded-full flex items-center justify-center text-white font-bold">
-                        ED
-                      </div>
-                      <div>
-                        <div className="font-medium text-gray-800">Emma Davis</div>
-                        <div className="text-sm text-gray-600">Trust Score: 85 • Online</div>
-                        <div className="text-xs text-gray-500">Scottsdale, AZ</div>
-                      </div>
+                  {getFilteredFriends().length > 0 && (
+                    <div className="text-center py-4 text-sm text-gray-500">
+                      Showing {getFilteredFriends().length} of {userFriends.length} friends
+                      {networkStats && (
+                        <div className="mt-2 text-xs">
+                          Network: {networkStats.totalUsers} users, {networkStats.avgConnections} avg connections
+                        </div>
+                      )}
                     </div>
-                    <div className="flex space-x-2">
-                      <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded-lg text-xs hover:bg-gray-300">
-                        View Profile
-                      </button>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center text-white font-bold">
-                        DK
-                      </div>
-                      <div>
-                        <div className="font-medium text-gray-800">David Kim</div>
-                        <div className="text-sm text-gray-600">Trust Score: 90 • 1d ago</div>
-                        <div className="text-xs text-gray-500">Mesa, AZ</div>
-                      </div>
-                    </div>
-                    <div className="flex space-x-2">
-                      <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded-lg text-xs hover:bg-gray-300">
-                        View Profile
-                      </button>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center text-white font-bold">
-                        RB
-                      </div>
-                      <div>
-                        <div className="font-medium text-gray-800">Rachel Brown</div>
-                        <div className="text-sm text-gray-600">Trust Score: 87 • Online</div>
-                        <div className="text-xs text-gray-500">Chandler, AZ</div>
-                      </div>
-                    </div>
-                    <div className="flex space-x-2">
-                      <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded-lg text-xs hover:bg-gray-300">
-                        View Profile
-                      </button>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 bg-gradient-to-r from-red-400 to-pink-400 rounded-full flex items-center justify-center text-white font-bold">
-                        AM
-                      </div>
-                      <div>
-                        <div className="font-medium text-gray-800">Alex Martinez</div>
-                        <div className="text-sm text-gray-600">Trust Score: 89 • 3h ago</div>
-                        <div className="text-xs text-gray-500">Glendale, AZ</div>
-                      </div>
-                    </div>
-                    <div className="flex space-x-2">
-                      <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded-lg text-xs hover:bg-gray-300">
-                        View Profile
-                      </button>
-                    </div>
-                  </div>
+                  )}
                 </div>
               </div>
             </div>
