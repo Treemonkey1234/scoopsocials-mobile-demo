@@ -11,6 +11,7 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({ onClose, onSubmit }
   const [date, setDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [time, setTime] = useState('');
+  const [endTime, setEndTime] = useState('');
   const [location, setLocation] = useState('');
   const [category, setCategory] = useState('Social');
   const [trustRequired, setTrustRequired] = useState(70);
@@ -58,6 +59,7 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({ onClose, onSubmit }
       description: description.trim(),
       date,
       time,
+      endTime: endTime || undefined,
       location: location.trim(),
       category,
       organizer: 'Riesling LeFluuf (Trust: 95)',
@@ -138,14 +140,25 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({ onClose, onSubmit }
                 />
               </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Start Time</label>
-              <input
-                type="time"
-                value={time}
-                onChange={(e) => setTime(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
-              />
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Start Time</label>
+                <input
+                  type="time"
+                  value={time}
+                  onChange={(e) => setTime(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">End Time (Optional)</label>
+                <input
+                  type="time"
+                  value={endTime}
+                  onChange={(e) => setEndTime(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                />
+              </div>
             </div>
           </div>
 

@@ -18,15 +18,18 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ onClose, onSubmit }) 
   const categories = ['Professional', 'Marketplace', 'Academic', 'Social/Events', 'Dating', 'Childcare', 'General'];
   
   const friends = [
-    { id: '1', name: 'Sarah Martinez', trustScore: 88, avatar: '👩' },
-    { id: '2', name: 'Mike Johnson', trustScore: 92, avatar: '👨' },
-    { id: '3', name: 'Emma Davis', trustScore: 85, avatar: '👩' },
-    { id: '4', name: 'David Kim', trustScore: 90, avatar: '👨' },
-    { id: '5', name: 'Rachel Brown', trustScore: 87, avatar: '👩' },
-    { id: '6', name: 'Alex Martinez', trustScore: 89, avatar: '👨' }
+    { id: '1', name: 'Sarah Martinez', trustScore: 88, avatar: '👩', isReciprocal: true },
+    { id: '2', name: 'Mike Johnson', trustScore: 92, avatar: '👨', isReciprocal: true },
+    { id: '3', name: 'Emma Davis', trustScore: 85, avatar: '👩', isReciprocal: false },
+    { id: '4', name: 'David Kim', trustScore: 90, avatar: '👨', isReciprocal: true },
+    { id: '5', name: 'Rachel Brown', trustScore: 87, avatar: '👩', isReciprocal: false },
+    { id: '6', name: 'Alex Martinez', trustScore: 89, avatar: '👨', isReciprocal: true }
   ];
 
-  const [filteredFriends, setFilteredFriends] = useState(friends);
+  // Only show reciprocal friends for posting
+  const reciprocalFriends = friends.filter(friend => friend.isReciprocal);
+
+  const [filteredFriends, setFilteredFriends] = useState(reciprocalFriends);
 
   const handleSubmit = () => {
     if (!content.trim()) {
@@ -77,9 +80,9 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ onClose, onSubmit }) 
   const handleFriendSearch = (searchText: string) => {
     setFriendSearchText(searchText);
     if (searchText.trim() === '') {
-      setFilteredFriends(friends);
+      setFilteredFriends(reciprocalFriends);
     } else {
-      const filtered = friends.filter(friend => 
+      const filtered = reciprocalFriends.filter(friend => 
         friend.name.toLowerCase().includes(searchText.toLowerCase())
       );
       setFilteredFriends(filtered);
@@ -151,12 +154,20 @@ onKeyPress={(e) => {
               </button>
             </div>
             
-            {/* Friend suggestions datalist */}
+            {/* Friend suggestions datalist - only reciprocal friends */}
             <datalist id="friends-datalist">
-              {friends.map((friend) => (
+              {reciprocalFriends.map((friend) => (
                 <option key={friend.id} value={friend.name} />
               ))}
             </datalist>
+            
+            {/* Reciprocal Friends Info */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-2">
+              <div className="flex items-center text-sm text-blue-800">
+                <span className="text-blue-500 mr-2">ℹ️</span>
+                You can only review reciprocal friends (people who follow you back)
+              </div>
+            </div>
           </div>
 
           {/* Content */}

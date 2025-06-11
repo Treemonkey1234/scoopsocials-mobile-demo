@@ -62,6 +62,8 @@ export default function ScoopApp() {
   const [showAttendees, setShowAttendees] = useState(false);
   const [showEventReview, setShowEventReview] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [showInbox, setShowInbox] = useState(false);
+  const [showCreateDropdown, setShowCreateDropdown] = useState(false);
   
   const [posts, setPosts] = useState<Post[]>([
     {
@@ -206,8 +208,6 @@ export default function ScoopApp() {
         ? { ...event, userRSVP: status }
         : event
     ));
-    
-    alert(`You are now marked as "${status}" for this event!`);
   };
   
   const handleViewAttendees = (eventId: string) => {
@@ -265,14 +265,48 @@ export default function ScoopApp() {
                       <p className="text-xs text-cyan-100 opacity-90">Real people, real reviews</p>
                     </div>
                   </div>
-                  <button 
-                    onClick={() => setShowCreatePost(true)}
-                    className="w-12 h-12 bg-white shadow-lg border-2 border-cyan-100 rounded-xl flex items-center justify-center text-cyan-600 text-xl font-bold hover:bg-cyan-50 hover:text-cyan-700 transition-all duration-200 hover:scale-105"
-                  >
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 4v16m8-8H4"></path>
-                    </svg>
-                  </button>
+                  <div className="relative">
+                    <button 
+                      onClick={() => setShowCreateDropdown(!showCreateDropdown)}
+                      className="w-12 h-12 bg-white shadow-lg border-2 border-cyan-100 rounded-xl flex items-center justify-center text-cyan-600 text-xl font-bold hover:bg-cyan-50 hover:text-cyan-700 transition-all duration-200 hover:scale-105"
+                    >
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 4v16m8-8H4"></path>
+                      </svg>
+                    </button>
+                    
+                    {showCreateDropdown && (
+                      <div className="absolute right-0 top-14 bg-white rounded-lg shadow-lg border border-gray-200 py-2 w-40 z-50">
+                        <button
+                          onClick={() => {
+                            setShowCreatePost(true);
+                            setShowCreateDropdown(false);
+                          }}
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          📝 Create Post
+                        </button>
+                        <button
+                          onClick={() => {
+                            setShowCreateEvent(true);
+                            setShowCreateDropdown(false);
+                          }}
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          📅 Create Event
+                        </button>
+                        <button
+                          onClick={() => {
+                            setShowCreateDropdown(false);
+                            alert('Add Friend functionality would open here');
+                          }}
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          👥 Add Friend
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -391,7 +425,13 @@ export default function ScoopApp() {
           {/* Profile Screen */}
           {currentScreen === 'profile' && (
             <div className="h-full bg-white">
-              <div className="bg-gradient-to-r from-cyan-400 to-blue-400 p-6 text-center text-white">
+              <div className="bg-gradient-to-r from-cyan-400 to-blue-400 p-6 text-center text-white relative">
+                <button 
+                  onClick={() => setShowInbox(true)}
+                  className="absolute top-4 right-4 bg-white bg-opacity-20 p-2 rounded-full hover:bg-opacity-30 transition-colors"
+                >
+                  <span className="text-white text-lg">📨</span>
+                </button>
                 <div className="w-20 h-20 bg-white rounded-full mx-auto mb-4 flex items-center justify-center">
                   <span className="text-cyan-600 text-2xl">👤</span>
                 </div>
@@ -431,20 +471,20 @@ export default function ScoopApp() {
                       Manage
                     </button>
                   </div>
-                  <div className="flex space-x-2 mb-4">
-                    <div className="w-8 h-8 bg-blue-400 rounded-lg flex items-center justify-center text-white text-sm p-1.5">
+                  <div className="flex justify-between mb-4">
+                    <div className="w-10 h-10 bg-blue-400 rounded-lg flex items-center justify-center text-white text-sm p-2">
                       <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/twitter.svg" alt="Twitter" className="w-full h-full filter invert" />
                     </div>
-                    <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white text-sm p-1.5">
+                    <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white text-sm p-2">
                       <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg" alt="LinkedIn" className="w-full h-full filter invert" />
                     </div>
-                    <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center text-white text-sm p-1.5">
+                    <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center text-white text-sm p-2">
                       <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg" alt="GitHub" className="w-full h-full filter invert" />
                     </div>
-                    <div className="w-8 h-8 bg-pink-500 rounded-lg flex items-center justify-center text-white text-sm p-1.5">
+                    <div className="w-10 h-10 bg-pink-500 rounded-lg flex items-center justify-center text-white text-sm p-2">
                       <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/instagram.svg" alt="Instagram" className="w-full h-full filter invert" />
                     </div>
-                    <div className="w-8 h-8 bg-gray-300 rounded-lg flex items-center justify-center text-gray-500 text-lg">+</div>
+                    <div className="w-10 h-10 bg-gray-300 rounded-lg flex items-center justify-center text-gray-500 text-lg">+</div>
                   </div>
                 </div>
                 
@@ -492,7 +532,7 @@ export default function ScoopApp() {
                 </div>
                 
                 {/* Tab Content */}
-                <div className="h-32 overflow-y-auto">
+                <div className="overflow-y-auto" style={{ height: 'calc(100vh - 500px)', minHeight: '200px' }}>
                   {profileTab === 'posts' && (
                     <div className="space-y-3">
                       <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
@@ -595,9 +635,49 @@ export default function ScoopApp() {
               <div className="p-4 border-b border-gray-200">
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-xl font-bold">Friends</h2>
-                  <button className="bg-cyan-500 text-white px-3 py-1 rounded-lg text-sm font-medium hover:bg-cyan-600 transition-colors">
-                    + Add Friend
-                  </button>
+                  <div className="relative">
+                    <button 
+                      onClick={() => setShowCreateDropdown(!showCreateDropdown)}
+                      className="bg-cyan-500 text-white px-3 py-1 rounded-lg text-sm font-medium hover:bg-cyan-600 transition-colors flex items-center"
+                    >
+                      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path>
+                      </svg>
+                      Create
+                    </button>
+                    
+                    {showCreateDropdown && (
+                      <div className="absolute right-0 top-10 bg-white rounded-lg shadow-lg border border-gray-200 py-2 w-40 z-50">
+                        <button
+                          onClick={() => {
+                            setShowCreatePost(true);
+                            setShowCreateDropdown(false);
+                          }}
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          📝 Create Post
+                        </button>
+                        <button
+                          onClick={() => {
+                            setShowCreateEvent(true);
+                            setShowCreateDropdown(false);
+                          }}
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          📅 Create Event
+                        </button>
+                        <button
+                          onClick={() => {
+                            setShowCreateDropdown(false);
+                            alert('Add Friend functionality would open here');
+                          }}
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          👥 Add Friend
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 
                 {/* Search Bar */}
@@ -615,10 +695,13 @@ export default function ScoopApp() {
                     All (89)
                   </button>
                   <button className="px-3 py-1 rounded-full text-sm bg-gray-200 text-gray-700 hover:bg-gray-300">
-                    Online (12)
+                    Reciprocal (23)
                   </button>
                   <button className="px-3 py-1 rounded-full text-sm bg-gray-200 text-gray-700 hover:bg-gray-300">
-                    Nearby (7)
+                    Most Recent
+                  </button>
+                  <button className="px-3 py-1 rounded-full text-sm bg-gray-200 text-gray-700 hover:bg-gray-300">
+                    Online (12)
                   </button>
                 </div>
               </div>
@@ -634,15 +717,12 @@ export default function ScoopApp() {
                       <div>
                         <div className="font-medium text-gray-800">Sarah Martinez</div>
                         <div className="text-sm text-gray-600">Trust Score: 88 • Online</div>
-                        <div className="text-xs text-gray-500">Phoenix, AZ • 2.3 miles away</div>
+                        <div className="text-xs text-gray-500">Phoenix, AZ</div>
                       </div>
                     </div>
                     <div className="flex space-x-2">
-                      <button className="bg-cyan-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-cyan-600">
-                        Message
-                      </button>
                       <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded-lg text-xs hover:bg-gray-300">
-                        View
+                        View Profile
                       </button>
                     </div>
                   </div>
@@ -655,15 +735,12 @@ export default function ScoopApp() {
                       <div>
                         <div className="font-medium text-gray-800">Mike Johnson</div>
                         <div className="text-sm text-gray-600">Trust Score: 92 • 2h ago</div>
-                        <div className="text-xs text-gray-500">Tempe, AZ • 5.1 miles away</div>
+                        <div className="text-xs text-gray-500">Tempe, AZ</div>
                       </div>
                     </div>
                     <div className="flex space-x-2">
-                      <button className="bg-cyan-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-cyan-600">
-                        Message
-                      </button>
                       <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded-lg text-xs hover:bg-gray-300">
-                        View
+                        View Profile
                       </button>
                     </div>
                   </div>
@@ -676,15 +753,12 @@ export default function ScoopApp() {
                       <div>
                         <div className="font-medium text-gray-800">Emma Davis</div>
                         <div className="text-sm text-gray-600">Trust Score: 85 • Online</div>
-                        <div className="text-xs text-gray-500">Scottsdale, AZ • 8.7 miles away</div>
+                        <div className="text-xs text-gray-500">Scottsdale, AZ</div>
                       </div>
                     </div>
                     <div className="flex space-x-2">
-                      <button className="bg-cyan-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-cyan-600">
-                        Message
-                      </button>
                       <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded-lg text-xs hover:bg-gray-300">
-                        View
+                        View Profile
                       </button>
                     </div>
                   </div>
@@ -697,15 +771,12 @@ export default function ScoopApp() {
                       <div>
                         <div className="font-medium text-gray-800">David Kim</div>
                         <div className="text-sm text-gray-600">Trust Score: 90 • 1d ago</div>
-                        <div className="text-xs text-gray-500">Mesa, AZ • 12.3 miles away</div>
+                        <div className="text-xs text-gray-500">Mesa, AZ</div>
                       </div>
                     </div>
                     <div className="flex space-x-2">
-                      <button className="bg-cyan-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-cyan-600">
-                        Message
-                      </button>
                       <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded-lg text-xs hover:bg-gray-300">
-                        View
+                        View Profile
                       </button>
                     </div>
                   </div>
@@ -718,15 +789,12 @@ export default function ScoopApp() {
                       <div>
                         <div className="font-medium text-gray-800">Rachel Brown</div>
                         <div className="text-sm text-gray-600">Trust Score: 87 • Online</div>
-                        <div className="text-xs text-gray-500">Chandler, AZ • 15.2 miles away</div>
+                        <div className="text-xs text-gray-500">Chandler, AZ</div>
                       </div>
                     </div>
                     <div className="flex space-x-2">
-                      <button className="bg-cyan-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-cyan-600">
-                        Message
-                      </button>
                       <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded-lg text-xs hover:bg-gray-300">
-                        View
+                        View Profile
                       </button>
                     </div>
                   </div>
@@ -739,15 +807,12 @@ export default function ScoopApp() {
                       <div>
                         <div className="font-medium text-gray-800">Alex Martinez</div>
                         <div className="text-sm text-gray-600">Trust Score: 89 • 3h ago</div>
-                        <div className="text-xs text-gray-500">Glendale, AZ • 18.9 miles away</div>
+                        <div className="text-xs text-gray-500">Glendale, AZ</div>
                       </div>
                     </div>
                     <div className="flex space-x-2">
-                      <button className="bg-cyan-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-cyan-600">
-                        Message
-                      </button>
                       <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded-lg text-xs hover:bg-gray-300">
-                        View
+                        View Profile
                       </button>
                     </div>
                   </div>
@@ -763,12 +828,49 @@ export default function ScoopApp() {
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-xl font-bold">Local Events</h2>
                   <div className="flex items-center space-x-2">
-                    <button 
-                      onClick={() => setShowCreateEvent(true)}
-                      className="bg-cyan-500 text-white px-3 py-1 rounded-lg text-sm font-medium hover:bg-cyan-600 transition-colors"
-                    >
-                      + Create
-                    </button>
+                    <div className="relative">
+                      <button 
+                        onClick={() => setShowCreateDropdown(!showCreateDropdown)}
+                        className="bg-cyan-500 text-white px-3 py-1 rounded-lg text-sm font-medium hover:bg-cyan-600 transition-colors flex items-center"
+                      >
+                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        Create
+                      </button>
+                      
+                      {showCreateDropdown && (
+                        <div className="absolute right-0 top-10 bg-white rounded-lg shadow-lg border border-gray-200 py-2 w-40 z-50">
+                          <button
+                            onClick={() => {
+                              setShowCreatePost(true);
+                              setShowCreateDropdown(false);
+                            }}
+                            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          >
+                            📝 Create Post
+                          </button>
+                          <button
+                            onClick={() => {
+                              setShowCreateEvent(true);
+                              setShowCreateDropdown(false);
+                            }}
+                            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          >
+                            📅 Create Event
+                          </button>
+                          <button
+                            onClick={() => {
+                              setShowCreateDropdown(false);
+                              alert('Add Friend functionality would open here');
+                            }}
+                            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          >
+                            👥 Add Friend
+                          </button>
+                        </div>
+                      )}
+                    </div>
                     <button className="text-cyan-600 text-sm">📍 Phoenix, AZ</button>
                   </div>
                 </div>
@@ -801,7 +903,7 @@ export default function ScoopApp() {
                 </div>
               </div>
               
-              <div className="flex-1 overflow-y-auto p-4" style={{ maxHeight: 'calc(100vh - 300px)' }}>
+              <div className="flex-1 overflow-y-auto p-4" style={{ maxHeight: 'calc(100vh - 200px)' }}>
                 <div className="space-y-3">
                   
                   {eventFilter === 'upcoming' && events.filter(event => event.date === 'Tomorrow' || event.date === 'Saturday' || event.date === 'Sunday').map((event) => (
@@ -943,7 +1045,7 @@ export default function ScoopApp() {
                           <div className="flex-1">
                             <h3 className="font-bold text-lg">Photography Meetup</h3>
                             <p className="text-sm opacity-90">Next Friday, 5:00 PM - 8:00 PM</p>
-                            <p className="text-xs opacity-75">Papago Park • 5 miles away</p>
+                            <p className="text-xs opacity-75">Papago Park</p>
                             <div className="flex items-center space-x-2 mt-1">
                               <span className="inline-block bg-orange-200 text-orange-800 px-2 py-1 rounded-full text-xs font-medium">New Discovery</span>
                               <span className="inline-block bg-blue-200 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">Public</span>
@@ -991,7 +1093,7 @@ export default function ScoopApp() {
                           <div className="flex-1">
                             <h3 className="font-bold text-lg">Book Club Discussion</h3>
                             <p className="text-sm opacity-90">Next Wednesday, 7:30 PM - 9:30 PM</p>
-                            <p className="text-xs opacity-75">Central Library • 3 miles away</p>
+                            <p className="text-xs opacity-75">Central Library</p>
                             <div className="flex items-center space-x-2 mt-1">
                               <span className="inline-block bg-pink-200 text-pink-800 px-2 py-1 rounded-full text-xs font-medium">Recommended</span>
                               <span className="inline-block bg-purple-200 text-purple-800 px-2 py-1 rounded-full text-xs font-medium">Private</span>
@@ -1177,6 +1279,180 @@ export default function ScoopApp() {
             eventId={selectedEvent.id}
             onSubmitReview={handleSubmitEventReview}
           />
+        )}
+        
+        {showInbox && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-lg w-full max-w-sm max-h-[85vh] flex flex-col">
+              {/* Header */}
+              <div className="flex justify-between items-center p-4 border-b border-gray-200">
+                <h2 className="text-xl font-bold text-gray-800">Inbox</h2>
+                <button
+                  onClick={() => setShowInbox(false)}
+                  className="text-gray-400 hover:text-gray-600 text-xl font-bold"
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* Filter Tabs */}
+              <div className="flex border-b border-gray-200">
+                <button className="flex-1 py-2 px-3 text-sm font-medium text-cyan-600 border-b-2 border-cyan-600">
+                  All (12)
+                </button>
+                <button className="flex-1 py-2 px-3 text-sm font-medium text-gray-600 hover:text-gray-800">
+                  Events (5)
+                </button>
+                <button className="flex-1 py-2 px-3 text-sm font-medium text-gray-600 hover:text-gray-800">
+                  Posts (4)
+                </button>
+                <button className="flex-1 py-2 px-3 text-sm font-medium text-gray-600 hover:text-gray-800">
+                  Other (3)
+                </button>
+              </div>
+
+              {/* Notifications List */}
+              <div className="flex-1 overflow-y-auto">
+                <div className="divide-y divide-gray-100">
+                  
+                  {/* Friend Request */}
+                  <div className="p-4 hover:bg-gray-50">
+                    <div className="flex items-start space-x-3">
+                      <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm">
+                        👥
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-gray-900">
+                          <span className="font-semibold">Sarah Martinez</span> sent you a friend request
+                        </p>
+                        <p className="text-xs text-gray-500">2 hours ago</p>
+                        <div className="flex space-x-2 mt-2">
+                          <button className="bg-cyan-500 text-white px-3 py-1 rounded text-xs hover:bg-cyan-600">
+                            Accept
+                          </button>
+                          <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded text-xs hover:bg-gray-300">
+                            Decline
+                          </button>
+                        </div>
+                      </div>
+                      <div className="w-2 h-2 bg-cyan-500 rounded-full"></div>
+                    </div>
+                  </div>
+
+                  {/* Event Invitation */}
+                  <div className="p-4 hover:bg-gray-50">
+                    <div className="flex items-start space-x-3">
+                      <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white text-sm">
+                        📅
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-gray-900">
+                          Invited to <span className="font-semibold">"Tech Meetup Phoenix"</span>
+                        </p>
+                        <p className="text-xs text-gray-500">5 hours ago • by Mike Johnson</p>
+                        <div className="flex space-x-2 mt-2">
+                          <button className="bg-green-500 text-white px-3 py-1 rounded text-xs hover:bg-green-600">
+                            Going
+                          </button>
+                          <button className="bg-yellow-500 text-white px-3 py-1 rounded text-xs hover:bg-yellow-600">
+                            Maybe
+                          </button>
+                          <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded text-xs hover:bg-gray-300">
+                            Pass
+                          </button>
+                        </div>
+                      </div>
+                      <div className="w-2 h-2 bg-cyan-500 rounded-full"></div>
+                    </div>
+                  </div>
+
+                  {/* New Review About You */}
+                  <div className="p-4 hover:bg-gray-50">
+                    <div className="flex items-start space-x-3">
+                      <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white text-sm">
+                        ⭐
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-gray-900">
+                          <span className="font-semibold">Emma Davis</span> reviewed you
+                        </p>
+                        <p className="text-xs text-gray-600 mt-1">"Great collaboration on the mobile app project..."</p>
+                        <p className="text-xs text-gray-500">1 day ago</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Reciprocal Friend */}
+                  <div className="p-4 hover:bg-gray-50">
+                    <div className="flex items-start space-x-3">
+                      <div className="w-8 h-8 bg-pink-500 rounded-full flex items-center justify-center text-white text-sm">
+                        💫
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-gray-900">
+                          You and <span className="font-semibold">David Kim</span> are now reciprocal friends!
+                        </p>
+                        <p className="text-xs text-gray-500">2 days ago</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Event Reminder */}
+                  <div className="p-4 hover:bg-gray-50">
+                    <div className="flex items-start space-x-3">
+                      <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white text-sm">
+                        🔔
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-gray-900">
+                          <span className="font-semibold">"Coffee & Code"</span> starts in 1 hour
+                        </p>
+                        <p className="text-xs text-gray-500">3 hours ago</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Profile View */}
+                  <div className="p-4 hover:bg-gray-50">
+                    <div className="flex items-start space-x-3">
+                      <div className="w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center text-white text-sm">
+                        👁️
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-gray-900">
+                          <span className="font-semibold">Alex Martinez</span> viewed your profile
+                        </p>
+                        <p className="text-xs text-gray-500">1 week ago</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Trust Milestone */}
+                  <div className="p-4 hover:bg-gray-50">
+                    <div className="flex items-start space-x-3">
+                      <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-white text-sm">
+                        🏆
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-gray-900">
+                          Congratulations! You've reached <span className="font-semibold">Trust Score 95</span>
+                        </p>
+                        <p className="text-xs text-gray-500">1 week ago</p>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              {/* Footer */}
+              <div className="p-4 border-t border-gray-200">
+                <button className="w-full text-center text-sm text-cyan-600 hover:text-cyan-700">
+                  Mark All as Read
+                </button>
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </div>
