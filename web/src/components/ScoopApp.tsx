@@ -74,6 +74,93 @@ export default function ScoopApp() {
   const [friendsSearchQuery, setFriendsSearchQuery] = useState('');
   const [networkStats, setNetworkStats] = useState<any>(null);
 
+  // Inbox state
+  const [inboxTab, setInboxTab] = useState('all');
+  const [notifications, setNotifications] = useState([
+    {
+      id: '1',
+      type: 'friend_request',
+      from: 'Sarah Martinez',
+      message: 'sent you a friend request',
+      timestamp: '2 hours ago',
+      isRead: false,
+      actions: ['accept', 'decline']
+    },
+    {
+      id: '2',
+      type: 'event_invitation',
+      from: 'Mike Johnson',
+      message: 'Invited to "Tech Meetup Phoenix"',
+      timestamp: '5 hours ago',
+      isRead: false,
+      actions: ['going', 'maybe', 'pass']
+    },
+    {
+      id: '3',
+      type: 'post_mention',
+      from: 'Emma Davis',
+      message: 'reviewed you',
+      content: 'Great collaboration on the mobile app project...',
+      timestamp: '1 day ago',
+      isRead: true,
+      actions: []
+    },
+    {
+      id: '4',
+      type: 'friend_reciprocal',
+      from: 'David Kim',
+      message: 'You and David Kim are now reciprocal friends!',
+      timestamp: '2 days ago',
+      isRead: true,
+      actions: []
+    },
+    {
+      id: '5',
+      type: 'event_reminder',
+      from: 'System',
+      message: '"Coffee & Code" starts in 1 hour',
+      timestamp: '3 hours ago',
+      isRead: false,
+      actions: []
+    },
+    {
+      id: '6',
+      type: 'profile_view',
+      from: 'Alex Martinez',
+      message: 'viewed your profile',
+      timestamp: '1 week ago',
+      isRead: true,
+      actions: []
+    },
+    {
+      id: '7',
+      type: 'trust_milestone',
+      from: 'System',
+      message: 'Congratulations! You\'ve reached Trust Score 95',
+      timestamp: '1 week ago',
+      isRead: true,
+      actions: []
+    },
+    {
+      id: '8',
+      type: 'event_invitation',
+      from: 'Rachel Brown',
+      message: 'Invited to "Book Club Discussion"',
+      timestamp: '1 day ago',
+      isRead: false,
+      actions: ['going', 'maybe', 'pass']
+    },
+    {
+      id: '9',
+      type: 'friend_request',
+      from: 'Kevin Patel',
+      message: 'sent you a friend request',
+      timestamp: '3 days ago',
+      isRead: false,
+      actions: ['accept', 'decline']
+    }
+  ]);
+
   // Initialize fake user network
   useEffect(() => {
     try {
@@ -161,6 +248,85 @@ export default function ScoopApp() {
     if (diffDays < 7) return `${diffDays}d ago`;
     if (diffDays < 30) return `${Math.floor(diffDays / 7)}w ago`;
     return `${Math.floor(diffDays / 30)}mo ago`;
+  };
+
+  // Inbox functionality
+  const getFilteredNotifications = () => {
+    switch (inboxTab) {
+      case 'events':
+        return notifications.filter(n => n.type === 'event_invitation' || n.type === 'event_reminder');
+      case 'posts':
+        return notifications.filter(n => n.type === 'post_mention' || n.type === 'trust_milestone');
+      case 'other':
+        return notifications.filter(n => n.type === 'friend_request' || n.type === 'friend_reciprocal' || n.type === 'profile_view');
+      default:
+        return notifications;
+    }
+  };
+
+  const getNotificationCounts = () => {
+    const all = notifications.length;
+    const events = notifications.filter(n => n.type === 'event_invitation' || n.type === 'event_reminder').length;
+    const posts = notifications.filter(n => n.type === 'post_mention' || n.type === 'trust_milestone').length;
+    const other = notifications.filter(n => n.type === 'friend_request' || n.type === 'friend_reciprocal' || n.type === 'profile_view').length;
+    return { all, events, posts, other };
+  };
+
+  const handleNotificationAction = (notificationId: string, action: string) => {
+    const notification = notifications.find(n => n.id === notificationId);
+    if (!notification) return;
+
+    let message = '';
+    
+    switch (action) {
+      case 'accept':
+        message = `✅ Accepted friend request from ${notification.from}`;
+        break;
+      case 'decline':
+        message = `❌ Declined friend request from ${notification.from}`;
+        break;
+      case 'going':
+        message = `✅ RSVP'd "Going" to the event`;
+        break;
+      case 'maybe':
+        message = `🤔 RSVP'd "Maybe" to the event`;
+        break;
+      case 'pass':
+        message = `❌ Passed on the event`;
+        break;
+    }
+
+    // Remove the notification after action
+    setNotifications(prev => prev.filter(n => n.id !== notificationId));
+    
+    // Show feedback
+    alert(message);
+  };
+
+  const markAllAsRead = () => {
+    setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+    alert('✅ All notifications marked as read');
+  };
+
+  const getNotificationIcon = (type: string) => {
+    switch (type) {
+      case 'friend_request':
+        return { icon: '👥', color: 'bg-blue-500' };
+      case 'event_invitation':
+        return { icon: '📅', color: 'bg-green-500' };
+      case 'post_mention':
+        return { icon: '⭐', color: 'bg-purple-500' };
+      case 'friend_reciprocal':
+        return { icon: '💫', color: 'bg-pink-500' };
+      case 'event_reminder':
+        return { icon: '🔔', color: 'bg-orange-500' };
+      case 'profile_view':
+        return { icon: '👁️', color: 'bg-indigo-500' };
+      case 'trust_milestone':
+        return { icon: '🏆', color: 'bg-yellow-500' };
+      default:
+        return { icon: '📢', color: 'bg-gray-500' };
+    }
   };
   
   const [posts, setPosts] = useState<Post[]>([
@@ -1345,17 +1511,37 @@ export default function ScoopApp() {
 
               {/* Filter Tabs */}
               <div className="flex border-b border-gray-200">
-                <button className="flex-1 py-2 px-3 text-sm font-medium text-cyan-600 border-b-2 border-cyan-600">
-                  All (12)
+                <button 
+                  onClick={() => setInboxTab('all')}
+                  className={`flex-1 py-2 px-3 text-sm font-medium ${
+                    inboxTab === 'all' ? 'text-cyan-600 border-b-2 border-cyan-600' : 'text-gray-600 hover:text-gray-800'
+                  }`}
+                >
+                  All ({getNotificationCounts().all})
                 </button>
-                <button className="flex-1 py-2 px-3 text-sm font-medium text-gray-600 hover:text-gray-800">
-                  Events (5)
+                <button 
+                  onClick={() => setInboxTab('events')}
+                  className={`flex-1 py-2 px-3 text-sm font-medium ${
+                    inboxTab === 'events' ? 'text-cyan-600 border-b-2 border-cyan-600' : 'text-gray-600 hover:text-gray-800'
+                  }`}
+                >
+                  Events ({getNotificationCounts().events})
                 </button>
-                <button className="flex-1 py-2 px-3 text-sm font-medium text-gray-600 hover:text-gray-800">
-                  Posts (4)
+                <button 
+                  onClick={() => setInboxTab('posts')}
+                  className={`flex-1 py-2 px-3 text-sm font-medium ${
+                    inboxTab === 'posts' ? 'text-cyan-600 border-b-2 border-cyan-600' : 'text-gray-600 hover:text-gray-800'
+                  }`}
+                >
+                  Posts ({getNotificationCounts().posts})
                 </button>
-                <button className="flex-1 py-2 px-3 text-sm font-medium text-gray-600 hover:text-gray-800">
-                  Other (3)
+                <button 
+                  onClick={() => setInboxTab('other')}
+                  className={`flex-1 py-2 px-3 text-sm font-medium ${
+                    inboxTab === 'other' ? 'text-cyan-600 border-b-2 border-cyan-600' : 'text-gray-600 hover:text-gray-800'
+                  }`}
+                >
+                  Other ({getNotificationCounts().other})
                 </button>
               </div>
 
@@ -1363,139 +1549,95 @@ export default function ScoopApp() {
               <div className="flex-1 overflow-y-auto">
                 <div className="divide-y divide-gray-100">
                   
-                  {/* Friend Request */}
-                  <div className="p-4 hover:bg-gray-50">
-                    <div className="flex items-start space-x-3">
-                      <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm">
-                        👥
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-gray-900">
-                          <span className="font-semibold">Sarah Martinez</span> sent you a friend request
-                        </p>
-                        <p className="text-xs text-gray-500">2 hours ago</p>
-                        <div className="flex space-x-2 mt-2">
-                          <button className="bg-cyan-500 text-white px-3 py-1 rounded text-xs hover:bg-cyan-600">
-                            Accept
-                          </button>
-                          <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded text-xs hover:bg-gray-300">
-                            Decline
-                          </button>
+                  {getFilteredNotifications().map((notification) => {
+                    const { icon, color } = getNotificationIcon(notification.type);
+                    
+                    return (
+                      <div key={notification.id} className="p-4 hover:bg-gray-50">
+                        <div className="flex items-start space-x-3">
+                          <div className={`w-8 h-8 ${color} rounded-full flex items-center justify-center text-white text-sm`}>
+                            {icon}
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-sm font-medium text-gray-900">
+                              {notification.from !== 'System' && (
+                                <span className="font-semibold">{notification.from}</span>
+                              )}
+                              {notification.from !== 'System' ? ` ${notification.message}` : notification.message}
+                            </p>
+                            {notification.content && (
+                              <p className="text-xs text-gray-600 mt-1">"{notification.content}"</p>
+                            )}
+                            <p className="text-xs text-gray-500">{notification.timestamp}</p>
+                            
+                            {/* Action Buttons */}
+                            {notification.actions.length > 0 && (
+                              <div className="flex space-x-2 mt-2">
+                                {notification.actions.map((action) => {
+                                  let buttonClass = '';
+                                  let buttonText = '';
+                                  
+                                  switch (action) {
+                                    case 'accept':
+                                      buttonClass = 'bg-cyan-500 text-white hover:bg-cyan-600';
+                                      buttonText = 'Accept';
+                                      break;
+                                    case 'decline':
+                                      buttonClass = 'bg-gray-200 text-gray-700 hover:bg-gray-300';
+                                      buttonText = 'Decline';
+                                      break;
+                                    case 'going':
+                                      buttonClass = 'bg-green-500 text-white hover:bg-green-600';
+                                      buttonText = 'Going';
+                                      break;
+                                    case 'maybe':
+                                      buttonClass = 'bg-yellow-500 text-white hover:bg-yellow-600';
+                                      buttonText = 'Maybe';
+                                      break;
+                                    case 'pass':
+                                      buttonClass = 'bg-gray-200 text-gray-700 hover:bg-gray-300';
+                                      buttonText = 'Pass';
+                                      break;
+                                  }
+                                  
+                                  return (
+                                    <button
+                                      key={action}
+                                      onClick={() => handleNotificationAction(notification.id, action)}
+                                      className={`px-3 py-1 rounded text-xs ${buttonClass}`}
+                                    >
+                                      {buttonText}
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            )}
+                          </div>
+                          {!notification.isRead && (
+                            <div className="w-2 h-2 bg-cyan-500 rounded-full"></div>
+                          )}
                         </div>
                       </div>
-                      <div className="w-2 h-2 bg-cyan-500 rounded-full"></div>
+                    );
+                  })}
+                  
+                  {getFilteredNotifications().length === 0 && (
+                    <div className="p-8 text-center text-gray-500">
+                      <div className="text-lg mb-2">📭</div>
+                      <div>No notifications in this category</div>
+                      <div className="text-sm">You're all caught up!</div>
                     </div>
-                  </div>
-
-                  {/* Event Invitation */}
-                  <div className="p-4 hover:bg-gray-50">
-                    <div className="flex items-start space-x-3">
-                      <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white text-sm">
-                        📅
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-gray-900">
-                          Invited to <span className="font-semibold">"Tech Meetup Phoenix"</span>
-                        </p>
-                        <p className="text-xs text-gray-500">5 hours ago • by Mike Johnson</p>
-                        <div className="flex space-x-2 mt-2">
-                          <button className="bg-green-500 text-white px-3 py-1 rounded text-xs hover:bg-green-600">
-                            Going
-                          </button>
-                          <button className="bg-yellow-500 text-white px-3 py-1 rounded text-xs hover:bg-yellow-600">
-                            Maybe
-                          </button>
-                          <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded text-xs hover:bg-gray-300">
-                            Pass
-                          </button>
-                        </div>
-                      </div>
-                      <div className="w-2 h-2 bg-cyan-500 rounded-full"></div>
-                    </div>
-                  </div>
-
-                  {/* New Review About You */}
-                  <div className="p-4 hover:bg-gray-50">
-                    <div className="flex items-start space-x-3">
-                      <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white text-sm">
-                        ⭐
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-gray-900">
-                          <span className="font-semibold">Emma Davis</span> reviewed you
-                        </p>
-                        <p className="text-xs text-gray-600 mt-1">"Great collaboration on the mobile app project..."</p>
-                        <p className="text-xs text-gray-500">1 day ago</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Reciprocal Friend */}
-                  <div className="p-4 hover:bg-gray-50">
-                    <div className="flex items-start space-x-3">
-                      <div className="w-8 h-8 bg-pink-500 rounded-full flex items-center justify-center text-white text-sm">
-                        💫
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-gray-900">
-                          You and <span className="font-semibold">David Kim</span> are now reciprocal friends!
-                        </p>
-                        <p className="text-xs text-gray-500">2 days ago</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Event Reminder */}
-                  <div className="p-4 hover:bg-gray-50">
-                    <div className="flex items-start space-x-3">
-                      <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white text-sm">
-                        🔔
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-gray-900">
-                          <span className="font-semibold">"Coffee & Code"</span> starts in 1 hour
-                        </p>
-                        <p className="text-xs text-gray-500">3 hours ago</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Profile View */}
-                  <div className="p-4 hover:bg-gray-50">
-                    <div className="flex items-start space-x-3">
-                      <div className="w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center text-white text-sm">
-                        👁️
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-gray-900">
-                          <span className="font-semibold">Alex Martinez</span> viewed your profile
-                        </p>
-                        <p className="text-xs text-gray-500">1 week ago</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Trust Milestone */}
-                  <div className="p-4 hover:bg-gray-50">
-                    <div className="flex items-start space-x-3">
-                      <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-white text-sm">
-                        🏆
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-gray-900">
-                          Congratulations! You've reached <span className="font-semibold">Trust Score 95</span>
-                        </p>
-                        <p className="text-xs text-gray-500">1 week ago</p>
-                      </div>
-                    </div>
-                  </div>
+                  )}
 
                 </div>
               </div>
 
               {/* Footer */}
               <div className="p-4 border-t border-gray-200">
-                <button className="w-full text-center text-sm text-cyan-600 hover:text-cyan-700">
+                <button 
+                  onClick={markAllAsRead}
+                  className="w-full text-center text-sm text-cyan-600 hover:text-cyan-700"
+                >
                   Mark All as Read
                 </button>
               </div>
