@@ -937,23 +937,34 @@ export default function ScoopApp() {
 
           {/* Friends Screen */}
           {currentScreen === 'friends' && (
-            <div className="h-full bg-white">
-              <div className="p-4 border-b border-gray-200">
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-xl font-bold">Friends</h2>
+            <div className="h-full flex flex-col" style={{background: 'linear-gradient(135deg, #f0fdff 0%, #e0f7fa 50%, #b2dfdb 100%)'}}>
+              
+              {/* Header */}
+              <div className="px-6 py-4 border-b border-cyan-300 flex-shrink-0 shadow-lg" style={{background: 'linear-gradient(135deg, #0891b2 0%, #0e7490 20%, #155e75 100%)'}}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                      <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <h1 className="text-xl font-bold text-white drop-shadow-md">Friends</h1>
+                      <p className="text-xs text-cyan-100 opacity-90">Your trusted network</p>
+                    </div>
+                  </div>
                   <div className="relative">
                     <button 
                       onClick={() => setShowCreateDropdown(!showCreateDropdown)}
-                      className="bg-cyan-500 text-white px-3 py-1 rounded-lg text-sm font-medium hover:bg-cyan-600 transition-colors flex items-center"
+                      className="w-12 h-12 bg-white shadow-lg border-2 border-cyan-100 rounded-xl flex items-center justify-center text-cyan-600 text-xl font-bold hover:bg-cyan-50 hover:text-cyan-700 transition-all duration-200 hover:scale-105"
                     >
-                      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path>
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 4v16m8-8H4"></path>
                       </svg>
-                      Create
                     </button>
                     
                     {showCreateDropdown && (
-                      <div className="absolute right-0 top-10 bg-white rounded-lg shadow-lg border border-gray-200 py-2 w-40 z-50">
+                      <div className="absolute right-0 top-14 bg-white rounded-lg shadow-lg border border-gray-200 py-2 w-40 z-50">
                         <button
                           onClick={() => {
                             setShowCreatePost(true);
@@ -985,6 +996,11 @@ export default function ScoopApp() {
                     )}
                   </div>
                 </div>
+              </div>
+
+              {/* Friends Content */}
+              <div className="flex-1 overflow-hidden bg-white">
+                <div className="p-4 border-b border-gray-200">
                 
                 {/* Search Bar */}
                 <div className="mb-4">
@@ -1074,62 +1090,79 @@ export default function ScoopApp() {
                   )}
                 </div>
               </div>
+              </div>
             </div>
           )}
 
           {/* Events Screen */}
           {currentScreen === 'groups' && (
-            <div className="h-full bg-white">
-              <div className="p-4 border-b border-gray-200">
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-xl font-bold">Local Events</h2>
-                  <div className="flex items-center space-x-2">
-                    <div className="relative">
-                      <button 
-                        onClick={() => setShowCreateDropdown(!showCreateDropdown)}
-                        className="bg-cyan-500 text-white px-3 py-1 rounded-lg text-sm font-medium hover:bg-cyan-600 transition-colors flex items-center"
-                      >
-                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path>
-                        </svg>
-                        Create
-                      </button>
-                      
-                      {showCreateDropdown && (
-                        <div className="absolute right-0 top-10 bg-white rounded-lg shadow-lg border border-gray-200 py-2 w-40 z-50">
-                          <button
-                            onClick={() => {
-                              setShowCreatePost(true);
-                              setShowCreateDropdown(false);
-                            }}
-                            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          >
-                            📝 Create Post
-                          </button>
-                          <button
-                            onClick={() => {
-                              setShowCreateEvent(true);
-                              setShowCreateDropdown(false);
-                            }}
-                            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          >
-                            📅 Create Event
-                          </button>
-                          <button
-                            onClick={() => {
-                              setShowCreateDropdown(false);
-                              alert('Add Friend functionality would open here');
-                            }}
-                            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          >
-                            👥 Add Friend
-                          </button>
-                        </div>
-                      )}
+            <div className="h-full flex flex-col" style={{background: 'linear-gradient(135deg, #f0fdff 0%, #e0f7fa 50%, #b2dfdb 100%)'}}>
+              
+              {/* Header */}
+              <div className="px-6 py-4 border-b border-cyan-300 flex-shrink-0 shadow-lg" style={{background: 'linear-gradient(135deg, #0891b2 0%, #0e7490 20%, #155e75 100%)'}}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                      <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd"></path>
+                      </svg>
                     </div>
-                    <button className="text-cyan-600 text-sm">📍 Phoenix, AZ</button>
+                    <div>
+                      <h1 className="text-xl font-bold text-white drop-shadow-md">Local Events</h1>
+                      <p className="text-xs text-cyan-100 opacity-90">Discover and connect</p>
+                    </div>
+                  </div>
+                  <div className="relative">
+                    <button 
+                      onClick={() => setShowCreateDropdown(!showCreateDropdown)}
+                      className="w-12 h-12 bg-white shadow-lg border-2 border-cyan-100 rounded-xl flex items-center justify-center text-cyan-600 text-xl font-bold hover:bg-cyan-50 hover:text-cyan-700 transition-all duration-200 hover:scale-105"
+                    >
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 4v16m8-8H4"></path>
+                      </svg>
+                    </button>
+                    
+                    {showCreateDropdown && (
+                      <div className="absolute right-0 top-14 bg-white rounded-lg shadow-lg border border-gray-200 py-2 w-40 z-50">
+                        <button
+                          onClick={() => {
+                            setShowCreatePost(true);
+                            setShowCreateDropdown(false);
+                          }}
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          📝 Create Post
+                        </button>
+                        <button
+                          onClick={() => {
+                            setShowCreateEvent(true);
+                            setShowCreateDropdown(false);
+                          }}
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          📅 Create Event
+                        </button>
+                        <button
+                          onClick={() => {
+                            setShowCreateDropdown(false);
+                            alert('Add Friend functionality would open here');
+                          }}
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          👥 Add Friend
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
+              </div>
+
+              {/* Events Content */}
+              <div className="flex-1 overflow-hidden bg-white">
+                <div className="p-4 border-b border-gray-200">
+                  <div className="flex items-center justify-between mb-4">
+                    <button className="text-cyan-600 text-sm">📍 Phoenix, AZ</button>
+                  </div>
                 
                 <div className="flex space-x-2 mb-4 overflow-x-auto">
                   <button 
@@ -1157,9 +1190,9 @@ export default function ScoopApp() {
                     Discover
                   </button>
                 </div>
-              </div>
-              
-              <div className="flex-1 overflow-y-auto p-4" style={{ maxHeight: 'calc(100vh - 200px)' }}>
+                </div>
+                
+                <div className="flex-1 overflow-y-auto p-4" style={{ maxHeight: 'calc(100vh - 200px)' }}>
                 <div className="space-y-3">
                   
                   {eventFilter === 'upcoming' && events.filter(event => event.date === 'Tomorrow' || event.date === 'Saturday' || event.date === 'Sunday').map((event) => (
@@ -1394,6 +1427,7 @@ export default function ScoopApp() {
                       </div>
                     </div>
                   )}
+                </div>
                 </div>
               </div>
             </div>
