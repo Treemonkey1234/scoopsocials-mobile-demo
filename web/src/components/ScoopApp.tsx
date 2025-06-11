@@ -58,6 +58,7 @@ export default function ScoopApp() {
   const [showCreateEvent, setShowCreateEvent] = useState(false);
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const [profileTab, setProfileTab] = useState('posts');
+  const [isProfileTabExpanded, setIsProfileTabExpanded] = useState(false);
   const [eventFilter, setEventFilter] = useState('upcoming');
   const [showEventDetails, setShowEventDetails] = useState(false);
   const [showAttendees, setShowAttendees] = useState(false);
@@ -860,29 +861,83 @@ export default function ScoopApp() {
 
                 {/* Social Accounts Preview */}
                 <div className="mb-4">
-                  <div className="flex justify-between items-center mb-2">
+                  <div className="flex justify-between items-center mb-3">
                     <h3 className="font-semibold text-gray-800">Social Accounts</h3>
                     <button 
                       onClick={() => setShowSocialAccounts(true)}
                       className="text-cyan-600 text-sm hover:text-cyan-700"
                     >
-                      Manage
+                      View all
                     </button>
                   </div>
-                  <div className="flex justify-between mb-4">
-                    <div className="w-10 h-10 bg-blue-400 rounded-lg flex items-center justify-center text-white text-sm p-2">
-                      <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/twitter.svg" alt="Twitter" className="w-full h-full filter invert" />
+                  <div className="space-y-3 mb-4">
+                    {/* Twitter */}
+                    <div className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-blue-400 rounded-lg flex items-center justify-center text-white text-sm p-1.5 relative">
+                          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/twitter.svg" alt="Twitter" className="w-full h-full filter invert" />
+                          <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                            <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
+                            </svg>
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-sm font-medium text-gray-800">Twitter</div>
+                          <div className="text-xs text-gray-500">Connected since Mar 2024</div>
+                        </div>
+                      </div>
                     </div>
-                    <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white text-sm p-2">
-                      <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg" alt="LinkedIn" className="w-full h-full filter invert" />
+                    
+                    {/* LinkedIn */}
+                    <div className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white text-sm p-1.5 relative">
+                          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg" alt="LinkedIn" className="w-full h-full filter invert" />
+                          <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                            <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
+                            </svg>
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-sm font-medium text-gray-800">LinkedIn</div>
+                          <div className="text-xs text-gray-500">Connected since Jan 2024</div>
+                        </div>
+                      </div>
                     </div>
-                    <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center text-white text-sm p-2">
-                      <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg" alt="GitHub" className="w-full h-full filter invert" />
+                    
+                    {/* GitHub */}
+                    <div className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center text-white text-sm p-1.5 relative">
+                          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg" alt="GitHub" className="w-full h-full filter invert" />
+                          <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                            <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
+                            </svg>
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-sm font-medium text-gray-800">GitHub</div>
+                          <div className="text-xs text-gray-500">Connected since Feb 2024</div>
+                        </div>
+                      </div>
                     </div>
-                    <div className="w-10 h-10 bg-pink-500 rounded-lg flex items-center justify-center text-white text-sm p-2">
-                      <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/instagram.svg" alt="Instagram" className="w-full h-full filter invert" />
-                    </div>
-                    <div className="w-10 h-10 bg-gray-300 rounded-lg flex items-center justify-center text-gray-500 text-lg">+</div>
+                    
+                    {/* Add Account Button */}
+                    <button 
+                      onClick={() => {
+                        setShowSocialAccounts(true);
+                        // Auto-direct to add section (we'll implement this in the modal)
+                      }}
+                      className="flex items-center justify-center w-full p-2 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 hover:border-cyan-400 hover:bg-cyan-50 transition-colors"
+                    >
+                      <div className="flex items-center space-x-2 text-gray-600 hover:text-cyan-600">
+                        <div className="w-6 h-6 rounded-full bg-gray-400 flex items-center justify-center text-white text-sm">+</div>
+                        <span className="text-sm font-medium">Add account</span>
+                      </div>
+                    </button>
                   </div>
                 </div>
                 
@@ -904,33 +959,61 @@ export default function ScoopApp() {
                 {/* Profile Tabs */}
                 <div className="flex space-x-1 mb-4 bg-gray-100 rounded-lg p-1">
                   <button 
-                    onClick={() => setProfileTab('posts')}
+                    onClick={() => {
+                      if (profileTab === 'posts') {
+                        setIsProfileTabExpanded(!isProfileTabExpanded);
+                      } else {
+                        setProfileTab('posts');
+                        setIsProfileTabExpanded(false);
+                      }
+                    }}
                     className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
                       profileTab === 'posts' ? 'bg-white text-cyan-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
                     }`}
                   >
-                    Posts
+                    Posts {profileTab === 'posts' && (isProfileTabExpanded ? '▼' : '▲')}
                   </button>
                   <button 
-                    onClick={() => setProfileTab('groups')}
+                    onClick={() => {
+                      if (profileTab === 'groups') {
+                        setIsProfileTabExpanded(!isProfileTabExpanded);
+                      } else {
+                        setProfileTab('groups');
+                        setIsProfileTabExpanded(false);
+                      }
+                    }}
                     className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
                       profileTab === 'groups' ? 'bg-white text-cyan-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
                     }`}
                   >
-                    Groups
+                    Groups {profileTab === 'groups' && (isProfileTabExpanded ? '▼' : '▲')}
                   </button>
                   <button 
-                    onClick={() => setProfileTab('likes')}
+                    onClick={() => {
+                      if (profileTab === 'likes') {
+                        setIsProfileTabExpanded(!isProfileTabExpanded);
+                      } else {
+                        setProfileTab('likes');
+                        setIsProfileTabExpanded(false);
+                      }
+                    }}
                     className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
                       profileTab === 'likes' ? 'bg-white text-cyan-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
                     }`}
                   >
-                    Likes
+                    Likes {profileTab === 'likes' && (isProfileTabExpanded ? '▼' : '▲')}
                   </button>
                 </div>
                 
                 {/* Tab Content */}
-                <div className="overflow-y-auto" style={{ height: 'calc(100vh - 500px)', minHeight: '200px' }}>
+                <div 
+                  className="overflow-y-auto transition-all duration-300 ease-in-out" 
+                  style={{ 
+                    height: isProfileTabExpanded ? 'calc(100vh - 350px)' : 'calc(100vh - 500px)', 
+                    minHeight: isProfileTabExpanded ? '400px' : '200px',
+                    maxHeight: isProfileTabExpanded ? '500px' : '300px'
+                  }}
+                >
                   {profileTab === 'posts' && (
                     <div className="space-y-3">
                       <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
