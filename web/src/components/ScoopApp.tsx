@@ -692,10 +692,52 @@ export default function ScoopApp() {
               <div className="bg-gradient-to-r from-cyan-400 to-blue-400 p-6 text-center text-white relative">
                 <button 
                   onClick={() => setShowInbox(true)}
-                  className="absolute top-4 right-4 bg-white bg-opacity-20 p-2 rounded-full hover:bg-opacity-30 transition-colors"
+                  className="absolute top-4 left-4 bg-white bg-opacity-20 p-2 rounded-full hover:bg-opacity-30 transition-colors"
                 >
                   <span className="text-white text-lg">📨</span>
                 </button>
+                <div className="absolute top-4 right-4">
+                  <button 
+                    onClick={() => setShowCreateDropdown(!showCreateDropdown)}
+                    className="bg-white bg-opacity-20 p-2 rounded-full hover:bg-opacity-30 transition-colors"
+                  >
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                  </button>
+                  
+                  {showCreateDropdown && (
+                    <div className="absolute right-0 top-12 bg-white rounded-lg shadow-lg border border-gray-200 py-2 w-40 z-50">
+                      <button
+                        onClick={() => {
+                          setShowCreatePost(true);
+                          setShowCreateDropdown(false);
+                        }}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        📝 Create Post
+                      </button>
+                      <button
+                        onClick={() => {
+                          setShowCreateEvent(true);
+                          setShowCreateDropdown(false);
+                        }}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        📅 Create Event
+                      </button>
+                      <button
+                        onClick={() => {
+                          setShowCreateDropdown(false);
+                          alert('Add Friend functionality would open here');
+                        }}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        👥 Add Friend
+                      </button>
+                    </div>
+                  )}
+                </div>
                 <div className="w-20 h-20 bg-white rounded-full mx-auto mb-4 flex items-center justify-center">
                   <span className="text-cyan-600 text-2xl">👤</span>
                 </div>
