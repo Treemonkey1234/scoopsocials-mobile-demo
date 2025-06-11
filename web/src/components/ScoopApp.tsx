@@ -933,7 +933,7 @@ export default function ScoopApp() {
                 
                 {/* Profile Tabs */}
                 <div className={`transition-all duration-300 ease-in-out ${
-                  isProfileTabExpanded ? 'fixed top-32 left-6 right-6 z-40 bg-white shadow-lg rounded-lg' : 'relative'
+                  isProfileTabExpanded ? 'fixed top-32 left-4 right-4 z-40 bg-white shadow-lg rounded-lg' : 'relative'
                 } mb-4`}>
                   {isProfileTabExpanded && (
                     <div className="px-6 pt-4 pb-2">
@@ -964,7 +964,7 @@ export default function ScoopApp() {
                         profileTab === 'posts' ? 'bg-white text-cyan-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
                       }`}
                     >
-                      Posts {profileTab === 'posts' && isProfileTabExpanded && '▼'}
+                      Posts
                     </button>
                     <button 
                       onClick={() => {
@@ -979,7 +979,7 @@ export default function ScoopApp() {
                         profileTab === 'groups' ? 'bg-white text-cyan-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
                       }`}
                     >
-                      Groups {profileTab === 'groups' && isProfileTabExpanded && '▼'}
+                      Groups
                     </button>
                     <button 
                       onClick={() => {
@@ -994,7 +994,7 @@ export default function ScoopApp() {
                         profileTab === 'likes' ? 'bg-white text-cyan-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
                       }`}
                     >
-                      Likes {profileTab === 'likes' && isProfileTabExpanded && '▼'}
+                      Likes
                     </button>
                   </div>
                 </div>
@@ -1003,7 +1003,7 @@ export default function ScoopApp() {
                 <div 
                   className={`overflow-y-auto transition-all duration-300 ease-in-out ${
                     isProfileTabExpanded 
-                      ? 'fixed top-52 left-6 right-6 bottom-20 z-30 bg-white rounded-lg shadow-lg' 
+                      ? 'fixed top-52 left-4 right-4 bottom-16 z-30 bg-white rounded-lg shadow-lg' 
                       : 'h-48'
                   }`}
                   style={{
