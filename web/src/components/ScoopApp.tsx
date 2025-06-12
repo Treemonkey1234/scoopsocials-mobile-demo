@@ -93,6 +93,13 @@ export default function ScoopApp() {
   // Profile tab state
   const [profileActiveTab, setProfileActiveTab] = useState(0);
   
+  // Other user profile viewing state
+  const [showUserProfile, setShowUserProfile] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<FakeUser | null>(null);
+  const [userProfileActiveTab, setUserProfileActiveTab] = useState(0);
+  const [showUserFriends, setShowUserFriends] = useState(false);
+  const [selectedUserFriends, setSelectedUserFriends] = useState<FakeUser[]>([]);
+  
   // Block system state
   const [blockedUsers, setBlockedUsers] = useState<string[]>([]);
   
@@ -909,36 +916,61 @@ export default function ScoopApp() {
                   </div>
                   <div className="flex items-center justify-between mb-4">
                     {/* Connected Accounts - Side by Side */}
-                    <div className="flex space-x-3">
+                    <div className="flex space-x-2">
                       {/* Twitter */}
-                      <div className="w-12 h-12 bg-blue-400 rounded-lg flex items-center justify-center text-white text-sm p-1.5 relative">
+                      <button 
+                        onClick={() => window.open('https://twitter.com/BigStinky', '_blank')}
+                        className="w-11 h-11 bg-blue-400 rounded-lg flex items-center justify-center text-white text-sm p-1.5 relative hover:bg-blue-500 transition-colors"
+                      >
                         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/twitter.svg" alt="Twitter" className="w-full h-full filter invert" />
-                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
-                          <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
-                          </svg>
+                        <div className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-green-500 rounded-full flex items-center justify-center">
+                          <span className="text-white text-xs">✓</span>
                         </div>
-                      </div>
+                      </button>
                       
                       {/* LinkedIn */}
-                      <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white text-sm p-1.5 relative">
+                      <button 
+                        onClick={() => window.open('https://linkedin.com/in/riesling-lefluuf', '_blank')}
+                        className="w-11 h-11 bg-blue-600 rounded-lg flex items-center justify-center text-white text-sm p-1.5 relative hover:bg-blue-700 transition-colors"
+                      >
                         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg" alt="LinkedIn" className="w-full h-full filter invert" />
-                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
-                          <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
-                          </svg>
+                        <div className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-green-500 rounded-full flex items-center justify-center">
+                          <span className="text-white text-xs">✓</span>
                         </div>
-                      </div>
+                      </button>
                       
                       {/* GitHub */}
-                      <div className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center text-white text-sm p-1.5 relative">
+                      <button 
+                        onClick={() => window.open('https://github.com/RieslingCodes', '_blank')}
+                        className="w-11 h-11 bg-gray-800 rounded-lg flex items-center justify-center text-white text-sm p-1.5 relative hover:bg-gray-900 transition-colors"
+                      >
                         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg" alt="GitHub" className="w-full h-full filter invert" />
-                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
-                          <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
-                          </svg>
+                        <div className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-green-500 rounded-full flex items-center justify-center">
+                          <span className="text-white text-xs">✓</span>
                         </div>
-                      </div>
+                      </button>
+
+                      {/* Instagram */}
+                      <button 
+                        onClick={() => window.open('https://instagram.com/wine_and_code', '_blank')}
+                        className="w-11 h-11 bg-pink-500 rounded-lg flex items-center justify-center text-white text-sm p-1.5 relative hover:bg-pink-600 transition-colors"
+                      >
+                        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/instagram.svg" alt="Instagram" className="w-full h-full filter invert" />
+                        <div className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-green-500 rounded-full flex items-center justify-center">
+                          <span className="text-white text-xs">✓</span>
+                        </div>
+                      </button>
+
+                      {/* YouTube */}
+                      <button 
+                        onClick={() => window.open('https://youtube.com/c/WineTechReviews', '_blank')}
+                        className="w-11 h-11 bg-red-500 rounded-lg flex items-center justify-center text-white text-sm p-1.5 relative hover:bg-red-600 transition-colors"
+                      >
+                        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/youtube.svg" alt="YouTube" className="w-full h-full filter invert" />
+                        <div className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-green-500 rounded-full flex items-center justify-center">
+                          <span className="text-white text-xs">✓</span>
+                        </div>
+                      </button>
                     </div>
                     
                     {/* Add Account Button */}
@@ -1100,135 +1132,196 @@ export default function ScoopApp() {
                         </div>
                       </div>
                       
-                      {/* Groups Section */}
+                      {/* Groups Section - Public Events */}
                       <div className="w-1/3 h-full overflow-y-auto scrollbar-hide px-2" style={{ scrollSnapAlign: 'start' }}>
                         <div className="space-y-4">
-                          <div className="bg-white rounded-lg p-4 border border-gray-200">
-                            <div className="flex items-center mb-3">
-                              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mr-3">
-                                <span className="text-white text-sm font-bold">🚀</span>
+                          {/* Events I'm Attending */}
+                          <div className="mb-4">
+                            <h4 className="text-sm font-semibold text-gray-600 mb-2">Events I'm Attending</h4>
+                            {events.filter(event => !event.isPrivate && event.userRSVP === 'going').length === 0 ? (
+                              <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                                <p className="text-sm text-gray-500 text-center">No public events attended yet</p>
                               </div>
-                              <div className="flex-1">
-                                <p className="font-semibold text-gray-800">Phoenix Tech Meetup</p>
-                                <p className="text-xs text-gray-500">324 members • Organizer</p>
-                              </div>
-                              <button className="text-cyan-500 text-sm font-semibold">Manage</button>
-                            </div>
-                            <p className="text-gray-600 text-sm">Monthly meetup for developers, designers, and tech enthusiasts in Phoenix.</p>
+                            ) : (
+                              events.filter(event => !event.isPrivate && event.userRSVP === 'going').map((event) => (
+                                <div key={event.id} className="bg-white rounded-lg p-4 border border-gray-200 mb-3">
+                                  <div className="flex items-center mb-2">
+                                    <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-teal-500 rounded-xl flex items-center justify-center mr-3">
+                                      <span className="text-white text-sm font-bold">📅</span>
+                                    </div>
+                                    <div className="flex-1">
+                                      <p className="font-semibold text-gray-800 text-sm">{event.title}</p>
+                                      <p className="text-xs text-gray-500">{event.date}, {event.time}</p>
+                                    </div>
+                                    <span className="text-xs text-green-600 font-semibold">Going</span>
+                                  </div>
+                                  <p className="text-gray-600 text-xs">{event.location} • {event.goingCount} attending</p>
+                                </div>
+                              ))
+                            )}
                           </div>
 
-                          <div className="bg-white rounded-lg p-4 border border-gray-200">
-                            <div className="flex items-center mb-3">
-                              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mr-3">
-                                <span className="text-white text-sm font-bold">⚛️</span>
+                          {/* Public Events I Created */}
+                          <div>
+                            <h4 className="text-sm font-semibold text-gray-600 mb-2">Events I Created</h4>
+                            <div className="bg-white rounded-lg p-4 border border-gray-200 mb-3">
+                              <div className="flex items-center mb-2">
+                                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mr-3">
+                                  <span className="text-white text-sm font-bold">🎯</span>
+                                </div>
+                                <div className="flex-1">
+                                  <p className="font-semibold text-gray-800 text-sm">Phoenix Startup Pitch Night</p>
+                                  <p className="text-xs text-gray-500">Next Friday, 6:00 PM</p>
+                                </div>
+                                <span className="text-xs text-purple-600 font-semibold">Organizer</span>
                               </div>
-                              <div className="flex-1">
-                                <p className="font-semibold text-gray-800">React Native Developers</p>
-                                <p className="text-xs text-gray-500">1.2k members • Member</p>
-                              </div>
-                              <button className="text-cyan-500 text-sm font-semibold">Joined</button>
+                              <p className="text-gray-600 text-xs">Downtown Phoenix • 28 going</p>
                             </div>
-                            <p className="text-gray-600 text-sm">Community for React Native developers sharing tips, code, and job opportunities.</p>
+
+                            <div className="bg-white rounded-lg p-4 border border-gray-200 mb-3">
+                              <div className="flex items-center mb-2">
+                                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mr-3">
+                                  <span className="text-white text-sm font-bold">☕</span>
+                                </div>
+                                <div className="flex-1">
+                                  <p className="font-semibold text-gray-800 text-sm">Monthly Coffee Meetup</p>
+                                  <p className="text-xs text-gray-500">Next Saturday, 10:00 AM</p>
+                                </div>
+                                <span className="text-xs text-blue-600 font-semibold">Organizer</span>
+                              </div>
+                              <p className="text-gray-600 text-xs">Central Coffee • 15 going</p>
+                            </div>
                           </div>
 
-                          <div className="bg-white rounded-lg p-4 border border-gray-200">
-                            <div className="flex items-center mb-3">
-                              <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-teal-500 rounded-xl flex items-center justify-center mr-3">
-                                <span className="text-white text-sm font-bold">🎯</span>
+                          {/* All Public Events */}
+                          <div>
+                            <h4 className="text-sm font-semibold text-gray-600 mb-2">Upcoming Public Events</h4>
+                            {events.filter(event => !event.isPrivate).slice(0, 3).map((event) => (
+                              <div key={event.id} className="bg-white rounded-lg p-4 border border-gray-200 mb-3">
+                                <div className="flex items-center mb-2">
+                                  <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center mr-3">
+                                    <span className="text-white text-sm font-bold">
+                                      {event.category === 'Professional' && '💼'}
+                                      {event.category === 'Social' && '🎉'}
+                                      {event.category === 'Sports' && '⚽'}
+                                      {event.category === 'Entertainment' && '🎭'}
+                                    </span>
+                                  </div>
+                                  <div className="flex-1">
+                                    <p className="font-semibold text-gray-800 text-sm">{event.title}</p>
+                                    <p className="text-xs text-gray-500">{event.date}, {event.time}</p>
+                                  </div>
+                                  <button className="text-xs text-cyan-600 font-semibold">View</button>
+                                </div>
+                                <p className="text-gray-600 text-xs">{event.location} • {event.goingCount} going</p>
                               </div>
-                              <div className="flex-1">
-                                <p className="font-semibold text-gray-800">Startup Founders AZ</p>
-                                <p className="text-xs text-gray-500">89 members • Member</p>
-                              </div>
-                              <button className="text-cyan-500 text-sm font-semibold">Joined</button>
-                            </div>
-                            <p className="text-gray-600 text-sm">Exclusive group for startup founders in Arizona to network and share experiences.</p>
-                          </div>
-
-                          <div className="bg-white rounded-lg p-4 border border-gray-200">
-                            <div className="flex items-center mb-3">
-                              <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center mr-3">
-                                <span className="text-white text-sm font-bold">🏃</span>
-                              </div>
-                              <div className="flex-1">
-                                <p className="font-semibold text-gray-800">Weekend Warriors</p>
-                                <p className="text-xs text-gray-500">156 members • Active</p>
-                              </div>
-                              <button className="bg-cyan-500 text-white text-sm font-semibold px-3 py-1 rounded-full">Join</button>
-                            </div>
-                            <p className="text-gray-600 text-sm">Plan weekend activities and outdoor adventures with like-minded people.</p>
+                            ))}
                           </div>
                         </div>
                       </div>
                       
-                      {/* Likes Section */}
+                      {/* Likes Section - User Interactions */}
                       <div className="w-1/3 h-full overflow-y-auto scrollbar-hide pl-2" style={{ scrollSnapAlign: 'start' }}>
                         <div className="space-y-4">
-                          <div className="bg-white rounded-lg p-4 border border-gray-200">
-                            <div className="flex items-center mb-3">
-                              <div className="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center mr-3">
-                                <span className="text-white text-sm font-bold">S</span>
+                          {/* Posts I've Liked */}
+                          <div className="mb-4">
+                            <h4 className="text-sm font-semibold text-gray-600 mb-2">Posts I've Liked</h4>
+                            <div className="bg-white rounded-lg p-4 border border-gray-200 mb-3">
+                              <div className="flex items-center mb-2">
+                                <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-3">
+                                  <span className="text-white text-sm font-bold">S</span>
+                                </div>
+                                <div className="flex-1">
+                                  <p className="font-semibold text-gray-800 text-sm">Sarah's Restaurant Review</p>
+                                  <p className="text-xs text-gray-500">👍 You liked this • 3 hours ago</p>
+                                </div>
                               </div>
-                              <div>
-                                <p className="font-semibold text-gray-800">Sarah's Restaurant Review</p>
-                                <p className="text-xs text-gray-500">You liked this • 3 hours ago</p>
+                              <p className="text-gray-700 mb-2 text-xs">Amazing Italian food! The pasta was homemade and the service was outstanding. 🍝</p>
+                              <div className="flex items-center">
+                                <span className="text-yellow-500 mr-2 text-xs">⭐⭐⭐⭐⭐</span>
+                                <span className="text-xs text-gray-500">Tony's Italian Kitchen</span>
                               </div>
                             </div>
-                            <p className="text-gray-700 mb-3 text-sm">Amazing Italian food! The pasta was homemade and the service was outstanding. 🍝</p>
-                            <div className="flex items-center">
-                              <span className="text-yellow-500 mr-2">⭐⭐⭐⭐⭐</span>
-                              <span className="text-sm text-gray-500">Tony's Italian Kitchen</span>
+
+                            <div className="bg-white rounded-lg p-4 border border-gray-200 mb-3">
+                              <div className="flex items-center mb-2">
+                                <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center mr-3">
+                                  <span className="text-white text-sm font-bold">M</span>
+                                </div>
+                                <div className="flex-1">
+                                  <p className="font-semibold text-gray-800 text-sm">Marcus's Tech Review</p>
+                                  <p className="text-xs text-gray-500">👍 You liked this • 1 day ago</p>
+                                </div>
+                              </div>
+                              <p className="text-gray-700 mb-2 text-xs">Amazing developer to work with! Clean code and great communication throughout the project. 💻</p>
+                              <div className="flex items-center">
+                                <span className="text-yellow-500 mr-2 text-xs">⭐⭐⭐⭐⭐</span>
+                                <span className="text-xs text-gray-500">Professional Review</span>
+                              </div>
                             </div>
                           </div>
 
-                          <div className="bg-white rounded-lg p-4 border border-gray-200">
-                            <div className="flex items-center mb-3">
-                              <div className="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center mr-3">
-                                <span className="text-white text-sm font-bold">M</span>
+                          {/* Events I've Interacted With */}
+                          <div className="mb-4">
+                            <h4 className="text-sm font-semibold text-gray-600 mb-2">Events I've Interacted With</h4>
+                            <div className="bg-white rounded-lg p-4 border border-gray-200 mb-3">
+                              <div className="flex items-center mb-2">
+                                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mr-3">
+                                  <span className="text-white text-sm font-bold">🎵</span>
+                                </div>
+                                <div className="flex-1">
+                                  <p className="font-semibold text-gray-800 text-sm">Jazz Night at Blue Note</p>
+                                  <p className="text-xs text-gray-500">💬 You commented • 2 days ago</p>
+                                </div>
                               </div>
-                              <div>
-                                <p className="font-semibold text-gray-800">Mike's Event Review</p>
-                                <p className="text-xs text-gray-500">You liked this • 1 day ago</p>
-                              </div>
+                              <p className="text-gray-700 text-xs">Amazing atmosphere and incredible musicians! Best jazz club in the city. 🎷</p>
                             </div>
-                            <p className="text-gray-700 mb-3 text-sm">Jazz night at Blue Note was incredible! Great atmosphere and amazing musicians. 🎷</p>
-                            <div className="flex items-center">
-                              <span className="text-yellow-500 mr-2">⭐⭐⭐⭐⭐</span>
-                              <span className="text-sm text-gray-500">Blue Note Jazz Club</span>
+
+                            <div className="bg-white rounded-lg p-4 border border-gray-200 mb-3">
+                              <div className="flex items-center mb-2">
+                                <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center mr-3">
+                                  <span className="text-white text-sm font-bold">☕</span>
+                                </div>
+                                <div className="flex-1">
+                                  <p className="font-semibold text-gray-800 text-sm">Coffee & Code Meetup</p>
+                                  <p className="text-xs text-gray-500">📅 You RSVP'd Going • 1 week ago</p>
+                                </div>
+                              </div>
+                              <p className="text-gray-700 text-xs">Perfect networking event for developers. Great coffee and even better conversations!</p>
                             </div>
                           </div>
 
-                          <div className="bg-white rounded-lg p-4 border border-gray-200">
-                            <div className="flex items-center mb-3">
-                              <div className="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center mr-3">
-                                <span className="text-white text-sm font-bold">A</span>
+                          {/* Comments I've Made */}
+                          <div>
+                            <h4 className="text-sm font-semibold text-gray-600 mb-2">Recent Comments</h4>
+                            <div className="bg-white rounded-lg p-4 border border-gray-200 mb-3">
+                              <div className="flex items-center mb-2">
+                                <div className="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center mr-3">
+                                  <span className="text-white text-sm font-bold">A</span>
+                                </div>
+                                <div className="flex-1">
+                                  <p className="font-semibold text-gray-800 text-sm">Alex's Coffee Shop Post</p>
+                                  <p className="text-xs text-gray-500">💬 You commented • 3 days ago</p>
+                                </div>
                               </div>
-                              <div>
-                                <p className="font-semibold text-gray-800">Alex's Coffee Shop Post</p>
-                                <p className="text-xs text-gray-500">You liked this • 2 days ago</p>
+                              <div className="bg-gray-50 p-2 rounded-lg">
+                                <p className="text-gray-700 text-xs italic">"Totally agree! This place has become my go-to workspace. The barista team is fantastic too!"</p>
                               </div>
                             </div>
-                            <p className="text-gray-700 mb-3 text-sm">Perfect spot for morning meetings! Great WiFi and excellent espresso. ☕</p>
-                            <div className="flex items-center">
-                              <span className="text-yellow-500 mr-2">⭐⭐⭐⭐⭐</span>
-                              <span className="text-sm text-gray-500">Central Coffee Co.</span>
-                            </div>
-                          </div>
 
-                          <div className="bg-white rounded-lg p-4 border border-gray-200">
-                            <div className="flex items-center mb-3">
-                              <div className="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center mr-3">
-                                <span className="text-white text-sm font-bold">L</span>
+                            <div className="bg-white rounded-lg p-4 border border-gray-200 mb-3">
+                              <div className="flex items-center mb-2">
+                                <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center mr-3">
+                                  <span className="text-white text-sm font-bold">L</span>
+                                </div>
+                                <div className="flex-1">
+                                  <p className="font-semibold text-gray-800 text-sm">Lisa's Professional Review</p>
+                                  <p className="text-xs text-gray-500">💬 You commented • 4 days ago</p>
+                                </div>
                               </div>
-                              <div>
-                                <p className="font-semibold text-gray-800">Lisa's App Review</p>
-                                <p className="text-xs text-gray-500">You liked this • 3 days ago</p>
+                              <div className="bg-gray-50 p-2 rounded-lg">
+                                <p className="text-gray-700 text-xs italic">"Lisa is an amazing project manager! Made our development process so much smoother."</p>
                               </div>
-                            </div>
-                            <p className="text-gray-700 mb-3 text-sm">Worked with @CodeMaster on a web project. Excellent code quality and great communication! 💻</p>
-                            <div className="flex items-center">
-                              <span className="text-yellow-500 mr-2">⭐⭐⭐⭐⭐</span>
-                              <span className="text-sm text-gray-500">Professional Review</span>
                             </div>
                           </div>
                         </div>
@@ -1368,7 +1461,14 @@ export default function ScoopApp() {
                         </div>
                       </div>
                       <div className="flex space-x-2">
-                        <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded-lg text-xs hover:bg-gray-300">
+                        <button 
+                          onClick={() => {
+                            setSelectedUser(friend);
+                            setShowUserProfile(true);
+                            setUserProfileActiveTab(0);
+                          }}
+                          className="bg-gray-200 text-gray-700 px-3 py-1 rounded-lg text-xs hover:bg-gray-300"
+                        >
                           View Profile
                         </button>
                         {isUserBlocked(friend.name) ? (
@@ -1894,7 +1994,14 @@ export default function ScoopApp() {
                           <h3 className="text-lg font-semibold text-gray-800 mb-3">Events</h3>
                           <div className="space-y-3">
                             {searchResults.events.map((event) => (
-                              <div key={event.id} className="bg-gradient-to-r from-green-400 to-green-600 text-white rounded-lg p-3 shadow-md">
+                              <div 
+                                key={event.id} 
+                                onClick={() => {
+                                  setSelectedEvent(event);
+                                  setShowEventDetails(true);
+                                }}
+                                className="bg-gradient-to-r from-green-400 to-green-600 text-white rounded-lg p-3 shadow-md cursor-pointer hover:from-green-500 hover:to-green-700 transition-all"
+                              >
                                 <div className="flex justify-between items-start">
                                   <div className="flex-1">
                                     <h4 className="font-bold">{event.title}</h4>
@@ -1929,7 +2036,14 @@ export default function ScoopApp() {
                                   </div>
                                 </div>
                                 <div className="flex space-x-2">
-                                  <button className="bg-cyan-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-cyan-600">
+                                  <button 
+                                    onClick={() => {
+                                      setSelectedUser(person);
+                                      setShowUserProfile(true);
+                                      setUserProfileActiveTab(0);
+                                    }}
+                                    className="bg-cyan-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-cyan-600"
+                                  >
                                     View Profile
                                   </button>
                                   {isUserBlocked(person.name) ? (
@@ -1960,7 +2074,14 @@ export default function ScoopApp() {
                           <h3 className="text-lg font-semibold text-gray-800 mb-3">Posts</h3>
                           <div className="space-y-3">
                             {searchResults.posts.filter(post => !isUserBlocked(post.reviewer) && !isUserBlocked(post.reviewedPerson)).map((post) => (
-                              <div key={post.id} className="bg-white border border-gray-200 rounded-lg p-3 shadow-sm">
+                              <div 
+                                key={post.id} 
+                                onClick={() => {
+                                  setSelectedPost(post);
+                                  setShowComments(true);
+                                }}
+                                className="bg-white border border-gray-200 rounded-lg p-3 shadow-sm cursor-pointer hover:bg-gray-50 transition-colors"
+                              >
                                 <div className="flex items-center justify-between mb-2">
                                   <div className="flex items-center space-x-2">
                                     <span className="text-sm font-medium text-gray-900">{post.reviewer}</span>
@@ -2550,6 +2671,290 @@ export default function ScoopApp() {
               <div className="p-4 border-t border-gray-200">
                 <p className="text-xs text-gray-500 text-center">
                   Blocked users won't appear in your feed, search results, or friend recommendations
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* User Profile Modal */}
+        {showUserProfile && selectedUser && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-hidden flex flex-col" style={{height: '600px'}}>
+              {/* Header */}
+              <div className="flex items-center justify-between p-4 border-b border-gray-200 flex-shrink-0">
+                <h2 className="text-lg font-semibold text-gray-800">{selectedUser.name}'s Profile</h2>
+                <button 
+                  onClick={() => setShowUserProfile(false)}
+                  className="text-gray-500 hover:text-gray-700 text-2xl"
+                >
+                  ×
+                </button>
+              </div>
+              
+              {/* Profile Content */}
+              <div className="flex-1 overflow-hidden flex flex-col">
+                {/* Profile Header */}
+                <div className="p-4 text-center border-b border-gray-200 flex-shrink-0">
+                  <div className={`w-20 h-20 bg-gradient-to-r ${getAvatarGradient(selectedUser.name)} rounded-full flex items-center justify-center text-white font-bold text-2xl mx-auto mb-3`}>
+                    {selectedUser.avatar}
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-800">{selectedUser.name}</h3>
+                  <p className="text-gray-600">@{selectedUser.username}</p>
+                  <div className="mt-2">
+                    <span className="bg-cyan-100 text-cyan-800 px-3 py-1 rounded-full text-sm font-semibold">
+                      Trust Score: {selectedUser.trustScore}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-center mt-2 text-sm text-gray-500">
+                    <span>📍 {selectedUser.location.city}, {selectedUser.location.state}</span>
+                  </div>
+                  <div className="flex space-x-4 text-center mt-3 text-sm">
+                    <div>
+                      <div className="font-bold text-cyan-600">{selectedUser.connectionCount}</div>
+                      <div className="text-gray-500">Connections</div>
+                    </div>
+                    <div>
+                      <div className="font-bold text-cyan-600">45</div>
+                      <div className="text-gray-500">Reviews</div>
+                    </div>
+                    <div>
+                      <div className="font-bold text-cyan-600">8</div>
+                      <div className="text-gray-500">Events</div>
+                    </div>
+                  </div>
+                  
+                  {/* Action Buttons */}
+                  <div className="flex space-x-2 mt-4">
+                    <button 
+                      onClick={() => {
+                        const userFriends = getFriendsForUser(selectedUser.id);
+                        setSelectedUserFriends(userFriends);
+                        setShowUserFriends(true);
+                      }}
+                      className="flex-1 bg-cyan-500 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:bg-cyan-600"
+                    >
+                      👥 Friends
+                    </button>
+                    <button 
+                      onClick={() => {
+                        if (confirm(`Are you sure you want to block ${selectedUser.name}? They won't appear in your feed or search results.`)) {
+                          blockUser(selectedUser.name);
+                          setShowUserProfile(false);
+                        }
+                      }}
+                      className="bg-red-100 text-red-700 py-2 px-4 rounded-lg text-sm font-semibold hover:bg-red-200 transition-colors"
+                    >
+                      🚫 Block?
+                    </button>
+                  </div>
+                </div>
+
+                {/* Tab Navigation */}
+                <div className="flex border-b border-gray-200 flex-shrink-0">
+                  {['Posts', 'Groups', 'Likes'].map((tab, index) => (
+                    <button
+                      key={tab}
+                      onClick={() => setUserProfileActiveTab(index)}
+                      className={`flex-1 py-3 text-center font-semibold text-sm transition-colors ${
+                        userProfileActiveTab === index
+                          ? 'text-cyan-500 border-b-2 border-cyan-500'
+                          : 'text-gray-500'
+                      }`}
+                    >
+                      {tab}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Tab Content */}
+                <div className="flex-1 overflow-y-auto p-4">
+                  {userProfileActiveTab === 0 && (
+                    // Posts Tab
+                    <div className="space-y-4">
+                      <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                        <div className="flex items-center mb-3">
+                          <div className={`w-8 h-8 bg-gradient-to-r ${getAvatarGradient(selectedUser.name)} rounded-full flex items-center justify-center mr-3`}>
+                            <span className="text-white text-sm font-bold">{selectedUser.avatar}</span>
+                          </div>
+                          <div>
+                            <p className="font-semibold text-gray-800 text-sm">{selectedUser.occupation} Review</p>
+                            <p className="text-xs text-gray-500">3 days ago</p>
+                          </div>
+                        </div>
+                        <p className="text-gray-700 mb-3 text-sm">Amazing experience working with this professional! Great communication and delivered excellent results on time. 💼</p>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-4">
+                            <span className="flex items-center text-gray-500 text-sm">
+                              <span className="mr-1">👍</span> 12
+                            </span>
+                            <span className="flex items-center text-gray-500 text-sm">
+                              <span className="mr-1">💬</span> 3
+                            </span>
+                          </div>
+                          <span className="text-yellow-500">⭐⭐⭐⭐⭐</span>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                        <div className="flex items-center mb-3">
+                          <div className={`w-8 h-8 bg-gradient-to-r ${getAvatarGradient(selectedUser.name)} rounded-full flex items-center justify-center mr-3`}>
+                            <span className="text-white text-sm font-bold">{selectedUser.avatar}</span>
+                          </div>
+                          <div>
+                            <p className="font-semibold text-gray-800 text-sm">Coffee Shop Review</p>
+                            <p className="text-xs text-gray-500">1 week ago</p>
+                          </div>
+                        </div>
+                        <p className="text-gray-700 mb-3 text-sm">Found this hidden gem! Perfect atmosphere for remote work and the coffee is incredible. ☕</p>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-4">
+                            <span className="flex items-center text-gray-500 text-sm">
+                              <span className="mr-1">👍</span> 18
+                            </span>
+                            <span className="flex items-center text-gray-500 text-sm">
+                              <span className="mr-1">💬</span> 5
+                            </span>
+                          </div>
+                          <span className="text-yellow-500">⭐⭐⭐⭐⭐</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {userProfileActiveTab === 1 && (
+                    // Groups/Events Tab
+                    <div className="space-y-4">
+                      <div>
+                        <h4 className="text-sm font-semibold text-gray-600 mb-2">Recent Events</h4>
+                        <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 mb-3">
+                          <div className="flex items-center mb-2">
+                            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center mr-3">
+                              <span className="text-white text-sm font-bold">💼</span>
+                            </div>
+                            <div className="flex-1">
+                              <p className="font-semibold text-gray-800 text-sm">Tech Networking Event</p>
+                              <p className="text-xs text-gray-500">Attended • Last week</p>
+                            </div>
+                          </div>
+                          <p className="text-gray-600 text-xs">{selectedUser.location.city} Convention Center • 45 attended</p>
+                        </div>
+                        
+                        <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                          <div className="flex items-center mb-2">
+                            <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-teal-500 rounded-lg flex items-center justify-center mr-3">
+                              <span className="text-white text-sm font-bold">🎯</span>
+                            </div>
+                            <div className="flex-1">
+                              <p className="font-semibold text-gray-800 text-sm">{selectedUser.interests[0]} Meetup</p>
+                              <p className="text-xs text-gray-500">Going • This weekend</p>
+                            </div>
+                          </div>
+                          <p className="text-gray-600 text-xs">Local Community Center • 23 going</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {userProfileActiveTab === 2 && (
+                    // Likes Tab
+                    <div className="space-y-4">
+                      <div>
+                        <h4 className="text-sm font-semibold text-gray-600 mb-2">Recent Activity</h4>
+                        <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 mb-3">
+                          <div className="flex items-center mb-2">
+                            <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center mr-3">
+                              <span className="text-white text-xs font-bold">❤️</span>
+                            </div>
+                            <div className="flex-1">
+                              <p className="font-semibold text-gray-800 text-sm">Liked Sarah's Restaurant Review</p>
+                              <p className="text-xs text-gray-500">2 hours ago</p>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                          <div className="flex items-center mb-2">
+                            <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center mr-3">
+                              <span className="text-white text-xs font-bold">💬</span>
+                            </div>
+                            <div className="flex-1">
+                              <p className="font-semibold text-gray-800 text-sm">Commented on Tech Meetup Event</p>
+                              <p className="text-xs text-gray-500">1 day ago</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* User Friends Modal */}
+        {showUserFriends && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[80vh] overflow-hidden">
+              {/* Header */}
+              <div className="flex items-center justify-between p-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-800">
+                  {selectedUser?.name}'s Friends ({selectedUserFriends.length})
+                </h2>
+                <button 
+                  onClick={() => setShowUserFriends(false)}
+                  className="text-gray-500 hover:text-gray-700 text-2xl"
+                >
+                  ×
+                </button>
+              </div>
+              
+              {/* Friends List */}
+              <div className="flex-1 overflow-y-auto max-h-96">
+                {selectedUserFriends.length === 0 ? (
+                  <div className="text-center py-8 text-gray-500">
+                    <div className="text-4xl mb-2">👥</div>
+                    <div className="text-lg font-medium mb-1">No friends to show</div>
+                    <div className="text-sm">This user hasn't connected with anyone yet</div>
+                  </div>
+                ) : (
+                  <div className="p-4 space-y-3">
+                    {selectedUserFriends.map((friend) => (
+                      <div key={friend.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div className="flex items-center space-x-3">
+                          <div className={`w-10 h-10 bg-gradient-to-r ${getAvatarGradient(friend.name)} rounded-full flex items-center justify-center text-white font-bold text-sm`}>
+                            {friend.avatar}
+                          </div>
+                          <div>
+                            <div className="font-medium text-gray-800">{friend.name}</div>
+                            <div className="text-sm text-gray-600">
+                              Trust Score: {friend.trustScore} • {friend.isOnline ? 'Online' : 'Offline'}
+                            </div>
+                            <div className="text-xs text-gray-500">{friend.location.city}, {friend.location.state}</div>
+                          </div>
+                        </div>
+                        <button 
+                          onClick={() => {
+                            setShowUserFriends(false);
+                            setSelectedUser(friend);
+                            setShowUserProfile(true);
+                            setUserProfileActiveTab(0);
+                          }}
+                          className="bg-cyan-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-cyan-600"
+                        >
+                          View
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+              
+              {/* Footer */}
+              <div className="p-4 border-t border-gray-200">
+                <p className="text-xs text-gray-500 text-center">
+                  These are {selectedUser?.name}'s connections in their network
                 </p>
               </div>
             </div>

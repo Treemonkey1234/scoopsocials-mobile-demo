@@ -8,10 +8,6 @@ interface EventReviewModalProps {
 }
 
 const EventReviewModal: React.FC<EventReviewModalProps> = ({ onClose, eventTitle, eventId, onSubmitReview }) => {
-  const [overallRating, setOverallRating] = useState(5);
-  const [organizationRating, setOrganizationRating] = useState(5);
-  const [venueRating, setVenueRating] = useState(5);
-  const [valueRating, setValueRating] = useState(5);
   const [reviewText, setReviewText] = useState('');
   const [attendanceConfirmed, setAttendanceConfirmed] = useState(false);
   const [wouldRecommend, setWouldRecommend] = useState(true);
@@ -58,12 +54,6 @@ const EventReviewModal: React.FC<EventReviewModalProps> = ({ onClose, eventTitle
       eventId: eventId,
       eventTitle,
       reviewer: 'Riesling LeFluuf',
-      overallRating,
-      ratings: {
-        organization: organizationRating,
-        venue: venueRating,
-        value: valueRating
-      },
       reviewText: reviewText.trim(),
       highlights,
       improvements: improvements.trim(),
@@ -77,23 +67,6 @@ const EventReviewModal: React.FC<EventReviewModalProps> = ({ onClose, eventTitle
     onClose();
   };
 
-  const StarRating = ({ rating, setRating, label }: { rating: number, setRating: (r: number) => void, label: string }) => (
-    <div className="mb-4">
-      <label className="block text-sm font-medium text-gray-700 mb-2">{label}</label>
-      <div className="flex space-x-1">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <button
-            key={star}
-            onClick={() => setRating(star)}
-            className={`text-2xl ${star <= rating ? 'text-yellow-400' : 'text-gray-300'} hover:text-yellow-400 transition-colors`}
-          >
-            ⭐
-          </button>
-        ))}
-        <span className="ml-2 text-sm text-gray-600">{rating}/5</span>
-      </div>
-    </div>
-  );
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -127,34 +100,6 @@ const EventReviewModal: React.FC<EventReviewModalProps> = ({ onClose, eventTitle
             </p>
           </div>
 
-          {/* Overall Rating */}
-          <StarRating 
-            rating={overallRating} 
-            setRating={setOverallRating} 
-            label="Overall Experience" 
-          />
-
-          {/* Detailed Ratings */}
-          <div className="mb-4">
-            <h3 className="font-medium text-gray-800 mb-3">Rate Different Aspects:</h3>
-            <div className="space-y-3">
-              <StarRating 
-                rating={organizationRating} 
-                setRating={setOrganizationRating} 
-                label="Organization" 
-              />
-              <StarRating 
-                rating={venueRating} 
-                setRating={setVenueRating} 
-                label="Venue" 
-              />
-              <StarRating 
-                rating={valueRating} 
-                setRating={setValueRating} 
-                label="Value" 
-              />
-            </div>
-          </div>
 
           {/* Written Review */}
           <div className="mb-4">
