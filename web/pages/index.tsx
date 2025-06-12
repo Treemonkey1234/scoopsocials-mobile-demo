@@ -283,7 +283,7 @@ export default function Home() {
         <p className="text-cyan-100 text-sm">Select the account type that best fits your needs</p>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-3 py-4 space-y-3">
+      <div className="flex-1 overflow-y-auto px-3 py-2 space-y-3 max-h-[calc(100vh-200px)]">
         {/* Free Account Card */}
         <div
           onClick={() => setAccountType('free')}
@@ -404,7 +404,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="bg-white/20 backdrop-blur p-3 rounded-xl mb-4">
+        <div className="bg-white/20 backdrop-blur p-3 rounded-xl mb-6">
           <div className="flex items-center">
             <span className="text-white mr-2">ℹ️</span>
             <span className="text-white text-xs">
@@ -471,14 +471,20 @@ export default function Home() {
         
         <div className="p-4 flex-shrink-0 space-y-3">
           <button
-            onClick={() => setCurrentScreen('main-app')}
+            onClick={() => {
+              console.log('Import Contacts clicked, setting screen to main-app');
+              setCurrentScreen('main-app');
+            }}
             className="w-full bg-cyan-500 text-white py-3 rounded-xl text-base font-bold"
           >
             Import Contacts
           </button>
 
           <button
-            onClick={() => setCurrentScreen('main-app')}
+            onClick={() => {
+              console.log('Skip for Now clicked, setting screen to main-app');
+              setCurrentScreen('main-app');
+            }}
             className="w-full text-gray-500 underline text-sm py-2"
           >
             Skip for Now
@@ -562,6 +568,7 @@ export default function Home() {
   );
 
   const renderScreen = () => {
+    console.log('Current screen:', currentScreen);
     switch (currentScreen) {
       case 'welcome': return <WelcomeScreen />;
       case 'signup': return <SignupScreen />;
@@ -569,8 +576,12 @@ export default function Home() {
       case 'verification': return <VerificationScreen />;
       case 'account-type': return <AccountTypeScreen />;
       case 'contacts': return <ContactsScreen />;
-      case 'main-app': return <MainAppScreen />;
-      default: return <WelcomeScreen />;
+      case 'main-app': 
+        console.log('Rendering MainAppScreen');
+        return <MainAppScreen />;
+      default: 
+        console.log('Default case, rendering WelcomeScreen');
+        return <WelcomeScreen />;
     }
   };
 
