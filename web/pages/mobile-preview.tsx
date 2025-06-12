@@ -506,9 +506,9 @@ export default function MobilePreview() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-sm bg-white rounded-3xl shadow-2xl overflow-hidden" style={{ height: '700px' }}>
+      <div className="w-full max-w-sm bg-white rounded-3xl shadow-2xl overflow-hidden min-h-[600px] max-h-[90vh] flex flex-col">
         {/* Status Bar */}
-        <div className="bg-white px-4 py-2 flex justify-between items-center text-xs font-semibold">
+        <div className="bg-white px-4 py-2 flex justify-between items-center text-xs font-semibold flex-shrink-0">
           <span>9:41</span>
           <div className="flex items-center space-x-1">
             <div className="flex space-x-1">
@@ -523,7 +523,7 @@ export default function MobilePreview() {
         </div>
         
         {/* Screen Content */}
-        <div className="h-full">
+        <div className="flex-1 overflow-hidden">
           {renderScreen()}
         </div>
       </div>
