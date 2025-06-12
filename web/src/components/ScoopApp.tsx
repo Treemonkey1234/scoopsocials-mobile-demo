@@ -67,6 +67,7 @@ export default function ScoopApp() {
   const [showInbox, setShowInbox] = useState(false);
   const [showCreateDropdown, setShowCreateDropdown] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showBlockedUsers, setShowBlockedUsers] = useState(false);
   
   // Fake user network state
   const [allUsers, setAllUsers] = useState<FakeUser[]>([]);
@@ -90,6 +91,27 @@ export default function ScoopApp() {
   
   // Profile tab state
   const [profileActiveTab, setProfileActiveTab] = useState(0);
+  
+  // Block system state
+  const [blockedUsers, setBlockedUsers] = useState<string[]>([]);
+  
+  // Block system functions
+  const blockUser = (username: string) => {
+    setBlockedUsers(prev => [...prev, username]);
+    // Remove from friends if they were friends
+    setUserFriends(prev => prev.filter(friend => friend.name !== username));
+    console.log(`Blocked user: ${username}`);
+  };
+  
+  const unblockUser = (username: string) => {
+    setBlockedUsers(prev => prev.filter(blocked => blocked !== username));
+    console.log(`Unblocked user: ${username}`);
+  };
+  
+  const isUserBlocked = (username: string) => {
+    return blockedUsers.includes(username);
+  };
+  
   const [notifications, setNotifications] = useState([
     {
       id: '1',
@@ -212,21 +234,23 @@ export default function ScoopApp() {
       event.organizer.toLowerCase().includes(searchTerm)
     );
 
-    // Search people
+    // Search people (excluding blocked users)
     const filteredPeople = allUsers.filter(user =>
-      user.name.toLowerCase().includes(searchTerm) ||
+      !isUserBlocked(user.name) &&
+      (user.name.toLowerCase().includes(searchTerm) ||
       user.username.toLowerCase().includes(searchTerm) ||
       user.location.city.toLowerCase().includes(searchTerm) ||
       user.location.state.toLowerCase().includes(searchTerm) ||
-      (user.occupation && user.occupation.toLowerCase().includes(searchTerm))
+      (user.occupation && user.occupation.toLowerCase().includes(searchTerm)))
     );
 
-    // Search posts
+    // Search posts (excluding blocked users)
     const filteredPosts = posts.filter(post =>
-      post.content.toLowerCase().includes(searchTerm) ||
+      !isUserBlocked(post.reviewer) && !isUserBlocked(post.reviewedPerson) &&
+      (post.content.toLowerCase().includes(searchTerm) ||
       post.reviewer.toLowerCase().includes(searchTerm) ||
       post.reviewedPerson.toLowerCase().includes(searchTerm) ||
-      post.category.toLowerCase().includes(searchTerm)
+      post.category.toLowerCase().includes(searchTerm))
     );
 
     setSearchResults({
@@ -674,7 +698,7 @@ export default function ScoopApp() {
               {/* Feed Content */}
               <div className="flex-1 overflow-y-auto custom-scrollbar" style={{scrollbarWidth: 'thin', scrollbarColor: '#9CA3AF #F3F4F6'}}>
                 <div className="px-4 py-3 space-y-3 pb-4">
-                  {posts.map((post) => (
+                  {posts.filter(post => !isUserBlocked(post.reviewer) && !isUserBlocked(post.reviewedPerson)).map((post) => (
                     <div key={post.id} className="rounded-lg shadow-md border border-cyan-200" style={{background: 'linear-gradient(145deg, #ffffff 0%, #f8fdff 100%)'}}>
                       <div className="flex">
                         {/* Vote Column */}
@@ -1346,6 +1370,21 @@ export default function ScoopApp() {
                         <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded-lg text-xs hover:bg-gray-300">
                           View Profile
                         </button>
+                        {isUserBlocked(friend.name) ? (
+                          <button 
+                            onClick={() => unblockUser(friend.name)}
+                            className="bg-green-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-green-600"
+                          >
+                            Unblock
+                          </button>
+                        ) : (
+                          <button 
+                            onClick={() => blockUser(friend.name)}
+                            className="bg-red-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-red-600"
+                          >
+                            Block
+                          </button>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -1888,9 +1927,26 @@ export default function ScoopApp() {
                                     <div className="text-xs text-gray-500">{person.location.city}, {person.location.state}</div>
                                   </div>
                                 </div>
-                                <button className="bg-cyan-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-cyan-600">
-                                  View Profile
-                                </button>
+                                <div className="flex space-x-2">
+                                  <button className="bg-cyan-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-cyan-600">
+                                    View Profile
+                                  </button>
+                                  {isUserBlocked(person.name) ? (
+                                    <button 
+                                      onClick={() => unblockUser(person.name)}
+                                      className="bg-green-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-green-600"
+                                    >
+                                      Unblock
+                                    </button>
+                                  ) : (
+                                    <button 
+                                      onClick={() => blockUser(person.name)}
+                                      className="bg-red-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-600"
+                                    >
+                                      Block
+                                    </button>
+                                  )}
+                                </div>
                               </div>
                             ))}
                           </div>
@@ -1902,7 +1958,7 @@ export default function ScoopApp() {
                         <div>
                           <h3 className="text-lg font-semibold text-gray-800 mb-3">Posts</h3>
                           <div className="space-y-3">
-                            {searchResults.posts.map((post) => (
+                            {searchResults.posts.filter(post => !isUserBlocked(post.reviewer) && !isUserBlocked(post.reviewedPerson)).map((post) => (
                               <div key={post.id} className="bg-white border border-gray-200 rounded-lg p-3 shadow-sm">
                                 <div className="flex items-center justify-between mb-2">
                                   <div className="flex items-center space-x-2">
@@ -2025,6 +2081,7 @@ export default function ScoopApp() {
             onSubmit={(newPost) => {
               setPosts([newPost, ...posts]);
             }}
+            isUserBlocked={isUserBlocked}
           />
         )}
 
@@ -2051,6 +2108,7 @@ export default function ScoopApp() {
             postId={selectedPost.id}
             postAuthor={selectedPost.reviewer}
             postContent={selectedPost.content}
+            isUserBlocked={isUserBlocked}
           />
         )}
 
@@ -2073,6 +2131,7 @@ export default function ScoopApp() {
             event={selectedEvent}
             onRSVP={handleRSVP}
             onViewAttendees={handleViewAttendees}
+            isUserBlocked={isUserBlocked}
           />
         )}
         
@@ -2081,6 +2140,7 @@ export default function ScoopApp() {
             onClose={() => setShowAttendees(false)}
             eventTitle={selectedEvent.title}
             eventId={selectedEvent.id}
+            isUserBlocked={isUserBlocked}
           />
         )}
         
@@ -2327,10 +2387,13 @@ export default function ScoopApp() {
                       </label>
                     </div>
                     
-                    <button className="w-full flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+                    <button 
+                      onClick={() => setShowBlockedUsers(true)}
+                      className="w-full flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
+                    >
                       <div className="flex items-center">
                         <span className="text-lg mr-3">🚫</span>
-                        <span className="text-gray-700">Blocked Users</span>
+                        <span className="text-gray-700">Blocked Users ({blockedUsers.length})</span>
                       </div>
                       <span className="text-gray-400">→</span>
                     </button>
@@ -2483,6 +2546,64 @@ export default function ScoopApp() {
               <div className="p-4 border-t border-gray-200 text-center">
                 <p className="text-xs text-gray-500">ScoopSocials v1.0.0</p>
                 <p className="text-xs text-gray-400 mt-1">Building trust in digital connections</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Blocked Users Modal */}
+        {showBlockedUsers && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[80vh] overflow-hidden">
+              {/* Header */}
+              <div className="flex items-center justify-between p-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-800">Blocked Users</h2>
+                <button 
+                  onClick={() => setShowBlockedUsers(false)}
+                  className="text-gray-500 hover:text-gray-700 text-2xl"
+                >
+                  ×
+                </button>
+              </div>
+              
+              {/* Content */}
+              <div className="flex-1 overflow-y-auto max-h-96">
+                {blockedUsers.length === 0 ? (
+                  <div className="text-center py-8 text-gray-500">
+                    <div className="text-4xl mb-2">🚫</div>
+                    <div className="text-lg font-medium mb-1">No blocked users</div>
+                    <div className="text-sm">You haven't blocked anyone yet</div>
+                  </div>
+                ) : (
+                  <div className="p-4 space-y-3">
+                    {blockedUsers.map((username) => (
+                      <div key={username} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div className="flex items-center space-x-3">
+                          <div className={`w-10 h-10 bg-gradient-to-r ${getAvatarGradient(username)} rounded-full flex items-center justify-center text-white font-bold text-sm`}>
+                            {username.charAt(0)}
+                          </div>
+                          <div>
+                            <div className="font-medium text-gray-800">{username}</div>
+                            <div className="text-xs text-gray-500">Blocked user</div>
+                          </div>
+                        </div>
+                        <button 
+                          onClick={() => unblockUser(username)}
+                          className="bg-green-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-green-600"
+                        >
+                          Unblock
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+              
+              {/* Footer */}
+              <div className="p-4 border-t border-gray-200">
+                <p className="text-xs text-gray-500 text-center">
+                  Blocked users won't appear in your feed, search results, or friend recommendations
+                </p>
               </div>
             </div>
           </div>

@@ -13,9 +13,10 @@ interface AttendeesModalProps {
   onClose: () => void;
   eventTitle: string;
   eventId: string;
+  isUserBlocked?: (username: string) => boolean;
 }
 
-const AttendeesModal: React.FC<AttendeesModalProps> = ({ onClose, eventTitle }) => {
+const AttendeesModal: React.FC<AttendeesModalProps> = ({ onClose, eventTitle, isUserBlocked }) => {
   const [attendees] = useState<Attendee[]>([
     {
       id: '1',
@@ -103,10 +104,12 @@ const AttendeesModal: React.FC<AttendeesModalProps> = ({ onClose, eventTitle }) 
     }
   };
 
-  const filteredAttendees = filter === 'all' ? attendees : attendees.filter(a => a.status === filter);
-  const goingCount = attendees.filter(a => a.status === 'going').length;
-  const maybeCount = attendees.filter(a => a.status === 'maybe').length;
-  const notGoingCount = attendees.filter(a => a.status === 'not_going').length;
+  // Filter out blocked users first, then apply status filter
+  const nonBlockedAttendees = attendees.filter(a => !isUserBlocked?.(a.name));
+  const filteredAttendees = filter === 'all' ? nonBlockedAttendees : nonBlockedAttendees.filter(a => a.status === filter);
+  const goingCount = nonBlockedAttendees.filter(a => a.status === 'going').length;
+  const maybeCount = nonBlockedAttendees.filter(a => a.status === 'maybe').length;
+  const notGoingCount = nonBlockedAttendees.filter(a => a.status === 'not_going').length;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">

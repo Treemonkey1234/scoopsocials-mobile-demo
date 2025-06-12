@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 interface CreatePostModalProps {
   onClose: () => void;
   onSubmit: (post: any) => void;
+  isUserBlocked?: (username: string) => boolean;
 }
 
-const CreatePostModal: React.FC<CreatePostModalProps> = ({ onClose, onSubmit }) => {
+const CreatePostModal: React.FC<CreatePostModalProps> = ({ onClose, onSubmit, isUserBlocked }) => {
   const [reviewedPersons, setReviewedPersons] = useState<string[]>([]);
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('General');
@@ -26,8 +27,8 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ onClose, onSubmit }) 
     { id: '6', name: 'Alex Martinez', trustScore: 89, avatar: '👨', isReciprocal: true }
   ];
 
-  // Only show reciprocal friends for posting
-  const reciprocalFriends = friends.filter(friend => friend.isReciprocal);
+  // Only show reciprocal friends for posting, excluding blocked users
+  const reciprocalFriends = friends.filter(friend => friend.isReciprocal && !isUserBlocked?.(friend.name));
 
   const [filteredFriends, setFilteredFriends] = useState(reciprocalFriends);
 
@@ -39,6 +40,13 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ onClose, onSubmit }) 
 
     if (reviewedPersons.length === 0) {
       alert('Please specify who you are reviewing');
+      return;
+    }
+
+    // Check if any selected persons are blocked
+    const blockedPersons = reviewedPersons.filter(person => isUserBlocked?.(person));
+    if (blockedPersons.length > 0) {
+      alert(`You cannot create posts about blocked users: ${blockedPersons.join(', ')}`);
       return;
     }
 

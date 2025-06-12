@@ -16,9 +16,10 @@ interface CommentsModalProps {
   postId: string;
   postAuthor: string;
   postContent: string;
+  isUserBlocked?: (username: string) => boolean;
 }
 
-const CommentsModal: React.FC<CommentsModalProps> = ({ onClose, postId, postAuthor, postContent }) => {
+const CommentsModal: React.FC<CommentsModalProps> = ({ onClose, postId, postAuthor, postContent, isUserBlocked }) => {
   const [newComment, setNewComment] = useState('');
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [replyText, setReplyText] = useState('');
@@ -232,7 +233,7 @@ const CommentsModal: React.FC<CommentsModalProps> = ({ onClose, postId, postAuth
       {/* Render nested replies */}
       {comment.replies && comment.replies.length > 0 && (
         <div className="mb-3">
-          {comment.replies.map(reply => renderComment(reply, depth + 1))}
+          {comment.replies.filter(reply => !isUserBlocked?.(reply.author)).map(reply => renderComment(reply, depth + 1))}
         </div>
       )}
     </div>
@@ -261,7 +262,7 @@ const CommentsModal: React.FC<CommentsModalProps> = ({ onClose, postId, postAuth
         {/* Comments List */}
         <div className="flex-1 overflow-y-auto p-4">
           <div className="space-y-2">
-            {comments.map((comment) => renderComment(comment))}
+            {comments.filter(comment => !isUserBlocked?.(comment.author)).map((comment) => renderComment(comment))}
           </div>
         </div>
 

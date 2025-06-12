@@ -17,9 +17,10 @@ interface EventDetailsModalProps {
   event: Event;
   onRSVP: (eventId: string, status: 'going' | 'maybe' | 'not_going') => void;
   onViewAttendees: (eventId: string) => void;
+  isUserBlocked?: (username: string) => boolean;
 }
 
-const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ onClose, event, onRSVP, onViewAttendees }) => {
+const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ onClose, event, onRSVP, onViewAttendees, isUserBlocked }) => {
   const [userStatus, setUserStatus] = useState<'going' | 'maybe' | 'not_going' | null>(null);
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
