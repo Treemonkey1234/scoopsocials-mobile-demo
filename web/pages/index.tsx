@@ -8,14 +8,6 @@ export default function Home() {
   const [accountType, setAccountType] = useState<'free' | 'professional' | 'venue' | null>(null);
   const [previousScreen, setPreviousScreen] = useState('welcome');
 
-  useEffect(() => {
-    console.log('=== STATE CHANGE ===');
-    console.log('currentScreen changed to:', currentScreen);
-    console.log('previousScreen:', previousScreen);
-    console.log('accountType:', accountType);
-    console.log('phoneNumber:', phoneNumber);
-    console.log('==================');
-  }, [currentScreen, previousScreen, accountType, phoneNumber]);
 
   const formatPhoneNumber = (text: string) => {
     const cleaned = text.replace(/\D/g, '');
@@ -97,7 +89,7 @@ export default function Home() {
         <p className="text-gray-600 mb-4">Join the community and start building trust</p>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 pb-4">
+      <div className="flex-1 overflow-y-auto px-4 pb-4 scrollbar-hide">
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">First Name</label>
@@ -292,7 +284,7 @@ export default function Home() {
         <p className="text-cyan-100 text-sm">Select the account type that best fits your needs</p>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-3 py-2 space-y-3 max-h-[calc(100vh-200px)]">
+      <div className="flex-1 overflow-y-auto px-3 py-2 space-y-3 scrollbar-hide">
         {/* Free Account Card */}
         <div
           onClick={() => setAccountType('free')}
@@ -455,7 +447,7 @@ export default function Home() {
       </div>
 
       <div className="flex-1 bg-white mx-3 mb-3 rounded-t-3xl overflow-hidden flex flex-col">
-        <div className="flex-1 p-4 text-center overflow-y-auto">
+        <div className="flex-1 p-4 text-center overflow-y-auto scrollbar-hide">
           <div className="text-5xl mb-3">📱</div>
           <h2 className="text-xl font-bold text-gray-800 mb-3">Connect with Friends</h2>
           <p className="text-gray-600 mb-6 leading-relaxed text-sm">
@@ -480,28 +472,14 @@ export default function Home() {
         
         <div className="p-4 flex-shrink-0 space-y-3">
           <button
-            onClick={() => {
-              console.log('=== IMPORT CONTACTS BUTTON CLICKED ===');
-              console.log('Current screen before change:', currentScreen);
-              console.log('About to set screen to main-app');
-              setCurrentScreen('main-app');
-              console.log('setCurrentScreen called with main-app');
-              console.log('=====================================');
-            }}
+            onClick={() => setCurrentScreen('main-app')}
             className="w-full bg-cyan-500 text-white py-3 rounded-xl text-base font-bold"
           >
             Import Contacts
           </button>
 
           <button
-            onClick={() => {
-              console.log('=== SKIP FOR NOW BUTTON CLICKED ===');
-              console.log('Current screen before change:', currentScreen);
-              console.log('About to set screen to main-app');
-              setCurrentScreen('main-app');
-              console.log('setCurrentScreen called with main-app');
-              console.log('==================================');
-            }}
+            onClick={() => setCurrentScreen('main-app')}
             className="w-full text-gray-500 underline text-sm py-2"
           >
             Skip for Now
@@ -519,7 +497,7 @@ export default function Home() {
         <p className="text-gray-600 text-sm">Your account has been successfully created</p>
       </div>
 
-      <div className="flex-1 p-4 overflow-y-auto">
+      <div className="flex-1 p-4 overflow-y-auto scrollbar-hide">
         <div className="space-y-4">
           <div className="bg-gradient-to-r from-cyan-50 to-blue-50 p-4 rounded-xl border border-cyan-200">
             <h3 className="font-bold text-gray-800 mb-2 flex items-center">
@@ -585,38 +563,15 @@ export default function Home() {
   );
 
   const renderScreen = () => {
-    console.log('=== RENDER SCREEN FUNCTION CALLED ===');
-    console.log('Current screen state:', currentScreen);
-    console.log('Type of currentScreen:', typeof currentScreen);
-    console.log('currentScreen === "main-app":', currentScreen === 'main-app');
-    
     switch (currentScreen) {
-      case 'welcome': 
-        console.log('RENDERING: WelcomeScreen');
-        return <WelcomeScreen />;
-      case 'signup': 
-        console.log('RENDERING: SignupScreen');
-        return <SignupScreen />;
-      case 'login': 
-        console.log('RENDERING: LoginScreen');
-        return <LoginScreen />;
-      case 'verification': 
-        console.log('RENDERING: VerificationScreen');
-        return <VerificationScreen />;
-      case 'account-type': 
-        console.log('RENDERING: AccountTypeScreen');
-        return <AccountTypeScreen />;
-      case 'contacts': 
-        console.log('RENDERING: ContactsScreen');
-        return <ContactsScreen />;
-      case 'main-app': 
-        console.log('RENDERING: MainAppScreen - SUCCESS!');
-        console.log('MainAppScreen component exists:', typeof MainAppScreen);
-        return <MainAppScreen />;
-      default: 
-        console.log('RENDERING: Default case - WelcomeScreen');
-        console.log('Unhandled screen:', currentScreen);
-        return <WelcomeScreen />;
+      case 'welcome': return <WelcomeScreen />;
+      case 'signup': return <SignupScreen />;
+      case 'login': return <LoginScreen />;
+      case 'verification': return <VerificationScreen />;
+      case 'account-type': return <AccountTypeScreen />;
+      case 'contacts': return <ContactsScreen />;
+      case 'main-app': return <MainAppScreen />;
+      default: return <WelcomeScreen />;
     }
   };
 
@@ -643,7 +598,7 @@ export default function Home() {
       </Head>
       
       <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-        <div className="w-full max-w-sm bg-white rounded-3xl shadow-2xl overflow-hidden min-h-[600px] max-h-[90vh] flex flex-col">
+        <div className="mobile-viewport mobile-frame bg-white flex flex-col relative">
           {/* Status Bar */}
           <div className="bg-white px-4 py-2 flex justify-between items-center text-xs font-semibold flex-shrink-0">
             <span>9:41</span>
@@ -659,14 +614,12 @@ export default function Home() {
             </div>
           </div>
           
-          {/* Debug Bar - Remove after fixing */}
-          <div className="bg-red-100 px-2 py-1 text-xs text-red-800 border-b border-red-200">
-            DEBUG: currentScreen = "{currentScreen}" | type = {typeof currentScreen}
-          </div>
           
           {/* Screen Content */}
           <div className="flex-1 overflow-hidden">
-            {renderScreen()}
+            <div className="h-full overflow-y-auto scrollbar-hide">
+              {renderScreen()}
+            </div>
           </div>
         </div>
         
