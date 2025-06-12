@@ -66,6 +66,7 @@ export default function ScoopApp() {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [showInbox, setShowInbox] = useState(false);
   const [showCreateDropdown, setShowCreateDropdown] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   
   // Fake user network state
   const [allUsers, setAllUsers] = useState<FakeUser[]>([]);
@@ -786,12 +787,20 @@ export default function ScoopApp() {
           {currentScreen === 'profile' && (
             <div className="h-full bg-white">
               <div className="bg-gradient-to-r from-cyan-400 to-blue-400 p-6 text-center text-white relative">
-                <button 
-                  onClick={() => setShowInbox(true)}
-                  className="absolute top-4 left-4 bg-white bg-opacity-20 p-2 rounded-full hover:bg-opacity-30 transition-colors"
-                >
-                  <span className="text-white text-lg">📨</span>
-                </button>
+                <div className="absolute top-4 left-4 flex space-x-2">
+                  <button 
+                    onClick={() => setShowInbox(true)}
+                    className="bg-white bg-opacity-20 p-2 rounded-full hover:bg-opacity-30 transition-colors"
+                  >
+                    <span className="text-white text-lg">📨</span>
+                  </button>
+                  <button 
+                    onClick={() => setShowSettings(true)}
+                    className="bg-white bg-opacity-20 p-2 rounded-full hover:bg-opacity-30 transition-colors"
+                  >
+                    <span className="text-white text-lg">⚙️</span>
+                  </button>
+                </div>
                 <div className="absolute top-4 right-4">
                   <button 
                     onClick={() => setShowCreateDropdown(!showCreateDropdown)}
@@ -2232,6 +2241,248 @@ export default function ScoopApp() {
                 >
                   Mark All as Read
                 </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Settings Modal */}
+        {showSettings && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-lg w-full max-w-md max-h-[85vh] flex flex-col">
+              {/* Header */}
+              <div className="flex justify-between items-center p-4 border-b border-gray-200">
+                <h2 className="text-xl font-bold text-gray-800">Settings</h2>
+                <button
+                  onClick={() => setShowSettings(false)}
+                  className="text-gray-400 hover:text-gray-600 text-xl font-bold"
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* Settings Content */}
+              <div className="flex-1 overflow-y-auto">
+                
+                {/* Account Section */}
+                <div className="p-4 border-b border-gray-200">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Account</h3>
+                  <div className="space-y-3">
+                    <button className="w-full flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+                      <div className="flex items-center">
+                        <span className="text-lg mr-3">👤</span>
+                        <span className="text-gray-700">Edit Profile</span>
+                      </div>
+                      <span className="text-gray-400">→</span>
+                    </button>
+                    
+                    <button className="w-full flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+                      <div className="flex items-center">
+                        <span className="text-lg mr-3">📱</span>
+                        <span className="text-gray-700">Phone Number</span>
+                      </div>
+                      <span className="text-gray-400">→</span>
+                    </button>
+                    
+                    <button 
+                      onClick={() => {
+                        setShowSettings(false);
+                        setShowSocialAccounts(true);
+                      }}
+                      className="w-full flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
+                    >
+                      <div className="flex items-center">
+                        <span className="text-lg mr-3">🔗</span>
+                        <span className="text-gray-700">Connected Accounts</span>
+                      </div>
+                      <span className="text-gray-400">→</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Privacy & Security Section */}
+                <div className="p-4 border-b border-gray-200">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Privacy & Security</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
+                      <div className="flex items-center">
+                        <span className="text-lg mr-3">🔒</span>
+                        <span className="text-gray-700">Profile Visibility</span>
+                      </div>
+                      <select className="text-sm border border-gray-300 rounded px-2 py-1">
+                        <option>Everyone</option>
+                        <option>Friends Only</option>
+                        <option>Private</option>
+                      </select>
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
+                      <div className="flex items-center">
+                        <span className="text-lg mr-3">👁️</span>
+                        <span className="text-gray-700">Show Trust Score</span>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" className="sr-only peer" defaultChecked />
+                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+                      </label>
+                    </div>
+                    
+                    <button className="w-full flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+                      <div className="flex items-center">
+                        <span className="text-lg mr-3">🚫</span>
+                        <span className="text-gray-700">Blocked Users</span>
+                      </div>
+                      <span className="text-gray-400">→</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Notifications Section */}
+                <div className="p-4 border-b border-gray-200">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Notifications</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
+                      <div className="flex items-center">
+                        <span className="text-lg mr-3">🔔</span>
+                        <span className="text-gray-700">Push Notifications</span>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" className="sr-only peer" defaultChecked />
+                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+                      </label>
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
+                      <div className="flex items-center">
+                        <span className="text-lg mr-3">📧</span>
+                        <span className="text-gray-700">Email Notifications</span>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" className="sr-only peer" />
+                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+                      </label>
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
+                      <div className="flex items-center">
+                        <span className="text-lg mr-3">📱</span>
+                        <span className="text-gray-700">SMS Notifications</span>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" className="sr-only peer" defaultChecked />
+                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Preferences Section */}
+                <div className="p-4 border-b border-gray-200">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Preferences</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
+                      <div className="flex items-center">
+                        <span className="text-lg mr-3">🌙</span>
+                        <span className="text-gray-700">Dark Mode</span>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" className="sr-only peer" />
+                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+                      </label>
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
+                      <div className="flex items-center">
+                        <span className="text-lg mr-3">🌍</span>
+                        <span className="text-gray-700">Language</span>
+                      </div>
+                      <select className="text-sm border border-gray-300 rounded px-2 py-1">
+                        <option>English</option>
+                        <option>Spanish</option>
+                        <option>French</option>
+                        <option>German</option>
+                      </select>
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
+                      <div className="flex items-center">
+                        <span className="text-lg mr-3">📍</span>
+                        <span className="text-gray-700">Location Services</span>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" className="sr-only peer" defaultChecked />
+                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Support Section */}
+                <div className="p-4 border-b border-gray-200">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Support</h3>
+                  <div className="space-y-3">
+                    <button className="w-full flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+                      <div className="flex items-center">
+                        <span className="text-lg mr-3">❓</span>
+                        <span className="text-gray-700">Help Center</span>
+                      </div>
+                      <span className="text-gray-400">→</span>
+                    </button>
+                    
+                    <button className="w-full flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+                      <div className="flex items-center">
+                        <span className="text-lg mr-3">📞</span>
+                        <span className="text-gray-700">Contact Support</span>
+                      </div>
+                      <span className="text-gray-400">→</span>
+                    </button>
+                    
+                    <button className="w-full flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+                      <div className="flex items-center">
+                        <span className="text-lg mr-3">📋</span>
+                        <span className="text-gray-700">Terms of Service</span>
+                      </div>
+                      <span className="text-gray-400">→</span>
+                    </button>
+                    
+                    <button className="w-full flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+                      <div className="flex items-center">
+                        <span className="text-lg mr-3">🔒</span>
+                        <span className="text-gray-700">Privacy Policy</span>
+                      </div>
+                      <span className="text-gray-400">→</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Account Actions Section */}
+                <div className="p-4">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Account</h3>
+                  <div className="space-y-3">
+                    <button className="w-full flex items-center justify-between p-3 rounded-lg bg-red-50 hover:bg-red-100 transition-colors">
+                      <div className="flex items-center">
+                        <span className="text-lg mr-3">🚪</span>
+                        <span className="text-red-600 font-medium">Log Out</span>
+                      </div>
+                      <span className="text-red-400">→</span>
+                    </button>
+                    
+                    <button className="w-full flex items-center justify-between p-3 rounded-lg bg-red-50 hover:bg-red-100 transition-colors">
+                      <div className="flex items-center">
+                        <span className="text-lg mr-3">🗑️</span>
+                        <span className="text-red-600 font-medium">Delete Account</span>
+                      </div>
+                      <span className="text-red-400">→</span>
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+              
+              {/* Footer */}
+              <div className="p-4 border-t border-gray-200 text-center">
+                <p className="text-xs text-gray-500">ScoopSocials v1.0.0</p>
+                <p className="text-xs text-gray-400 mt-1">Building trust in digital connections</p>
               </div>
             </div>
           </div>
