@@ -86,6 +86,9 @@ export default function ScoopApp() {
 
   // Inbox state
   const [inboxTab, setInboxTab] = useState('all');
+  
+  // Profile tab state
+  const [profileActiveTab, setProfileActiveTab] = useState(0);
   const [notifications, setNotifications] = useState([
     {
       id: '1',
@@ -929,29 +932,273 @@ export default function ScoopApp() {
                   </div>
                 </div>
                 
-                {/* Recent Activity Overview */}
-                <div className="space-y-4 mb-6">
-                  <div className="bg-white rounded-lg p-4 border border-gray-200">
-                    <h3 className="text-sm font-semibold text-gray-800 mb-3">Recent Posts</h3>
-                    <div className="space-y-2">
-                      <div className="text-xs text-gray-600">Mobile app collaboration review • 2 days ago</div>
-                      <div className="text-xs text-gray-600">Marketplace transaction review • 1 week ago</div>
-                    </div>
+                {/* Horizontal Swipeable Sections */}
+                <div className="mb-6">
+                  {/* Tab Navigation */}
+                  <div className="flex border-b border-gray-200 mb-4">
+                    {['Posts', 'Groups', 'Likes'].map((tab, index) => (
+                      <button
+                        key={tab}
+                        onClick={() => {
+                          setProfileActiveTab(index);
+                          const container = document.getElementById('profile-content-container');
+                          if (container) {
+                            container.scrollTo({
+                              left: index * container.offsetWidth,
+                              behavior: 'smooth'
+                            });
+                          }
+                        }}
+                        className={`flex-1 py-3 text-center font-semibold text-sm transition-colors ${
+                          profileActiveTab === index
+                            ? 'text-cyan-500 border-b-2 border-cyan-500'
+                            : 'text-gray-500'
+                        }`}
+                      >
+                        {tab}
+                      </button>
+                    ))}
                   </div>
-                  
-                  <div className="bg-white rounded-lg p-4 border border-gray-200">
-                    <h3 className="text-sm font-semibold text-gray-800 mb-3">Groups</h3>
-                    <div className="space-y-2">
-                      <div className="text-xs text-gray-600">Phoenix Tech Meetup • Organizer</div>
-                      <div className="text-xs text-gray-600">React Native Developers • Member</div>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-white rounded-lg p-4 border border-gray-200">
-                    <h3 className="text-sm font-semibold text-gray-800 mb-3">Recent Likes</h3>
-                    <div className="space-y-2">
-                      <div className="text-xs text-gray-600">Apartment hunt review • 3 days ago</div>
-                      <div className="text-xs text-gray-600">Coffee & Code event • 1 week ago</div>
+
+                  {/* Horizontal Scrollable Content */}
+                  <div 
+                    id="profile-content-container"
+                    className="overflow-x-auto overflow-y-hidden scrollbar-hide"
+                    onScroll={(e) => {
+                      const container = e.currentTarget;
+                      const scrollLeft = container.scrollLeft;
+                      const containerWidth = container.offsetWidth;
+                      const newActiveIndex = Math.round(scrollLeft / containerWidth);
+                      
+                      if (newActiveIndex !== profileActiveTab) {
+                        setProfileActiveTab(newActiveIndex);
+                      }
+                    }}
+                    style={{ scrollSnapType: 'x mandatory', height: '400px' }}
+                  >
+                    <div className="flex h-full" style={{ width: '300%' }}>
+                      {/* Posts Section */}
+                      <div className="w-1/3 h-full overflow-y-auto scrollbar-hide pr-4" style={{ scrollSnapAlign: 'start' }}>
+                        <div className="space-y-4">
+                          <div className="bg-white rounded-lg p-4 border border-gray-200">
+                            <div className="flex items-center mb-3">
+                              <div className="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center mr-3">
+                                <span className="text-white text-sm font-bold">R</span>
+                              </div>
+                              <div>
+                                <p className="font-semibold text-gray-800">Coffee Shop Review</p>
+                                <p className="text-xs text-gray-500">2 hours ago</p>
+                              </div>
+                            </div>
+                            <p className="text-gray-700 mb-3 text-sm">Amazing coffee and great WiFi for remote work! Perfect spot for morning meetings. ☕</p>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center space-x-4">
+                                <button className="flex items-center text-gray-500">
+                                  <span className="mr-1">👍</span>
+                                  <span className="text-sm">24</span>
+                                </button>
+                                <button className="flex items-center text-gray-500">
+                                  <span className="mr-1">💬</span>
+                                  <span className="text-sm">5</span>
+                                </button>
+                              </div>
+                              <div className="flex items-center">
+                                <span className="text-yellow-500">⭐⭐⭐⭐⭐</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="bg-white rounded-lg p-4 border border-gray-200">
+                            <div className="flex items-center mb-3">
+                              <div className="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center mr-3">
+                                <span className="text-white text-sm font-bold">R</span>
+                              </div>
+                              <div>
+                                <p className="font-semibold text-gray-800">App Collaboration Review</p>
+                                <p className="text-xs text-gray-500">2 days ago</p>
+                              </div>
+                            </div>
+                            <p className="text-gray-700 mb-3 text-sm">Worked with @TechGuru on a mobile app project. Great communication and delivered quality code on time! 📱</p>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center space-x-4">
+                                <button className="flex items-center text-gray-500">
+                                  <span className="mr-1">👍</span>
+                                  <span className="text-sm">18</span>
+                                </button>
+                                <button className="flex items-center text-gray-500">
+                                  <span className="mr-1">💬</span>
+                                  <span className="text-sm">3</span>
+                                </button>
+                              </div>
+                              <div className="flex items-center">
+                                <span className="text-yellow-500">⭐⭐⭐⭐⭐</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="bg-white rounded-lg p-4 border border-gray-200">
+                            <div className="flex items-center mb-3">
+                              <div className="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center mr-3">
+                                <span className="text-white text-sm font-bold">R</span>
+                              </div>
+                              <div>
+                                <p className="font-semibold text-gray-800">Marketplace Transaction</p>
+                                <p className="text-xs text-gray-500">1 week ago</p>
+                              </div>
+                            </div>
+                            <p className="text-gray-700 mb-3 text-sm">Bought a laptop from @TechSeller. Item was exactly as described and shipped quickly. Highly recommend! 💻</p>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center space-x-4">
+                                <button className="flex items-center text-gray-500">
+                                  <span className="mr-1">👍</span>
+                                  <span className="text-sm">15</span>
+                                </button>
+                                <button className="flex items-center text-gray-500">
+                                  <span className="mr-1">💬</span>
+                                  <span className="text-sm">2</span>
+                                </button>
+                              </div>
+                              <div className="flex items-center">
+                                <span className="text-yellow-500">⭐⭐⭐⭐⭐</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Groups Section */}
+                      <div className="w-1/3 h-full overflow-y-auto scrollbar-hide px-2" style={{ scrollSnapAlign: 'start' }}>
+                        <div className="space-y-4">
+                          <div className="bg-white rounded-lg p-4 border border-gray-200">
+                            <div className="flex items-center mb-3">
+                              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mr-3">
+                                <span className="text-white text-sm font-bold">🚀</span>
+                              </div>
+                              <div className="flex-1">
+                                <p className="font-semibold text-gray-800">Phoenix Tech Meetup</p>
+                                <p className="text-xs text-gray-500">324 members • Organizer</p>
+                              </div>
+                              <button className="text-cyan-500 text-sm font-semibold">Manage</button>
+                            </div>
+                            <p className="text-gray-600 text-sm">Monthly meetup for developers, designers, and tech enthusiasts in Phoenix.</p>
+                          </div>
+
+                          <div className="bg-white rounded-lg p-4 border border-gray-200">
+                            <div className="flex items-center mb-3">
+                              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mr-3">
+                                <span className="text-white text-sm font-bold">⚛️</span>
+                              </div>
+                              <div className="flex-1">
+                                <p className="font-semibold text-gray-800">React Native Developers</p>
+                                <p className="text-xs text-gray-500">1.2k members • Member</p>
+                              </div>
+                              <button className="text-cyan-500 text-sm font-semibold">Joined</button>
+                            </div>
+                            <p className="text-gray-600 text-sm">Community for React Native developers sharing tips, code, and job opportunities.</p>
+                          </div>
+
+                          <div className="bg-white rounded-lg p-4 border border-gray-200">
+                            <div className="flex items-center mb-3">
+                              <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-teal-500 rounded-xl flex items-center justify-center mr-3">
+                                <span className="text-white text-sm font-bold">🎯</span>
+                              </div>
+                              <div className="flex-1">
+                                <p className="font-semibold text-gray-800">Startup Founders AZ</p>
+                                <p className="text-xs text-gray-500">89 members • Member</p>
+                              </div>
+                              <button className="text-cyan-500 text-sm font-semibold">Joined</button>
+                            </div>
+                            <p className="text-gray-600 text-sm">Exclusive group for startup founders in Arizona to network and share experiences.</p>
+                          </div>
+
+                          <div className="bg-white rounded-lg p-4 border border-gray-200">
+                            <div className="flex items-center mb-3">
+                              <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center mr-3">
+                                <span className="text-white text-sm font-bold">🏃</span>
+                              </div>
+                              <div className="flex-1">
+                                <p className="font-semibold text-gray-800">Weekend Warriors</p>
+                                <p className="text-xs text-gray-500">156 members • Active</p>
+                              </div>
+                              <button className="bg-cyan-500 text-white text-sm font-semibold px-3 py-1 rounded-full">Join</button>
+                            </div>
+                            <p className="text-gray-600 text-sm">Plan weekend activities and outdoor adventures with like-minded people.</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Likes Section */}
+                      <div className="w-1/3 h-full overflow-y-auto scrollbar-hide pl-2" style={{ scrollSnapAlign: 'start' }}>
+                        <div className="space-y-4">
+                          <div className="bg-white rounded-lg p-4 border border-gray-200">
+                            <div className="flex items-center mb-3">
+                              <div className="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center mr-3">
+                                <span className="text-white text-sm font-bold">S</span>
+                              </div>
+                              <div>
+                                <p className="font-semibold text-gray-800">Sarah's Restaurant Review</p>
+                                <p className="text-xs text-gray-500">You liked this • 3 hours ago</p>
+                              </div>
+                            </div>
+                            <p className="text-gray-700 mb-3 text-sm">Amazing Italian food! The pasta was homemade and the service was outstanding. 🍝</p>
+                            <div className="flex items-center">
+                              <span className="text-yellow-500 mr-2">⭐⭐⭐⭐⭐</span>
+                              <span className="text-sm text-gray-500">Tony's Italian Kitchen</span>
+                            </div>
+                          </div>
+
+                          <div className="bg-white rounded-lg p-4 border border-gray-200">
+                            <div className="flex items-center mb-3">
+                              <div className="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center mr-3">
+                                <span className="text-white text-sm font-bold">M</span>
+                              </div>
+                              <div>
+                                <p className="font-semibold text-gray-800">Mike's Event Review</p>
+                                <p className="text-xs text-gray-500">You liked this • 1 day ago</p>
+                              </div>
+                            </div>
+                            <p className="text-gray-700 mb-3 text-sm">Jazz night at Blue Note was incredible! Great atmosphere and amazing musicians. 🎷</p>
+                            <div className="flex items-center">
+                              <span className="text-yellow-500 mr-2">⭐⭐⭐⭐⭐</span>
+                              <span className="text-sm text-gray-500">Blue Note Jazz Club</span>
+                            </div>
+                          </div>
+
+                          <div className="bg-white rounded-lg p-4 border border-gray-200">
+                            <div className="flex items-center mb-3">
+                              <div className="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center mr-3">
+                                <span className="text-white text-sm font-bold">A</span>
+                              </div>
+                              <div>
+                                <p className="font-semibold text-gray-800">Alex's Coffee Shop Post</p>
+                                <p className="text-xs text-gray-500">You liked this • 2 days ago</p>
+                              </div>
+                            </div>
+                            <p className="text-gray-700 mb-3 text-sm">Perfect spot for morning meetings! Great WiFi and excellent espresso. ☕</p>
+                            <div className="flex items-center">
+                              <span className="text-yellow-500 mr-2">⭐⭐⭐⭐⭐</span>
+                              <span className="text-sm text-gray-500">Central Coffee Co.</span>
+                            </div>
+                          </div>
+
+                          <div className="bg-white rounded-lg p-4 border border-gray-200">
+                            <div className="flex items-center mb-3">
+                              <div className="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center mr-3">
+                                <span className="text-white text-sm font-bold">L</span>
+                              </div>
+                              <div>
+                                <p className="font-semibold text-gray-800">Lisa's App Review</p>
+                                <p className="text-xs text-gray-500">You liked this • 3 days ago</p>
+                              </div>
+                            </div>
+                            <p className="text-gray-700 mb-3 text-sm">Worked with @CodeMaster on a web project. Excellent code quality and great communication! 💻</p>
+                            <div className="flex items-center">
+                              <span className="text-yellow-500 mr-2">⭐⭐⭐⭐⭐</span>
+                              <span className="text-sm text-gray-500">Professional Review</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
