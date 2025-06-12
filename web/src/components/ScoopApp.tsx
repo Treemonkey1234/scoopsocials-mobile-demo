@@ -68,6 +68,7 @@ export default function ScoopApp() {
   const [showCreateDropdown, setShowCreateDropdown] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showBlockedUsers, setShowBlockedUsers] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   
   // Fake user network state
   const [allUsers, setAllUsers] = useState<FakeUser[]>([]);
@@ -610,8 +611,8 @@ export default function ScoopApp() {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen flex items-center justify-center p-4">
-      <div className="bg-white shadow-2xl relative rounded-3xl flex flex-col overflow-hidden mobile-frame" style={{width: '393px', height: '852px', maxHeight: '852px'}}>
+    <div className={`${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'} min-h-screen flex items-center justify-center p-4 transition-colors duration-300`}>
+      <div className={`${isDarkMode ? 'bg-gray-800' : 'bg-white'} shadow-2xl relative rounded-3xl flex flex-col overflow-hidden mobile-frame transition-colors duration-300`} style={{width: '393px', height: '852px', maxHeight: '852px'}}>
         
         {/* Status Bar */}
         <div className="bg-black text-white px-6 py-2 rounded-t-3xl flex items-center justify-between text-sm flex-shrink-0">
@@ -630,11 +631,11 @@ export default function ScoopApp() {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 overflow-hidden" style={{maxHeight: 'calc(852px - 120px)'}}>
+        <div className={`flex-1 overflow-hidden ${isDarkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-300`} style={{maxHeight: 'calc(852px - 120px)'}}>
           
           {/* Home Feed Screen */}
           {currentScreen === 'home' && (
-            <div className="h-full flex flex-col" style={{background: 'linear-gradient(135deg, #f0fdff 0%, #e0f7fa 50%, #b2dfdb 100%)'}}>
+            <div className={`h-full flex flex-col transition-all duration-300`} style={{background: isDarkMode ? 'linear-gradient(135deg, #1f2937 0%, #374151 50%, #4b5563 100%)' : 'linear-gradient(135deg, #f0fdff 0%, #e0f7fa 50%, #b2dfdb 100%)'}}>
               
               {/* Header */}
               <div className="px-6 py-4 border-b border-cyan-300 flex-shrink-0 shadow-lg" style={{background: 'linear-gradient(135deg, #0891b2 0%, #0e7490 20%, #155e75 100%)'}}>
@@ -2309,10 +2310,10 @@ export default function ScoopApp() {
         {/* Settings Modal */}
         {showSettings && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-lg w-full max-w-md max-h-[85vh] flex flex-col">
+            <div className={`${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'} rounded-lg w-full max-w-md max-h-[85vh] flex flex-col transition-colors duration-300`}>
               {/* Header */}
-              <div className="flex justify-between items-center p-4 border-b border-gray-200">
-                <h2 className="text-xl font-bold text-gray-800">Settings</h2>
+              <div className={`flex justify-between items-center p-4 border-b ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
+                <h2 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Settings</h2>
                 <button
                   onClick={() => setShowSettings(false)}
                   className="text-gray-400 hover:text-gray-600 text-xl font-bold"
@@ -2325,35 +2326,13 @@ export default function ScoopApp() {
               <div className="flex-1 overflow-y-auto">
                 
                 {/* Account Section */}
-                <div className="p-4 border-b border-gray-200">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Account</h3>
+                <div className={`p-4 border-b ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
+                  <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-800'} mb-3`}>Account</h3>
                   <div className="space-y-3">
-                    <button className="w-full flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+                    <button className={`w-full flex items-center justify-between p-3 rounded-lg ${isDarkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-50 hover:bg-gray-100'} transition-colors`}>
                       <div className="flex items-center">
                         <span className="text-lg mr-3">👤</span>
-                        <span className="text-gray-700">Edit Profile</span>
-                      </div>
-                      <span className="text-gray-400">→</span>
-                    </button>
-                    
-                    <button className="w-full flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
-                      <div className="flex items-center">
-                        <span className="text-lg mr-3">📱</span>
-                        <span className="text-gray-700">Phone Number</span>
-                      </div>
-                      <span className="text-gray-400">→</span>
-                    </button>
-                    
-                    <button 
-                      onClick={() => {
-                        setShowSettings(false);
-                        setShowSocialAccounts(true);
-                      }}
-                      className="w-full flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
-                    >
-                      <div className="flex items-center">
-                        <span className="text-lg mr-3">🔗</span>
-                        <span className="text-gray-700">Connected Accounts</span>
+                        <span className={`${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>Edit Profile</span>
                       </div>
                       <span className="text-gray-400">→</span>
                     </button>
@@ -2366,25 +2345,10 @@ export default function ScoopApp() {
                   <div className="space-y-3">
                     <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
                       <div className="flex items-center">
-                        <span className="text-lg mr-3">🔒</span>
-                        <span className="text-gray-700">Profile Visibility</span>
-                      </div>
-                      <select className="text-sm border border-gray-300 rounded px-2 py-1">
-                        <option>Everyone</option>
-                        <option>Friends Only</option>
-                        <option>Private</option>
-                      </select>
-                    </div>
-                    
-                    <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
-                      <div className="flex items-center">
                         <span className="text-lg mr-3">👁️</span>
-                        <span className="text-gray-700">Show Trust Score</span>
+                        <span className="text-gray-700">Trust Score Always Visible</span>
                       </div>
-                      <label className="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" className="sr-only peer" defaultChecked />
-                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
-                      </label>
+                      <span className="text-sm text-gray-500">Enabled</span>
                     </div>
                     
                     <button 
@@ -2404,17 +2368,6 @@ export default function ScoopApp() {
                 <div className="p-4 border-b border-gray-200">
                   <h3 className="text-lg font-semibold text-gray-800 mb-3">Notifications</h3>
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
-                      <div className="flex items-center">
-                        <span className="text-lg mr-3">🔔</span>
-                        <span className="text-gray-700">Push Notifications</span>
-                      </div>
-                      <label className="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" className="sr-only peer" defaultChecked />
-                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
-                      </label>
-                    </div>
-                    
                     <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
                       <div className="flex items-center">
                         <span className="text-lg mr-3">📧</span>
@@ -2449,7 +2402,12 @@ export default function ScoopApp() {
                         <span className="text-gray-700">Dark Mode</span>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" className="sr-only peer" />
+                        <input 
+                          type="checkbox" 
+                          className="sr-only peer" 
+                          checked={isDarkMode}
+                          onChange={(e) => setIsDarkMode(e.target.checked)}
+                        />
                         <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
                       </label>
                     </div>
@@ -2465,17 +2423,6 @@ export default function ScoopApp() {
                         <option>French</option>
                         <option>German</option>
                       </select>
-                    </div>
-                    
-                    <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
-                      <div className="flex items-center">
-                        <span className="text-lg mr-3">📍</span>
-                        <span className="text-gray-700">Location Services</span>
-                      </div>
-                      <label className="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" className="sr-only peer" defaultChecked />
-                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
-                      </label>
                     </div>
                   </div>
                 </div>
