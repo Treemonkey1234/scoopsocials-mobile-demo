@@ -6,6 +6,7 @@ export default function MobilePreview() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
   const [accountType, setAccountType] = useState<'free' | 'professional' | 'venue' | null>(null);
+  const [previousScreen, setPreviousScreen] = useState('welcome');
 
   const formatPhoneNumber = (text: string) => {
     const cleaned = text.replace(/\D/g, '');
@@ -22,45 +23,51 @@ export default function MobilePreview() {
   };
 
   const WelcomeScreen = () => (
-    <div className="flex flex-col h-full bg-gradient-to-br from-cyan-400 to-blue-500 text-white">
-      <div className="flex-1 flex flex-col justify-between p-6 py-4">
-        <div className="text-center mt-6">
-          <div className="w-20 h-20 bg-white rounded-full mx-auto mb-4 flex items-center justify-center">
-            <span className="text-xl font-bold text-cyan-500">S</span>
+    <div className="flex flex-col h-full bg-gradient-to-br from-cyan-400 to-blue-500 text-white overflow-hidden">
+      <div className="flex-1 flex flex-col justify-between p-6 py-3">
+        <div className="text-center mt-4">
+          <div className="w-16 h-16 bg-white rounded-full mx-auto mb-3 flex items-center justify-center">
+            <span className="text-lg font-bold text-cyan-500">S</span>
           </div>
-          <h1 className="text-2xl font-bold mb-2">ScoopSocials</h1>
-          <p className="text-cyan-100 text-base">Building trust in digital connections</p>
+          <h1 className="text-xl font-bold mb-2">ScoopSocials</h1>
+          <p className="text-cyan-100 text-sm">Building trust in digital connections</p>
         </div>
 
-        <div className="space-y-3 text-center">
-          <div className="bg-white/10 backdrop-blur rounded-full px-4 py-3 flex items-center">
-            <span className="text-xl mr-3">🛡️</span>
-            <span className="text-base">Verified Profiles</span>
+        <div className="space-y-2 text-center my-4">
+          <div className="bg-white/10 backdrop-blur rounded-full px-3 py-2 flex items-center">
+            <span className="text-lg mr-3">🛡️</span>
+            <span className="text-sm">Verified Profiles</span>
           </div>
-          <div className="bg-white/10 backdrop-blur rounded-full px-4 py-3 flex items-center">
-            <span className="text-xl mr-3">📱</span>
-            <span className="text-base">Phone Verification</span>
+          <div className="bg-white/10 backdrop-blur rounded-full px-3 py-2 flex items-center">
+            <span className="text-lg mr-3">📱</span>
+            <span className="text-sm">Phone Verification</span>
           </div>
-          <div className="bg-white/10 backdrop-blur rounded-full px-4 py-3 flex items-center">
-            <span className="text-xl mr-3">👥</span>
-            <span className="text-base">Community Trust</span>
+          <div className="bg-white/10 backdrop-blur rounded-full px-3 py-2 flex items-center">
+            <span className="text-lg mr-3">👥</span>
+            <span className="text-sm">Community Trust</span>
           </div>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-3 pb-2">
           <button
-            onClick={() => setCurrentScreen('signup')}
-            className="w-full bg-white text-cyan-500 py-3 rounded-full text-lg font-bold"
+            onClick={() => {
+              setPreviousScreen('welcome');
+              setCurrentScreen('signup');
+            }}
+            className="w-full bg-white text-cyan-500 py-3 rounded-full text-base font-bold"
           >
             Create Account
           </button>
           <button
-            onClick={() => setCurrentScreen('login')}
-            className="w-full border-2 border-white text-white py-3 rounded-full text-lg font-semibold"
+            onClick={() => {
+              setPreviousScreen('welcome');
+              setCurrentScreen('login');
+            }}
+            className="w-full border-2 border-white text-white py-3 rounded-full text-base font-semibold"
           >
             Sign In
           </button>
-          <p className="text-center text-xs text-cyan-100 mt-2 px-2 leading-tight">
+          <p className="text-center text-xs text-cyan-100 px-4 leading-tight pt-1">
             By continuing, you agree to our Terms of Service and Privacy Policy
           </p>
         </div>
@@ -120,7 +127,10 @@ export default function MobilePreview() {
           </div>
 
           <button
-            onClick={() => setCurrentScreen('verification')}
+            onClick={() => {
+              setPreviousScreen('signup');
+              setCurrentScreen('verification');
+            }}
             className="w-full bg-cyan-500 text-white py-3 rounded-xl text-lg font-bold mt-6"
           >
             Continue
@@ -168,7 +178,10 @@ export default function MobilePreview() {
           </div>
 
           <button
-            onClick={() => setCurrentScreen('verification')}
+            onClick={() => {
+              setPreviousScreen('login');
+              setCurrentScreen('verification');
+            }}
             className="w-full bg-cyan-500 text-white py-4 rounded-xl text-lg font-bold"
           >
             Send Verification Code
@@ -203,7 +216,7 @@ export default function MobilePreview() {
     <div className="flex flex-col h-full bg-white">
       <div className="p-6">
         <button
-          onClick={() => setCurrentScreen(phoneNumber ? 'signup' : 'login')}
+          onClick={() => setCurrentScreen(previousScreen)}
           className="mb-6 p-2 text-gray-600"
         >
           ← Back
@@ -418,53 +431,55 @@ export default function MobilePreview() {
   );
 
   const ContactsScreen = () => (
-    <div className="flex flex-col h-full bg-gradient-to-br from-cyan-400 to-blue-500">
-      <div className="p-6">
+    <div className="flex flex-col h-full bg-gradient-to-br from-cyan-400 to-blue-500 overflow-hidden">
+      <div className="p-4 flex-shrink-0">
         <button
           onClick={() => setCurrentScreen('account-type')}
-          className="mb-6 p-2 text-white"
+          className="mb-4 p-2 text-white"
         >
           ← Back
         </button>
-        <h1 className="text-3xl font-bold text-white mb-2">Find Friends</h1>
-        <p className="text-cyan-100 mb-8">
+        <h1 className="text-2xl font-bold text-white mb-1">Find Friends</h1>
+        <p className="text-cyan-100 text-sm">
           Discover who's already on ScoopSocials and invite others to join
         </p>
       </div>
 
-      <div className="flex-1 bg-white m-4 rounded-t-3xl p-6">
-        <div className="text-center py-12">
-          <div className="text-6xl mb-4">📱</div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Connect with Friends</h2>
-          <p className="text-gray-600 mb-8 leading-relaxed">
+      <div className="flex-1 bg-white mx-3 mb-3 rounded-t-3xl overflow-hidden flex flex-col">
+        <div className="flex-1 p-4 text-center overflow-y-auto">
+          <div className="text-5xl mb-3">📱</div>
+          <h2 className="text-xl font-bold text-gray-800 mb-3">Connect with Friends</h2>
+          <p className="text-gray-600 mb-6 leading-relaxed text-sm">
             We'll check your contacts to see who's already on ScoopSocials and help you connect with them instantly.
           </p>
 
-          <div className="space-y-4 mb-8">
+          <div className="space-y-3 mb-6">
             <div className="flex items-center justify-center">
               <span className="text-green-500 mr-3">👥</span>
-              <span className="text-gray-700">Find existing friends</span>
+              <span className="text-gray-700 text-sm">Find existing friends</span>
             </div>
             <div className="flex items-center justify-center">
               <span className="text-green-500 mr-3">📤</span>
-              <span className="text-gray-700">Invite new friends</span>
+              <span className="text-gray-700 text-sm">Invite new friends</span>
             </div>
             <div className="flex items-center justify-center">
               <span className="text-green-500 mr-3">🔒</span>
-              <span className="text-gray-700">Your privacy is protected</span>
+              <span className="text-gray-700 text-sm">Your privacy is protected</span>
             </div>
           </div>
-
+        </div>
+        
+        <div className="p-4 flex-shrink-0 space-y-3">
           <button
             onClick={() => alert('Welcome to ScoopSocials! 🎉\n\nLogin flow completed successfully!\n\nNext: Install React Native to run the actual mobile app.')}
-            className="w-full bg-cyan-500 text-white py-4 rounded-xl text-lg font-bold mb-4"
+            className="w-full bg-cyan-500 text-white py-3 rounded-xl text-base font-bold"
           >
             Import Contacts
           </button>
 
           <button
             onClick={() => alert('Welcome to ScoopSocials! 🎉\n\nLogin flow completed successfully!\n\nNext: Install React Native to run the actual mobile app.')}
-            className="text-gray-500 underline"
+            className="w-full text-gray-500 underline text-sm py-2"
           >
             Skip for Now
           </button>
