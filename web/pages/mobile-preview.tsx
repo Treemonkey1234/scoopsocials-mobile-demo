@@ -24,31 +24,31 @@ export default function MobilePreview() {
 
   const WelcomeScreen = () => (
     <div className="flex flex-col h-full bg-gradient-to-br from-cyan-400 to-blue-500 text-white overflow-hidden">
-      <div className="flex-1 flex flex-col justify-between p-6 py-3">
-        <div className="text-center mt-4">
+      <div className="flex-1 flex flex-col p-5 py-3">
+        <div className="text-center mt-3">
           <div className="w-16 h-16 bg-white rounded-full mx-auto mb-3 flex items-center justify-center">
             <span className="text-lg font-bold text-cyan-500">S</span>
           </div>
-          <h1 className="text-xl font-bold mb-2">ScoopSocials</h1>
+          <h1 className="text-xl font-bold mb-1">ScoopSocials</h1>
           <p className="text-cyan-100 text-sm">Building trust in digital connections</p>
         </div>
 
-        <div className="space-y-2 text-center my-4">
-          <div className="bg-white/10 backdrop-blur rounded-full px-3 py-2 flex items-center">
-            <span className="text-lg mr-3">🛡️</span>
-            <span className="text-sm">Verified Profiles</span>
+        <div className="space-y-3 text-center my-4 flex-1 flex flex-col justify-center">
+          <div className="bg-white/10 backdrop-blur rounded-full px-4 py-3 flex items-center">
+            <span className="text-xl mr-3">🛡️</span>
+            <span className="text-base">Verified Profiles</span>
           </div>
-          <div className="bg-white/10 backdrop-blur rounded-full px-3 py-2 flex items-center">
-            <span className="text-lg mr-3">📱</span>
-            <span className="text-sm">Phone Verification</span>
+          <div className="bg-white/10 backdrop-blur rounded-full px-4 py-3 flex items-center">
+            <span className="text-xl mr-3">📱</span>
+            <span className="text-base">Phone Verification</span>
           </div>
-          <div className="bg-white/10 backdrop-blur rounded-full px-3 py-2 flex items-center">
-            <span className="text-lg mr-3">👥</span>
-            <span className="text-sm">Community Trust</span>
+          <div className="bg-white/10 backdrop-blur rounded-full px-4 py-3 flex items-center">
+            <span className="text-xl mr-3">👥</span>
+            <span className="text-base">Community Trust</span>
           </div>
         </div>
 
-        <div className="space-y-3 pb-2">
+        <div className="space-y-3 pb-1">
           <button
             onClick={() => {
               setPreviousScreen('welcome');
@@ -67,7 +67,7 @@ export default function MobilePreview() {
           >
             Sign In
           </button>
-          <p className="text-center text-xs text-cyan-100 px-4 leading-tight pt-1">
+          <p className="text-center text-xs text-cyan-100 px-2 leading-tight">
             By continuing, you agree to our Terms of Service and Privacy Policy
           </p>
         </div>
@@ -414,11 +414,11 @@ export default function MobilePreview() {
         </div>
       </div>
 
-      <div className="p-4 flex-shrink-0">
+      <div className="p-3 flex-shrink-0">
         <button
           onClick={() => setCurrentScreen('contacts')}
           disabled={!accountType}
-          className={`w-full py-3 rounded-xl text-base font-bold ${
+          className={`w-full py-3 rounded-xl text-sm font-bold ${
             accountType
               ? 'bg-white text-cyan-500'
               : 'bg-gray-300 text-gray-500 cursor-not-allowed'
@@ -471,14 +471,18 @@ export default function MobilePreview() {
         
         <div className="p-4 flex-shrink-0 space-y-3">
           <button
-            onClick={() => alert('Welcome to ScoopSocials! 🎉\n\nLogin flow completed successfully!\n\nNext: Install React Native to run the actual mobile app.')}
+            onClick={() => {
+              window.open('https://treemonkey1234.github.io/scoopsocials-mobile-demo/', '_blank');
+            }}
             className="w-full bg-cyan-500 text-white py-3 rounded-xl text-base font-bold"
           >
             Import Contacts
           </button>
 
           <button
-            onClick={() => alert('Welcome to ScoopSocials! 🎉\n\nLogin flow completed successfully!\n\nNext: Install React Native to run the actual mobile app.')}
+            onClick={() => {
+              window.open('https://treemonkey1234.github.io/scoopsocials-mobile-demo/', '_blank');
+            }}
             className="w-full text-gray-500 underline text-sm py-2"
           >
             Skip for Now
