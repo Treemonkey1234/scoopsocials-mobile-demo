@@ -7,6 +7,7 @@ export default function Home() {
   const [verificationCode, setVerificationCode] = useState('');
   const [accountType, setAccountType] = useState<'free' | 'professional' | 'venue' | null>(null);
   const [previousScreen, setPreviousScreen] = useState('welcome');
+  const [activeTab, setActiveTab] = useState('posts');
 
 
   const formatPhoneNumber = (text: string) => {
@@ -489,74 +490,278 @@ export default function Home() {
     </div>
   );
 
-  const MainAppScreen = () => (
-    <div className="flex flex-col h-full bg-white">
-      <div className="p-4 flex-shrink-0 text-center border-b border-gray-200">
-        <div className="text-4xl mb-3">🎉</div>
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">Welcome to ScoopSocials!</h1>
-        <p className="text-gray-600 text-sm">Your account has been successfully created</p>
+  const PostsTab = () => (
+    <div className="space-y-4">
+      <div className="bg-white rounded-xl border border-gray-200 p-4">
+        <div className="flex items-center mb-3">
+          <div className="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center mr-3">
+            <span className="text-white text-sm font-bold">J</span>
+          </div>
+          <div>
+            <p className="font-semibold text-gray-800">John's Bar Review</p>
+            <p className="text-xs text-gray-500">2 hours ago</p>
+          </div>
+        </div>
+        <p className="text-gray-700 mb-3">Great atmosphere and friendly staff! The drinks were perfectly crafted. 🍸</p>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <button className="flex items-center text-gray-500">
+              <span className="mr-1">👍</span>
+              <span className="text-sm">12</span>
+            </button>
+            <button className="flex items-center text-gray-500">
+              <span className="mr-1">💬</span>
+              <span className="text-sm">3</span>
+            </button>
+          </div>
+          <div className="flex items-center">
+            <span className="text-yellow-500">⭐⭐⭐⭐⭐</span>
+          </div>
+        </div>
       </div>
 
-      <div className="flex-1 p-4 overflow-y-auto scrollbar-hide">
-        <div className="space-y-4">
-          <div className="bg-gradient-to-r from-cyan-50 to-blue-50 p-4 rounded-xl border border-cyan-200">
-            <h3 className="font-bold text-gray-800 mb-2 flex items-center">
-              <span className="text-cyan-500 mr-2">✅</span>
-              Account Setup Complete
-            </h3>
-            <p className="text-gray-600 text-sm">
-              Your {accountType === 'free' ? 'Free' : accountType === 'professional' ? 'Professional' : 'Venue'} account is ready to use
-            </p>
+      <div className="bg-white rounded-xl border border-gray-200 p-4">
+        <div className="flex items-center mb-3">
+          <div className="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center mr-3">
+            <span className="text-white text-sm font-bold">J</span>
           </div>
-
-          <div className="bg-green-50 p-4 rounded-xl border border-green-200">
-            <h3 className="font-bold text-gray-800 mb-2 flex items-center">
-              <span className="text-green-500 mr-2">📱</span>
-              Phone Verified
-            </h3>
-            <p className="text-gray-600 text-sm">
-              {phoneNumber || '(555) 123-4567'} has been verified
-            </p>
+          <div>
+            <p className="font-semibold text-gray-800">Coffee Shop Experience</p>
+            <p className="text-xs text-gray-500">1 day ago</p>
           </div>
+        </div>
+        <p className="text-gray-700 mb-3">Amazing coffee and cozy atmosphere. Perfect for working remotely! ☕</p>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <button className="flex items-center text-gray-500">
+              <span className="mr-1">👍</span>
+              <span className="text-sm">8</span>
+            </button>
+            <button className="flex items-center text-gray-500">
+              <span className="mr-1">💬</span>
+              <span className="text-sm">1</span>
+            </button>
+          </div>
+          <div className="flex items-center">
+            <span className="text-yellow-500">⭐⭐⭐⭐⭐</span>
+          </div>
+        </div>
+      </div>
 
-          <div className="bg-purple-50 p-4 rounded-xl border border-purple-200">
-            <h3 className="font-bold text-gray-800 mb-2 flex items-center">
-              <span className="text-purple-500 mr-2">🌟</span>
-              What's Next?
-            </h3>
-            <div className="space-y-2 text-sm text-gray-600">
-              <div className="flex items-center">
-                <span className="text-cyan-500 mr-2">→</span>
-                Start building your trust score by creating reviews
-              </div>
-              <div className="flex items-center">
-                <span className="text-cyan-500 mr-2">→</span>
-                Connect with friends and join community groups
-              </div>
-              <div className="flex items-center">
-                <span className="text-cyan-500 mr-2">→</span>
-                Explore local events and meetups
-              </div>
+      <div className="text-center py-8">
+        <p className="text-gray-500 text-sm">No more posts to show</p>
+      </div>
+    </div>
+  );
+
+  const GroupsTab = () => (
+    <div className="space-y-4">
+      <div className="bg-white rounded-xl border border-gray-200 p-4">
+        <div className="flex items-center mb-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mr-3">
+            <span className="text-white text-sm font-bold">🎵</span>
+          </div>
+          <div className="flex-1">
+            <p className="font-semibold text-gray-800">Music Lovers NYC</p>
+            <p className="text-xs text-gray-500">324 members • Active</p>
+          </div>
+          <button className="text-cyan-500 text-sm font-semibold">Joined</button>
+        </div>
+        <p className="text-gray-600 text-sm">Share your favorite venues and discover new music spots in the city!</p>
+      </div>
+
+      <div className="bg-white rounded-xl border border-gray-200 p-4">
+        <div className="flex items-center mb-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-teal-500 rounded-xl flex items-center justify-center mr-3">
+            <span className="text-white text-sm font-bold">🍕</span>
+          </div>
+          <div className="flex-1">
+            <p className="font-semibold text-gray-800">Foodie Friends</p>
+            <p className="text-xs text-gray-500">156 members • Very Active</p>
+          </div>
+          <button className="text-cyan-500 text-sm font-semibold">Joined</button>
+        </div>
+        <p className="text-gray-600 text-sm">Restaurant reviews and food recommendations from trusted friends.</p>
+      </div>
+
+      <div className="bg-white rounded-xl border border-gray-200 p-4">
+        <div className="flex items-center mb-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mr-3">
+            <span className="text-white text-sm font-bold">🏃</span>
+          </div>
+          <div className="flex-1">
+            <p className="font-semibold text-gray-800">Weekend Warriors</p>
+            <p className="text-xs text-gray-500">89 members • Moderately Active</p>
+          </div>
+          <button className="bg-cyan-500 text-white text-sm font-semibold px-3 py-1 rounded-full">Join</button>
+        </div>
+        <p className="text-gray-600 text-sm">Plan weekend activities and outdoor adventures with like-minded people.</p>
+      </div>
+
+      <div className="text-center py-8">
+        <button className="text-cyan-500 font-semibold">Discover More Groups</button>
+      </div>
+    </div>
+  );
+
+  const LikesTab = () => (
+    <div className="space-y-4">
+      <div className="bg-white rounded-xl border border-gray-200 p-4">
+        <div className="flex items-center mb-3">
+          <div className="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center mr-3">
+            <span className="text-white text-sm font-bold">S</span>
+          </div>
+          <div>
+            <p className="font-semibold text-gray-800">Sarah's Brunch Spot Review</p>
+            <p className="text-xs text-gray-500">You liked this • 3 hours ago</p>
+          </div>
+        </div>
+        <p className="text-gray-700 mb-3">Best bottomless brunch in the city! The mimosas were perfect 🥂</p>
+        <div className="flex items-center">
+          <span className="text-yellow-500 mr-2">⭐⭐⭐⭐⭐</span>
+          <span className="text-sm text-gray-500">Brooklyn Heights Café</span>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-xl border border-gray-200 p-4">
+        <div className="flex items-center mb-3">
+          <div className="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center mr-3">
+            <span className="text-white text-sm font-bold">M</span>
+          </div>
+          <div>
+            <p className="font-semibold text-gray-800">Mike's Event Post</p>
+            <p className="text-xs text-gray-500">You liked this • 1 day ago</p>
+          </div>
+        </div>
+        <p className="text-gray-700 mb-3">Jazz night at Blue Note was incredible! The energy was amazing 🎷</p>
+        <div className="flex items-center">
+          <span className="text-yellow-500 mr-2">⭐⭐⭐⭐⭐</span>
+          <span className="text-sm text-gray-500">Blue Note Jazz Club</span>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-xl border border-gray-200 p-4">
+        <div className="flex items-center mb-3">
+          <div className="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center mr-3">
+            <span className="text-white text-sm font-bold">A</span>
+          </div>
+          <div>
+            <p className="font-semibold text-gray-800">Alex's Restaurant Review</p>
+            <p className="text-xs text-gray-500">You liked this • 2 days ago</p>
+          </div>
+        </div>
+        <p className="text-gray-700 mb-3">Hidden gem for authentic Italian food. The pasta was homemade! 🍝</p>
+        <div className="flex items-center">
+          <span className="text-yellow-500 mr-2">⭐⭐⭐⭐⭐</span>
+          <span className="text-sm text-gray-500">Tony's Italian Kitchen</span>
+        </div>
+      </div>
+
+      <div className="text-center py-8">
+        <p className="text-gray-500 text-sm">No more liked posts</p>
+      </div>
+    </div>
+  );
+
+  const MainAppScreen = () => (
+    <div className="flex flex-col h-full bg-gray-50">
+      {/* Profile Header */}
+      <div className="bg-white border-b border-gray-200 p-4 flex-shrink-0">
+        <div className="flex items-center mb-4">
+          <div className="w-16 h-16 bg-cyan-500 rounded-full flex items-center justify-center mr-4">
+            <span className="text-white text-xl font-bold">J</span>
+          </div>
+          <div className="flex-1">
+            <h1 className="text-xl font-bold text-gray-800">John Doe</h1>
+            <p className="text-gray-600 text-sm">{phoneNumber || '(555) 123-4567'}</p>
+            <div className="flex items-center mt-1">
+              <span className="text-yellow-500 text-sm mr-1">⭐</span>
+              <span className="text-sm font-semibold text-gray-700">4.8 Trust Score</span>
             </div>
           </div>
+          <button className="text-gray-400">
+            <span className="text-xl">⚙️</span>
+          </button>
+        </div>
 
-          <div className="text-center space-y-3 pt-4">
-            <button
-              onClick={() => {
-                window.open('https://treemonkey1234.github.io/scoopsocials-mobile-demo/web-demo/', '_blank');
-              }}
-              className="w-full bg-cyan-500 text-white py-3 rounded-xl text-base font-bold"
-            >
-              Explore Community Feed
-            </button>
-            
-            <button
-              onClick={() => setCurrentScreen('welcome')}
-              className="w-full text-gray-500 underline text-sm py-2"
-            >
-              Start Over
-            </button>
+        <div className="flex justify-around mb-4">
+          <div className="text-center">
+            <p className="text-lg font-bold text-gray-800">12</p>
+            <p className="text-xs text-gray-500">Posts</p>
           </div>
+          <div className="text-center">
+            <p className="text-lg font-bold text-gray-800">3</p>
+            <p className="text-xs text-gray-500">Groups</p>
+          </div>
+          <div className="text-center">
+            <p className="text-lg font-bold text-gray-800">24</p>
+            <p className="text-xs text-gray-500">Likes</p>
+          </div>
+          <div className="text-center">
+            <p className="text-lg font-bold text-gray-800">89</p>
+            <p className="text-xs text-gray-500">Friends</p>
+          </div>
+        </div>
+
+        {/* Tab Navigation */}
+        <div className="flex border-b border-gray-200">
+          <button
+            onClick={() => setActiveTab('posts')}
+            className={`flex-1 py-3 text-center font-semibold text-sm ${
+              activeTab === 'posts'
+                ? 'text-cyan-500 border-b-2 border-cyan-500'
+                : 'text-gray-500'
+            }`}
+          >
+            Posts
+          </button>
+          <button
+            onClick={() => setActiveTab('groups')}
+            className={`flex-1 py-3 text-center font-semibold text-sm ${
+              activeTab === 'groups'
+                ? 'text-cyan-500 border-b-2 border-cyan-500'
+                : 'text-gray-500'
+            }`}
+          >
+            Groups
+          </button>
+          <button
+            onClick={() => setActiveTab('likes')}
+            className={`flex-1 py-3 text-center font-semibold text-sm ${
+              activeTab === 'likes'
+                ? 'text-cyan-500 border-b-2 border-cyan-500'
+                : 'text-gray-500'
+            }`}
+          >
+            Likes
+          </button>
+        </div>
+      </div>
+
+      {/* Tab Content */}
+      <div className="flex-1 overflow-y-auto scrollbar-hide p-4">
+        {activeTab === 'posts' && <PostsTab />}
+        {activeTab === 'groups' && <GroupsTab />}
+        {activeTab === 'likes' && <LikesTab />}
+      </div>
+
+      {/* Bottom Actions */}
+      <div className="bg-white border-t border-gray-200 p-4 flex-shrink-0">
+        <div className="flex space-x-3">
+          <button
+            onClick={() => {
+              window.open('https://treemonkey1234.github.io/scoopsocials-mobile-demo/web-demo/', '_blank');
+            }}
+            className="flex-1 bg-cyan-500 text-white py-3 rounded-xl text-sm font-bold"
+          >
+            Community Feed
+          </button>
+          <button
+            onClick={() => setCurrentScreen('welcome')}
+            className="px-4 py-3 border border-gray-300 rounded-xl text-sm font-semibold text-gray-600"
+          >
+            Logout
+          </button>
         </div>
       </div>
     </div>
