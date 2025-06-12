@@ -221,6 +221,7 @@ Current Development Status
 - Block System development for user safety features
 
 📋 NEXT PRIORITY:
-Implement Block System functionality to prevent blocked users from adding to groups, making posts about blocked users, and direct interaction
+1. Implement Block System functionality to prevent blocked users from adding to groups, making posts about blocked users, and direct interaction
+2. Create a settings button and settings screen with user preferences and account management
 
 Last Updated: December 6, 2024
