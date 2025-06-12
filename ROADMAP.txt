@@ -232,5 +232,6 @@ Current Development Status
 
 📋 NEXT PRIORITY:
 1. Implement Block System functionality to prevent blocked users from adding to groups, making posts about blocked users, and direct interaction
+2. Revisit and improve settings screen functionality (make settings actually functional, add persistence, enhance UX)
 
 Last Updated: December 6, 2024
