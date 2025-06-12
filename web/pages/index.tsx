@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 
 export default function Home() {
@@ -7,6 +7,15 @@ export default function Home() {
   const [verificationCode, setVerificationCode] = useState('');
   const [accountType, setAccountType] = useState<'free' | 'professional' | 'venue' | null>(null);
   const [previousScreen, setPreviousScreen] = useState('welcome');
+
+  useEffect(() => {
+    console.log('=== STATE CHANGE ===');
+    console.log('currentScreen changed to:', currentScreen);
+    console.log('previousScreen:', previousScreen);
+    console.log('accountType:', accountType);
+    console.log('phoneNumber:', phoneNumber);
+    console.log('==================');
+  }, [currentScreen, previousScreen, accountType, phoneNumber]);
 
   const formatPhoneNumber = (text: string) => {
     const cleaned = text.replace(/\D/g, '');
@@ -472,8 +481,12 @@ export default function Home() {
         <div className="p-4 flex-shrink-0 space-y-3">
           <button
             onClick={() => {
-              console.log('Import Contacts clicked, setting screen to main-app');
+              console.log('=== IMPORT CONTACTS BUTTON CLICKED ===');
+              console.log('Current screen before change:', currentScreen);
+              console.log('About to set screen to main-app');
               setCurrentScreen('main-app');
+              console.log('setCurrentScreen called with main-app');
+              console.log('=====================================');
             }}
             className="w-full bg-cyan-500 text-white py-3 rounded-xl text-base font-bold"
           >
@@ -482,8 +495,12 @@ export default function Home() {
 
           <button
             onClick={() => {
-              console.log('Skip for Now clicked, setting screen to main-app');
+              console.log('=== SKIP FOR NOW BUTTON CLICKED ===');
+              console.log('Current screen before change:', currentScreen);
+              console.log('About to set screen to main-app');
               setCurrentScreen('main-app');
+              console.log('setCurrentScreen called with main-app');
+              console.log('==================================');
             }}
             className="w-full text-gray-500 underline text-sm py-2"
           >
@@ -568,19 +585,37 @@ export default function Home() {
   );
 
   const renderScreen = () => {
-    console.log('Current screen:', currentScreen);
+    console.log('=== RENDER SCREEN FUNCTION CALLED ===');
+    console.log('Current screen state:', currentScreen);
+    console.log('Type of currentScreen:', typeof currentScreen);
+    console.log('currentScreen === "main-app":', currentScreen === 'main-app');
+    
     switch (currentScreen) {
-      case 'welcome': return <WelcomeScreen />;
-      case 'signup': return <SignupScreen />;
-      case 'login': return <LoginScreen />;
-      case 'verification': return <VerificationScreen />;
-      case 'account-type': return <AccountTypeScreen />;
-      case 'contacts': return <ContactsScreen />;
+      case 'welcome': 
+        console.log('RENDERING: WelcomeScreen');
+        return <WelcomeScreen />;
+      case 'signup': 
+        console.log('RENDERING: SignupScreen');
+        return <SignupScreen />;
+      case 'login': 
+        console.log('RENDERING: LoginScreen');
+        return <LoginScreen />;
+      case 'verification': 
+        console.log('RENDERING: VerificationScreen');
+        return <VerificationScreen />;
+      case 'account-type': 
+        console.log('RENDERING: AccountTypeScreen');
+        return <AccountTypeScreen />;
+      case 'contacts': 
+        console.log('RENDERING: ContactsScreen');
+        return <ContactsScreen />;
       case 'main-app': 
-        console.log('Rendering MainAppScreen');
+        console.log('RENDERING: MainAppScreen - SUCCESS!');
+        console.log('MainAppScreen component exists:', typeof MainAppScreen);
         return <MainAppScreen />;
       default: 
-        console.log('Default case, rendering WelcomeScreen');
+        console.log('RENDERING: Default case - WelcomeScreen');
+        console.log('Unhandled screen:', currentScreen);
         return <WelcomeScreen />;
     }
   };
@@ -622,6 +657,11 @@ export default function Home() {
               <span>📶</span>
               <span>🔋</span>
             </div>
+          </div>
+          
+          {/* Debug Bar - Remove after fixing */}
+          <div className="bg-red-100 px-2 py-1 text-xs text-red-800 border-b border-red-200">
+            DEBUG: currentScreen = "{currentScreen}" | type = {typeof currentScreen}
           </div>
           
           {/* Screen Content */}
