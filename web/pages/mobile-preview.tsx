@@ -283,7 +283,7 @@ export default function MobilePreview() {
         <p className="text-cyan-100 text-sm">Select the account type that best fits your needs</p>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-3 pb-4 space-y-3">
+      <div className="flex-1 overflow-y-auto px-3 py-4 space-y-3">
         {/* Free Account Card */}
         <div
           onClick={() => setAccountType('free')}

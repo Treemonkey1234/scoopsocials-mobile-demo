@@ -283,7 +283,7 @@ export default function Home() {
         <p className="text-cyan-100 text-sm">Select the account type that best fits your needs</p>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-3 pb-4 space-y-3">
+      <div className="flex-1 overflow-y-auto px-3 py-4 space-y-3">
         {/* Free Account Card */}
         <div
           onClick={() => setAccountType('free')}
@@ -471,22 +471,91 @@ export default function Home() {
         
         <div className="p-4 flex-shrink-0 space-y-3">
           <button
-            onClick={() => {
-              window.open('https://treemonkey1234.github.io/scoopsocials-mobile-demo/', '_blank');
-            }}
+            onClick={() => setCurrentScreen('main-app')}
             className="w-full bg-cyan-500 text-white py-3 rounded-xl text-base font-bold"
           >
             Import Contacts
           </button>
 
           <button
-            onClick={() => {
-              window.open('https://treemonkey1234.github.io/scoopsocials-mobile-demo/', '_blank');
-            }}
+            onClick={() => setCurrentScreen('main-app')}
             className="w-full text-gray-500 underline text-sm py-2"
           >
             Skip for Now
           </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const MainAppScreen = () => (
+    <div className="flex flex-col h-full bg-white">
+      <div className="p-4 flex-shrink-0 text-center border-b border-gray-200">
+        <div className="text-4xl mb-3">🎉</div>
+        <h1 className="text-2xl font-bold text-gray-800 mb-2">Welcome to ScoopSocials!</h1>
+        <p className="text-gray-600 text-sm">Your account has been successfully created</p>
+      </div>
+
+      <div className="flex-1 p-4 overflow-y-auto">
+        <div className="space-y-4">
+          <div className="bg-gradient-to-r from-cyan-50 to-blue-50 p-4 rounded-xl border border-cyan-200">
+            <h3 className="font-bold text-gray-800 mb-2 flex items-center">
+              <span className="text-cyan-500 mr-2">✅</span>
+              Account Setup Complete
+            </h3>
+            <p className="text-gray-600 text-sm">
+              Your {accountType === 'free' ? 'Free' : accountType === 'professional' ? 'Professional' : 'Venue'} account is ready to use
+            </p>
+          </div>
+
+          <div className="bg-green-50 p-4 rounded-xl border border-green-200">
+            <h3 className="font-bold text-gray-800 mb-2 flex items-center">
+              <span className="text-green-500 mr-2">📱</span>
+              Phone Verified
+            </h3>
+            <p className="text-gray-600 text-sm">
+              {phoneNumber || '(555) 123-4567'} has been verified
+            </p>
+          </div>
+
+          <div className="bg-purple-50 p-4 rounded-xl border border-purple-200">
+            <h3 className="font-bold text-gray-800 mb-2 flex items-center">
+              <span className="text-purple-500 mr-2">🌟</span>
+              What's Next?
+            </h3>
+            <div className="space-y-2 text-sm text-gray-600">
+              <div className="flex items-center">
+                <span className="text-cyan-500 mr-2">→</span>
+                Start building your trust score by creating reviews
+              </div>
+              <div className="flex items-center">
+                <span className="text-cyan-500 mr-2">→</span>
+                Connect with friends and join community groups
+              </div>
+              <div className="flex items-center">
+                <span className="text-cyan-500 mr-2">→</span>
+                Explore local events and meetups
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center space-y-3 pt-4">
+            <button
+              onClick={() => {
+                window.open('https://treemonkey1234.github.io/scoopsocials-mobile-demo/web-demo/', '_blank');
+              }}
+              className="w-full bg-cyan-500 text-white py-3 rounded-xl text-base font-bold"
+            >
+              Explore Community Feed
+            </button>
+            
+            <button
+              onClick={() => setCurrentScreen('welcome')}
+              className="w-full text-gray-500 underline text-sm py-2"
+            >
+              Start Over
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -500,6 +569,7 @@ export default function Home() {
       case 'verification': return <VerificationScreen />;
       case 'account-type': return <AccountTypeScreen />;
       case 'contacts': return <ContactsScreen />;
+      case 'main-app': return <MainAppScreen />;
       default: return <WelcomeScreen />;
     }
   };
