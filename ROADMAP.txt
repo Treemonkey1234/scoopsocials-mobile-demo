@@ -125,13 +125,27 @@ Free Account
 - Basic posting and reviewing
 - Standard friend connections
 - Event attendance
+- Trust score display
+- Community validation
 
 Professional Account
 -------------------
+- Everything in Free
 - Create Local Community Hubs
 - Create Interest-Based Groups
 - Enhanced event management
 - Advanced community features
+- Priority support
+
+Venue Account
+-------------
+- Everything in Professional
+- Customer outreach tools
+- Event promotion features
+- Business analytics
+- Review management
+- Customer engagement suite
+- Dedicated venue profile
 
 Discussion Points Required
 =========================
