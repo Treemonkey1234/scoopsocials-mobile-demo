@@ -311,6 +311,16 @@ export default function ScoopApp() {
     return filtered;
   };
 
+  // Helper function to navigate to a user's profile
+  const navigateToUserProfile = (userName: string) => {
+    const user = allUsers.find(u => u.name === userName);
+    if (user) {
+      setSelectedUser(user);
+      setCurrentScreen('user-profile');
+      setUserProfileActiveTab(0);
+    }
+  };
+
   const getAvatarGradient = (name: string): string => {
     const colors = [
       'from-pink-400 to-purple-400',
@@ -580,6 +590,34 @@ export default function ScoopApp() {
       location: 'O\'Malleys Irish Bar',
       isPrivate: false,
       userRSVP: null
+    },
+    {
+      id: 'discover-1',
+      title: 'Photography Meetup',
+      date: 'Next Friday',
+      time: '5:00 PM',
+      endTime: '8:00 PM',
+      organizer: 'Emma Davis',
+      goingCount: 6,
+      trustRequired: 65,
+      category: 'Creative',
+      location: 'Old Town Scottsdale',
+      isPrivate: false,
+      userRSVP: null
+    },
+    {
+      id: 'discover-2',
+      title: 'Book Club Discussion',
+      date: 'Next Wednesday',
+      time: '7:30 PM',
+      endTime: '9:30 PM',
+      organizer: 'Rachel Brown',
+      goingCount: 9,
+      trustRequired: 70,
+      category: 'Educational',
+      location: 'Central Library',
+      isPrivate: true,
+      userRSVP: null
     }
   ]);
 
@@ -752,9 +790,19 @@ export default function ScoopApp() {
                         <div className="flex-1 p-4">
                           <div className="mb-4">
                             <div className="flex items-center mb-2">
-                              <span className="text-sm font-medium text-gray-900 mr-2">{post.reviewer}</span>
+                              <span 
+                                onClick={() => navigateToUserProfile(post.reviewer)}
+                                className="text-sm font-medium text-cyan-600 cursor-pointer hover:text-cyan-700 mr-2"
+                              >
+                                {post.reviewer}
+                              </span>
                               <span className="text-gray-400 mx-2">reviewed</span>
-                              <span className="text-sm font-medium text-cyan-600 cursor-pointer hover:text-cyan-700 ml-2">{post.reviewedPerson}</span>
+                              <span 
+                                onClick={() => navigateToUserProfile(post.reviewedPerson)}
+                                className="text-sm font-medium text-cyan-600 cursor-pointer hover:text-cyan-700 ml-2"
+                              >
+                                {post.reviewedPerson}
+                              </span>
                             </div>
                             <div className="flex items-center space-x-2 mb-2">
                               <span className="px-3 py-1 rounded-full text-xs font-medium shadow-sm bg-gradient-to-r from-green-100 to-green-200 text-green-800 border border-green-300">
@@ -908,11 +956,14 @@ export default function ScoopApp() {
                   Software engineer passionate about building trust and connection in digital communities. Always looking to collaborate on meaningful projects.
                 </p>
                 
-                <div className="flex flex-wrap gap-2 mb-4">
-                  <span className="bg-green-500 text-white px-2 py-1 rounded text-xs">VERIFIED</span>
-                  <span className="bg-blue-500 text-white px-2 py-1 rounded text-xs">OUTGOING</span>
-                  <span className="bg-purple-500 text-white px-2 py-1 rounded text-xs">TECH</span>
-                  <span className="bg-orange-500 text-white px-2 py-1 rounded text-xs">RELIABLE</span>
+                <div className="mb-4">
+                  <p className="text-gray-600 text-xs font-medium mb-2 uppercase tracking-wide">Community Flavors</p>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="bg-green-500 text-white px-2 py-1 rounded text-xs">VERIFIED</span>
+                    <span className="bg-blue-500 text-white px-2 py-1 rounded text-xs">OUTGOING</span>
+                    <span className="bg-purple-500 text-white px-2 py-1 rounded text-xs">TECH</span>
+                    <span className="bg-orange-500 text-white px-2 py-1 rounded text-xs">RELIABLE</span>
+                  </div>
                 </div>
 
                 {/* Social Accounts Preview - Side by Side */}
@@ -1057,7 +1108,7 @@ export default function ScoopApp() {
                     <div className="flex h-full" style={{ width: '300%' }}>
                       {/* Posts Section */}
                       <div className="w-1/3 h-full overflow-y-auto scrollbar-hide pr-4" style={{ scrollSnapAlign: 'start' }}>
-                        <div className="space-y-4">
+                        <div className="space-y-4 pb-20">
                           <div className="bg-white rounded-lg p-4 border border-gray-200">
                             <div className="flex items-center mb-3">
                               <div className="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center mr-3">
@@ -1137,7 +1188,7 @@ export default function ScoopApp() {
                       
                       {/* Groups Section - Public Events */}
                       <div className="w-1/3 h-full overflow-y-auto scrollbar-hide px-2" style={{ scrollSnapAlign: 'start' }}>
-                        <div className="space-y-4">
+                        <div className="space-y-4 pb-20">
                           {/* Events I'm Attending */}
                           <div className="mb-4">
                             <h4 className="text-sm font-semibold text-gray-600 mb-2">Events I'm Attending</h4>
@@ -1225,7 +1276,7 @@ export default function ScoopApp() {
                       
                       {/* Likes Section - User Interactions */}
                       <div className="w-1/3 h-full overflow-y-auto scrollbar-hide pl-2" style={{ scrollSnapAlign: 'start' }}>
-                        <div className="space-y-4">
+                        <div className="space-y-4 pb-20">
                           {/* Posts I've Liked */}
                           <div className="mb-4">
                             <h4 className="text-sm font-semibold text-gray-600 mb-2">Posts I've Liked</h4>
@@ -1631,7 +1682,14 @@ export default function ScoopApp() {
                           <div className="text-xs mt-1 opacity-75">Min Trust: {event.trustRequired}</div>
                         </div>
                       </div>
-                      <p className="text-sm mb-3 opacity-90">By {event.organizer}</p>
+                      <p className="text-sm mb-3 opacity-90">
+                        By <span 
+                          onClick={() => navigateToUserProfile(event.organizer)}
+                          className="text-cyan-200 cursor-pointer hover:text-cyan-100 underline"
+                        >
+                          {event.organizer}
+                        </span>
+                      </p>
                       <div className="flex space-x-2">
                         <button 
                           onClick={() => handleRSVP(event.id, 'going')}
@@ -1755,9 +1813,13 @@ export default function ScoopApp() {
                         <div className="flex space-x-2">
                           <button 
                             onClick={() => handleRSVP('discover-1', 'going')}
-                            className="flex-1 bg-white text-orange-600 px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors"
+                            className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
+                              events.find(e => e.id === 'discover-1')?.userRSVP === 'going'
+                                ? 'bg-green-100 text-green-700 border border-green-300'
+                                : 'bg-white text-orange-600 hover:bg-gray-100'
+                            }`}
                           >
-                            Join Event
+                            {events.find(e => e.id === 'discover-1')?.userRSVP === 'going' ? 'Event Joined ✓' : 'Join Event'}
                           </button>
                           <button 
                             onClick={() => {
@@ -1799,13 +1861,24 @@ export default function ScoopApp() {
                             <div className="text-xs mt-1 opacity-75">Min Trust: 70</div>
                           </div>
                         </div>
-                        <p className="text-sm mb-3 opacity-90">By Rachel Brown (Trust: 91)</p>
+                        <p className="text-sm mb-3 opacity-90">
+                          By <span 
+                            onClick={() => navigateToUserProfile('Rachel Brown')}
+                            className="text-pink-200 cursor-pointer hover:text-pink-100 underline"
+                          >
+                            Rachel Brown
+                          </span> (Trust: 91)
+                        </p>
                         <div className="flex space-x-2">
                           <button 
                             onClick={() => handleRSVP('discover-2', 'going')}
-                            className="flex-1 bg-white text-pink-600 px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors"
+                            className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
+                              events.find(e => e.id === 'discover-2')?.userRSVP === 'going'
+                                ? 'bg-green-100 text-green-700 border border-green-300'
+                                : 'bg-white text-pink-600 hover:bg-gray-100'
+                            }`}
                           >
-                            Join Event
+                            {events.find(e => e.id === 'discover-2')?.userRSVP === 'going' ? 'Event Joined ✓' : 'Join Event'}
                           </button>
                           <button 
                             onClick={() => {
@@ -2100,9 +2173,25 @@ export default function ScoopApp() {
                               >
                                 <div className="flex items-center justify-between mb-2">
                                   <div className="flex items-center space-x-2">
-                                    <span className="text-sm font-medium text-gray-900">{post.reviewer}</span>
+                                    <span 
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        navigateToUserProfile(post.reviewer);
+                                      }}
+                                      className="text-sm font-medium text-cyan-600 cursor-pointer hover:text-cyan-700"
+                                    >
+                                      {post.reviewer}
+                                    </span>
                                     <span className="text-gray-400 text-xs">reviewed</span>
-                                    <span className="text-sm font-medium text-cyan-600">{post.reviewedPerson}</span>
+                                    <span 
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        navigateToUserProfile(post.reviewedPerson);
+                                      }}
+                                      className="text-sm font-medium text-cyan-600 cursor-pointer hover:text-cyan-700"
+                                    >
+                                      {post.reviewedPerson}
+                                    </span>
                                   </div>
                                   <span className="px-2 py-1 bg-gradient-to-r from-green-100 to-green-200 text-green-800 rounded-full text-xs">
                                     Trust: {post.reviewerTrustScore}
@@ -2254,11 +2343,14 @@ export default function ScoopApp() {
                   Interests include {selectedUser.interests.slice(0, 3).join(', ')}.
                 </p>
                 
-                <div className="flex flex-wrap gap-2 mb-4">
-                  <span className="bg-green-500 text-white px-2 py-1 rounded text-xs">VERIFIED</span>
-                  <span className="bg-blue-500 text-white px-2 py-1 rounded text-xs">TRUSTED</span>
-                  <span className="bg-purple-500 text-white px-2 py-1 rounded text-xs">{selectedUser.interests[0].toUpperCase()}</span>
-                  <span className="bg-orange-500 text-white px-2 py-1 rounded text-xs">ACTIVE</span>
+                <div className="mb-4">
+                  <p className="text-gray-600 text-xs font-medium mb-2 uppercase tracking-wide">Community Flavors</p>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="bg-green-500 text-white px-2 py-1 rounded text-xs">VERIFIED</span>
+                    <span className="bg-blue-500 text-white px-2 py-1 rounded text-xs">TRUSTED</span>
+                    <span className="bg-purple-500 text-white px-2 py-1 rounded text-xs">{selectedUser.interests[0].toUpperCase()}</span>
+                    <span className="bg-orange-500 text-white px-2 py-1 rounded text-xs">ACTIVE</span>
+                  </div>
                 </div>
 
                 {/* Social Accounts Preview - Side by Side */}
@@ -2405,7 +2497,7 @@ export default function ScoopApp() {
                     <div className="flex h-full" style={{ width: '300%' }}>
                       {/* Posts Section */}
                       <div className="w-1/3 h-full overflow-y-auto pr-4" style={{ scrollSnapAlign: 'start' }}>
-                        <div className="space-y-4">
+                        <div className="space-y-4 pb-20">
                           <div className="bg-white rounded-lg p-4 border border-gray-200">
                             <div className="flex items-start mb-3">
                               <div className={`w-8 h-8 bg-gradient-to-r ${getAvatarGradient(selectedUser.name)} rounded-full flex items-center justify-center mr-3 text-white font-bold text-sm`}>
@@ -2495,7 +2587,7 @@ export default function ScoopApp() {
 
                       {/* Groups Section - Public Events */}
                       <div className="w-1/3 h-full overflow-y-auto pr-4" style={{ scrollSnapAlign: 'start' }}>
-                        <div className="space-y-4">
+                        <div className="space-y-4 pb-20">
                           {/* Events They're Attending */}
                           <div className="mb-4">
                             <h4 className="text-sm font-semibold text-gray-600 mb-2">Events They're Attending</h4>
@@ -2580,7 +2672,7 @@ export default function ScoopApp() {
 
                       {/* Likes Section */}
                       <div className="w-1/3 h-full overflow-y-auto" style={{ scrollSnapAlign: 'start' }}>
-                        <div className="space-y-4">
+                        <div className="space-y-4 pb-20">
                           <div className="bg-white rounded-lg p-4 border border-gray-200">
                             <div className="flex items-center mb-2">
                               <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center mr-3">
@@ -3363,11 +3455,14 @@ export default function ScoopApp() {
                     Interests include {selectedUser.interests.slice(0, 3).join(', ')}.
                   </p>
                   
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    <span className="bg-green-500 text-white px-2 py-1 rounded text-xs">VERIFIED</span>
-                    <span className="bg-blue-500 text-white px-2 py-1 rounded text-xs">TRUSTED</span>
-                    <span className="bg-purple-500 text-white px-2 py-1 rounded text-xs">{selectedUser.interests[0].toUpperCase()}</span>
-                    <span className="bg-orange-500 text-white px-2 py-1 rounded text-xs">ACTIVE</span>
+                  <div className="mb-4">
+                    <p className="text-gray-600 text-xs font-medium mb-2 uppercase tracking-wide">Community Flavors</p>
+                    <div className="flex flex-wrap gap-2">
+                      <span className="bg-green-500 text-white px-2 py-1 rounded text-xs">VERIFIED</span>
+                      <span className="bg-blue-500 text-white px-2 py-1 rounded text-xs">TRUSTED</span>
+                      <span className="bg-purple-500 text-white px-2 py-1 rounded text-xs">{selectedUser.interests[0].toUpperCase()}</span>
+                      <span className="bg-orange-500 text-white px-2 py-1 rounded text-xs">ACTIVE</span>
+                    </div>
                   </div>
 
                   {/* Social Accounts Preview */}
@@ -3490,7 +3585,7 @@ export default function ScoopApp() {
                     <div style={{ height: '200px' }} className="overflow-y-auto">
                       {userProfileActiveTab === 0 && (
                         // Posts Tab
-                        <div className="space-y-4">
+                        <div className="space-y-4 pb-8">
                           <div className="bg-white rounded-lg p-4 border border-gray-200">
                             <div className="flex items-center mb-3">
                               <div className={`w-8 h-8 bg-gradient-to-r ${getAvatarGradient(selectedUser.name)} rounded-full flex items-center justify-center mr-3`}>
@@ -3545,7 +3640,7 @@ export default function ScoopApp() {
 
                       {userProfileActiveTab === 1 && (
                         // Groups/Events Tab
-                        <div className="space-y-4">
+                        <div className="space-y-4 pb-8">
                           <div>
                             <h4 className="text-sm font-semibold text-gray-600 mb-2">Recent Events</h4>
                             <div className="bg-white rounded-lg p-4 border border-gray-200 mb-3">
@@ -3579,7 +3674,7 @@ export default function ScoopApp() {
 
                       {userProfileActiveTab === 2 && (
                         // Likes Tab
-                        <div className="space-y-4">
+                        <div className="space-y-4 pb-8">
                           <div>
                             <h4 className="text-sm font-semibold text-gray-600 mb-2">Recent Activity</h4>
                             <div className="bg-white rounded-lg p-4 border border-gray-200 mb-3">
