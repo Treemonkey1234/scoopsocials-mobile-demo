@@ -313,11 +313,16 @@ export default function ScoopApp() {
 
   // Helper function to navigate to a user's profile
   const navigateToUserProfile = (userName: string) => {
+    console.log('Navigating to user profile:', userName);
     const user = allUsers.find(u => u.name === userName);
+    console.log('Found user:', user);
     if (user) {
       setSelectedUser(user);
       setCurrentScreen('user-profile');
       setUserProfileActiveTab(0);
+      console.log('Navigation successful');
+    } else {
+      console.log('User not found in allUsers array');
     }
   };
 
@@ -1108,7 +1113,7 @@ export default function ScoopApp() {
                     <div className="flex h-full" style={{ width: '300%' }}>
                       {/* Posts Section */}
                       <div className="w-1/3 h-full overflow-y-auto scrollbar-hide pr-4" style={{ scrollSnapAlign: 'start' }}>
-                        <div className="space-y-4 pb-32">
+                        <div className="space-y-4 pb-24">
                           <div className="bg-white rounded-lg p-4 border border-gray-200">
                             <div className="flex items-center mb-3">
                               <div className="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center mr-3">
@@ -1188,7 +1193,7 @@ export default function ScoopApp() {
                       
                       {/* Groups Section - Public Events */}
                       <div className="w-1/3 h-full overflow-y-auto scrollbar-hide px-2" style={{ scrollSnapAlign: 'start' }}>
-                        <div className="space-y-4 pb-32">
+                        <div className="space-y-4 pb-24">
                           {/* Events I'm Attending */}
                           <div className="mb-4">
                             <h4 className="text-sm font-semibold text-gray-600 mb-2">Events I'm Attending</h4>
@@ -1276,7 +1281,7 @@ export default function ScoopApp() {
                       
                       {/* Likes Section - User Interactions */}
                       <div className="w-1/3 h-full overflow-y-auto scrollbar-hide pl-2" style={{ scrollSnapAlign: 'start' }}>
-                        <div className="space-y-4 pb-32">
+                        <div className="space-y-4 pb-24">
                           {/* Posts I've Liked */}
                           <div className="mb-4">
                             <h4 className="text-sm font-semibold text-gray-600 mb-2">Posts I've Liked</h4>
@@ -2497,7 +2502,7 @@ export default function ScoopApp() {
                     <div className="flex h-full" style={{ width: '300%' }}>
                       {/* Posts Section */}
                       <div className="w-1/3 h-full overflow-y-auto pr-4" style={{ scrollSnapAlign: 'start' }}>
-                        <div className="space-y-4 pb-32">
+                        <div className="space-y-4 pb-24">
                           <div className="bg-white rounded-lg p-4 border border-gray-200">
                             <div className="flex items-start mb-3">
                               <div className={`w-8 h-8 bg-gradient-to-r ${getAvatarGradient(selectedUser.name)} rounded-full flex items-center justify-center mr-3 text-white font-bold text-sm`}>
@@ -2587,7 +2592,7 @@ export default function ScoopApp() {
 
                       {/* Groups Section - Public Events */}
                       <div className="w-1/3 h-full overflow-y-auto pr-4" style={{ scrollSnapAlign: 'start' }}>
-                        <div className="space-y-4 pb-32">
+                        <div className="space-y-4 pb-24">
                           {/* Events They're Attending */}
                           <div className="mb-4">
                             <h4 className="text-sm font-semibold text-gray-600 mb-2">Events They're Attending</h4>
@@ -2672,7 +2677,7 @@ export default function ScoopApp() {
 
                       {/* Likes Section */}
                       <div className="w-1/3 h-full overflow-y-auto" style={{ scrollSnapAlign: 'start' }}>
-                        <div className="space-y-4 pb-32">
+                        <div className="space-y-4 pb-24">
                           <div className="bg-white rounded-lg p-4 border border-gray-200">
                             <div className="flex items-center mb-2">
                               <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center mr-3">
@@ -2750,7 +2755,7 @@ export default function ScoopApp() {
         </div>
 
         {/* Bottom Navigation */}
-        <div className="bg-white border-t border-gray-200 px-2 py-2 rounded-b-3xl flex-shrink-0 relative z-50">
+        <div className="bg-white border-t border-gray-200 px-2 py-2 rounded-b-3xl flex-shrink-0">
           <div className="flex justify-around items-center">
             <button 
               onClick={() => setCurrentScreen('home')}
