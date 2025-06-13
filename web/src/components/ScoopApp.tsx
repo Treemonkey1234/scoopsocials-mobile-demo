@@ -2142,6 +2142,28 @@ export default function ScoopApp() {
                       <p className="text-xs text-cyan-100 opacity-90">@{selectedUser.username}</p>
                     </div>
                   </div>
+                  <div className="flex items-center space-x-2">
+                    <button 
+                      onClick={() => {
+                        const friends = getFriendsForUser(selectedUser.id);
+                        setSelectedUserFriends(friends);
+                        setShowUserFriends(true);
+                      }}
+                      className="w-12 h-12 bg-white shadow-lg border-2 border-cyan-100 rounded-xl flex items-center justify-center text-cyan-600 text-xl font-bold hover:bg-cyan-50 hover:text-cyan-700 transition-all duration-200 hover:scale-105"
+                    >
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                      </svg>
+                    </button>
+                    <button 
+                      onClick={() => blockUser(selectedUser.name)}
+                      className="w-12 h-12 bg-white shadow-lg border-2 border-cyan-100 rounded-xl flex items-center justify-center text-red-600 text-xl font-bold hover:bg-red-50 hover:text-red-700 transition-all duration-200 hover:scale-105"
+                    >
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728" />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -2257,27 +2279,6 @@ export default function ScoopApp() {
                     </div>
                   </div>
 
-                  {/* Action Buttons */}
-                  <div className="grid grid-cols-2 gap-3 mb-4">
-                    <button 
-                      onClick={() => {
-                        const friends = getFriendsForUser(selectedUser.id);
-                        setSelectedUserFriends(friends);
-                        setShowUserFriends(true);
-                      }}
-                      className="bg-cyan-500 hover:bg-cyan-600 text-white py-3 px-4 rounded-lg font-medium text-sm flex items-center justify-center space-x-2 transition-colors"
-                    >
-                      <span>👥</span>
-                      <span>Friends</span>
-                    </button>
-                    <button 
-                      onClick={() => blockUser(selectedUser.name)}
-                      className="bg-red-500 hover:bg-red-600 text-white py-3 px-4 rounded-lg font-medium text-sm flex items-center justify-center space-x-2 transition-colors"
-                    >
-                      <span>🚫</span>
-                      <span>Block?</span>
-                    </button>
-                  </div>
 
                   {/* Tab Navigation */}
                   <div className="flex border-b border-gray-200 mb-4">
