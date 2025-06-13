@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 interface CreateEventModalProps {
   onClose: () => void;
   onSubmit: (event: any) => void;
+  preSelectedFriend?: string;
 }
 
-const CreateEventModal: React.FC<CreateEventModalProps> = ({ onClose, onSubmit }) => {
+const CreateEventModal: React.FC<CreateEventModalProps> = ({ onClose, onSubmit, preSelectedFriend }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
@@ -17,7 +18,7 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({ onClose, onSubmit }
   const [trustRequired, setTrustRequired] = useState(70);
   const [maxAttendees, setMaxAttendees] = useState('');
   const [isPrivate, setIsPrivate] = useState(false);
-  const [selectedFriends, setSelectedFriends] = useState<string[]>([]);
+  const [selectedFriends, setSelectedFriends] = useState<string[]>(preSelectedFriend ? [preSelectedFriend] : []);
   const [friendSearchQuery, setFriendSearchQuery] = useState('');
 
   const categories = ['Social', 'Professional', 'Sports', 'Tech', 'Academic', 'Community Service', 'Arts & Culture'];

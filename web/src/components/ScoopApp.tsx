@@ -1467,25 +1467,10 @@ export default function ScoopApp() {
                             setCurrentScreen('user-profile');
                             setUserProfileActiveTab(0);
                           }}
-                          className="bg-gray-200 text-gray-700 px-3 py-1 rounded-lg text-xs hover:bg-gray-300"
+                          className="bg-cyan-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-cyan-600"
                         >
                           View Profile
                         </button>
-                        {isUserBlocked(friend.name) ? (
-                          <button 
-                            onClick={() => unblockUser(friend.name)}
-                            className="bg-green-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-green-600"
-                          >
-                            Unblock
-                          </button>
-                        ) : (
-                          <button 
-                            onClick={() => blockUser(friend.name)}
-                            className="bg-red-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-red-600"
-                          >
-                            Block
-                          </button>
-                        )}
                       </div>
                     </div>
                   ))}
@@ -2186,11 +2171,24 @@ export default function ScoopApp() {
                       <button
                         onClick={() => {
                           setShowCreateDropdown(false);
-                          alert('Add Friend functionality would open here');
+                          if (currentScreen === 'user-profile' && selectedUser) {
+                            // Check if already friends
+                            const userFriends = getFriendsForUser(selectedUser.id);
+                            const isAlreadyFriend = userFriends.some(friend => friend.name === selectedUser.name);
+                            
+                            if (isAlreadyFriend) {
+                              alert(`You are already friends with ${selectedUser.name}!`);
+                            } else {
+                              alert(`Friend request sent to ${selectedUser.name}! They will be notified and can accept your request.`);
+                              // In a real app, you would send a friend request here
+                            }
+                          } else {
+                            alert('Add Friend functionality would open here');
+                          }
                         }}
                         className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
-                        👥 Add Friend
+                        👥 {currentScreen === 'user-profile' && selectedUser ? `Add ${selectedUser.name}` : 'Add Friend'}
                       </button>
                     </div>
                   )}
@@ -2456,68 +2454,87 @@ export default function ScoopApp() {
                         </div>
                       </div>
 
-                      {/* Groups Section */}
+                      {/* Groups Section - Public Events */}
                       <div className="w-1/3 h-full overflow-y-auto pr-4" style={{ scrollSnapAlign: 'start' }}>
                         <div className="space-y-4">
-                          <div className="bg-white rounded-lg p-4 border border-gray-200">
-                            <div className="flex items-center mb-2">
-                              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center mr-3">
-                                <span className="text-white text-sm font-bold">💼</span>
+                          {/* Events They're Attending */}
+                          <div className="mb-4">
+                            <h4 className="text-sm font-semibold text-gray-600 mb-2">Events They're Attending</h4>
+                            <div className="bg-white rounded-lg p-4 border border-gray-200 mb-3">
+                              <div className="flex items-center mb-2">
+                                <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-teal-500 rounded-xl flex items-center justify-center mr-3">
+                                  <span className="text-white text-sm font-bold">📅</span>
+                                </div>
+                                <div className="flex-1">
+                                  <p className="font-semibold text-gray-800 text-sm">{selectedUser.interests[0]} Meetup</p>
+                                  <p className="text-xs text-gray-500">This weekend, 2:00 PM</p>
+                                </div>
+                                <span className="text-xs text-green-600 font-semibold">Going</span>
                               </div>
-                              <div className="flex-1">
-                                <p className="font-semibold text-gray-800 text-sm">Tech Networking Event</p>
-                                <p className="text-xs text-gray-500">Attended • Last week</p>
-                              </div>
+                              <p className="text-gray-600 text-xs">Downtown Community Center • 28 attending</p>
                             </div>
-                            <p className="text-gray-600 text-xs">{selectedUser.location.city} Convention Center • 45 attended</p>
+                            <div className="bg-white rounded-lg p-4 border border-gray-200 mb-3">
+                              <div className="flex items-center mb-2">
+                                <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-teal-500 rounded-xl flex items-center justify-center mr-3">
+                                  <span className="text-white text-sm font-bold">📅</span>
+                                </div>
+                                <div className="flex-1">
+                                  <p className="font-semibold text-gray-800 text-sm">Book Club Meeting</p>
+                                  <p className="text-xs text-gray-500">Next Tuesday, 6:30 PM</p>
+                                </div>
+                                <span className="text-xs text-green-600 font-semibold">Going</span>
+                              </div>
+                              <p className="text-gray-600 text-xs">Local Library • 12 attending</p>
+                            </div>
                           </div>
-                          <div className="bg-white rounded-lg p-4 border border-gray-200">
-                            <div className="flex items-center mb-2">
-                              <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-teal-500 rounded-lg flex items-center justify-center mr-3">
-                                <span className="text-white text-sm font-bold">🎯</span>
+
+                          {/* Events They Created */}
+                          <div className="mb-4">
+                            <h4 className="text-sm font-semibold text-gray-600 mb-2">Events They Created</h4>
+                            <div className="bg-white rounded-lg p-4 border border-gray-200 mb-3">
+                              <div className="flex items-center mb-2">
+                                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mr-3">
+                                  <span className="text-white text-sm font-bold">🎨</span>
+                                </div>
+                                <div className="flex-1">
+                                  <p className="font-semibold text-gray-800 text-sm">Creative Workshop</p>
+                                  <p className="text-xs text-gray-500">Next month, 10:00 AM</p>
+                                </div>
+                                <span className="text-xs text-purple-600 font-semibold">Organizer</span>
                               </div>
-                              <div className="flex-1">
-                                <p className="font-semibold text-gray-800 text-sm">{selectedUser.interests[0]} Meetup</p>
-                                <p className="text-xs text-gray-500">Going • This weekend</p>
-                              </div>
+                              <p className="text-gray-600 text-xs">Local Art Studio • 15 interested</p>
                             </div>
-                            <p className="text-gray-600 text-xs">Downtown Community Center • 28 going</p>
                           </div>
-                          <div className="bg-white rounded-lg p-4 border border-gray-200">
-                            <div className="flex items-center mb-2">
-                              <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mr-3">
-                                <span className="text-white text-sm font-bold">🎨</span>
+
+                          {/* Past Events */}
+                          <div>
+                            <h4 className="text-sm font-semibold text-gray-600 mb-2">Past Events</h4>
+                            <div className="bg-white rounded-lg p-4 border border-gray-200 mb-3">
+                              <div className="flex items-center mb-2">
+                                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mr-3">
+                                  <span className="text-white text-sm font-bold">💼</span>
+                                </div>
+                                <div className="flex-1">
+                                  <p className="font-semibold text-gray-800 text-sm">Tech Networking Event</p>
+                                  <p className="text-xs text-gray-500">Last week</p>
+                                </div>
+                                <span className="text-xs text-gray-600 font-semibold">Attended</span>
                               </div>
-                              <div className="flex-1">
-                                <p className="font-semibold text-gray-800 text-sm">Creative Workshop</p>
-                                <p className="text-xs text-gray-500">Created • Next month</p>
-                              </div>
+                              <p className="text-gray-600 text-xs">{selectedUser.location.city} Convention Center • 45 attended</p>
                             </div>
-                            <p className="text-gray-600 text-xs">Local Art Studio • 15 interested</p>
-                          </div>
-                          <div className="bg-white rounded-lg p-4 border border-gray-200">
-                            <div className="flex items-center mb-2">
-                              <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center mr-3">
-                                <span className="text-white text-sm font-bold">🍕</span>
+                            <div className="bg-white rounded-lg p-4 border border-gray-200 mb-3">
+                              <div className="flex items-center mb-2">
+                                <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center mr-3">
+                                  <span className="text-white text-sm font-bold">🍕</span>
+                                </div>
+                                <div className="flex-1">
+                                  <p className="font-semibold text-gray-800 text-sm">Food Truck Friday</p>
+                                  <p className="text-xs text-gray-500">2 weeks ago</p>
+                                </div>
+                                <span className="text-xs text-gray-600 font-semibold">Attended</span>
                               </div>
-                              <div className="flex-1">
-                                <p className="font-semibold text-gray-800 text-sm">Food Truck Friday</p>
-                                <p className="text-xs text-gray-500">Attended • 2 weeks ago</p>
-                              </div>
+                              <p className="text-gray-600 text-xs">City Park • 120 attended</p>
                             </div>
-                            <p className="text-gray-600 text-xs">City Park • 120 attended</p>
-                          </div>
-                          <div className="bg-white rounded-lg p-4 border border-gray-200">
-                            <div className="flex items-center mb-2">
-                              <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-blue-500 rounded-lg flex items-center justify-center mr-3">
-                                <span className="text-white text-sm font-bold">📚</span>
-                              </div>
-                              <div className="flex-1">
-                                <p className="font-semibold text-gray-800 text-sm">Book Club Meeting</p>
-                                <p className="text-xs text-gray-500">Going • Next Tuesday</p>
-                              </div>
-                            </div>
-                            <p className="text-gray-600 text-xs">Local Library • 12 going</p>
                           </div>
                         </div>
                       </div>
@@ -2683,6 +2700,7 @@ export default function ScoopApp() {
               setPosts([newPost, ...posts]);
             }}
             isUserBlocked={isUserBlocked}
+            preSelectedUser={currentScreen === 'user-profile' && selectedUser ? selectedUser.name : undefined}
           />
         )}
 
@@ -2720,6 +2738,7 @@ export default function ScoopApp() {
               setEvents([newEvent, ...events]);
               alert('Event created successfully! It will appear in the events list.');
             }}
+            preSelectedFriend={currentScreen === 'user-profile' && selectedUser ? selectedUser.name : undefined}
           />
         )}
         

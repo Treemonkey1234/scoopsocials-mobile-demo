@@ -4,10 +4,11 @@ interface CreatePostModalProps {
   onClose: () => void;
   onSubmit: (post: any) => void;
   isUserBlocked?: (username: string) => boolean;
+  preSelectedUser?: string;
 }
 
-const CreatePostModal: React.FC<CreatePostModalProps> = ({ onClose, onSubmit, isUserBlocked }) => {
-  const [reviewedPersons, setReviewedPersons] = useState<string[]>([]);
+const CreatePostModal: React.FC<CreatePostModalProps> = ({ onClose, onSubmit, isUserBlocked, preSelectedUser }) => {
+  const [reviewedPersons, setReviewedPersons] = useState<string[]>(preSelectedUser ? [preSelectedUser] : []);
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('General');
   const [location, setLocation] = useState('');
