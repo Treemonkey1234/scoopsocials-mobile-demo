@@ -313,16 +313,11 @@ export default function ScoopApp() {
 
   // Helper function to navigate to a user's profile
   const navigateToUserProfile = (userName: string) => {
-    console.log('Navigating to user profile:', userName);
     const user = allUsers.find(u => u.name === userName);
-    console.log('Found user:', user);
     if (user) {
       setSelectedUser(user);
       setCurrentScreen('user-profile');
       setUserProfileActiveTab(0);
-      console.log('Navigation successful');
-    } else {
-      console.log('User not found in allUsers array');
     }
   };
 
@@ -693,7 +688,7 @@ export default function ScoopApp() {
         </div>
 
         {/* Main Content */}
-        <div className={`flex-1 overflow-hidden ${isDarkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-300`} style={{maxHeight: 'calc(852px - 120px)'}}>
+        <div className={`flex-1 overflow-hidden ${isDarkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-300`} style={{maxHeight: 'calc(852px - 120px)', paddingBottom: '80px'}}>
           
           {/* Home Feed Screen */}
           {currentScreen === 'home' && (
@@ -2755,7 +2750,7 @@ export default function ScoopApp() {
         </div>
 
         {/* Bottom Navigation */}
-        <div className="bg-white border-t border-gray-200 px-2 py-2 rounded-b-3xl flex-shrink-0">
+        <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-2 py-2 rounded-b-3xl">
           <div className="flex justify-around items-center">
             <button 
               onClick={() => setCurrentScreen('home')}

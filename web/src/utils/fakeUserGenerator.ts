@@ -110,7 +110,41 @@ export class FakeUserNetworkGenerator {
   private generateUsers(): void {
     console.log('Generating user profiles...');
     
-    for (let i = 0; i < this.TOTAL_USERS; i++) {
+    // First, create users for the hardcoded post names
+    const postNames = [
+      'Jessica Wong', 'David Kim', 'Mike Johnson', 'Emma Davis', 
+      'Sarah Chen', 'Alex Martinez', 'Rachel Brown', 'Tom Anderson', 'Kevin Lee'
+    ];
+    
+    postNames.forEach(name => {
+      const user: FakeUser = {
+        id: faker.string.uuid(),
+        name: name,
+        username: faker.internet.userName(),
+        email: faker.internet.email(),
+        age: faker.number.int({ min: 18, max: 65 }),
+        location: this.getRandomLocation(),
+        occupation: faker.helpers.arrayElement(this.OCCUPATIONS),
+        interests: this.generateInterests(),
+        joinDate: faker.date.between({ 
+          from: new Date('2020-01-01'), 
+          to: new Date() 
+        }),
+        activityLevel: this.getActivityLevel(),
+        trustScore: faker.number.int({ min: 65, max: 98 }),
+        bio: faker.lorem.sentences(2),
+        avatar: this.generateAvatar(name),
+        connections: [],
+        connectionCount: 0,
+        isOnline: faker.datatype.boolean({ probability: 0.15 }),
+        lastSeen: faker.date.recent({ days: 30 })
+      };
+      
+      this.users.push(user);
+    });
+    
+    // Then generate the rest with random names
+    for (let i = postNames.length; i < this.TOTAL_USERS; i++) {
       const user: FakeUser = {
         id: faker.string.uuid(),
         name: faker.person.fullName(),
