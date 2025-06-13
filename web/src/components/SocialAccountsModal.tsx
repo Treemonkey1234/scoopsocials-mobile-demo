@@ -17,12 +17,33 @@ interface SocialAccountsModalProps {
 
 const SocialAccountsModal: React.FC<SocialAccountsModalProps> = ({ onClose }) => {
   const [accounts, setAccounts] = useState<SocialAccount[]>([
+    // Social Media
     { platform: 'Twitter', username: '@BigStinky', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/twitter.svg', color: 'bg-blue-400', connectedSince: 'Mar 2024', category: 'social', profileUrl: 'https://twitter.com/BigStinky' },
-    { platform: 'LinkedIn', username: 'riesling-lefluuf', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg', color: 'bg-blue-600', connectedSince: 'Jan 2024', category: 'professional', profileUrl: 'https://linkedin.com/in/riesling-lefluuf' },
     { platform: 'Instagram', username: '@wine_and_code', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/instagram.svg', color: 'bg-pink-500', connectedSince: 'Dec 2023', category: 'social', profileUrl: 'https://instagram.com/wine_and_code' },
-    { platform: 'GitHub', username: 'RieslingCodes', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg', color: 'bg-gray-800', connectedSince: 'Feb 2024', category: 'tech', profileUrl: 'https://github.com/RieslingCodes' },
+    { platform: 'Facebook', username: 'Riesling LeFluuf', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg', color: 'bg-blue-600', connectedSince: 'Nov 2023', category: 'social', profileUrl: 'https://facebook.com/riesling.lefluuf' },
+    { platform: 'Snapchat', username: 'BigStinkySnaps', verified: false, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/snapchat.svg', color: 'bg-yellow-400', connectedSince: 'Jan 2024', category: 'social', profileUrl: 'https://snapchat.com/add/BigStinkySnaps' },
+    { platform: 'Discord', username: 'BigStinky#1234', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/discord.svg', color: 'bg-indigo-600', connectedSince: 'Aug 2023', category: 'social', profileUrl: 'https://discord.com/users/BigStinky' },
+    { platform: 'Reddit', username: 'u/BigStinkyWines', verified: false, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/reddit.svg', color: 'bg-orange-600', connectedSince: 'Jul 2023', category: 'social', profileUrl: 'https://reddit.com/u/BigStinkyWines' },
+    
+    // Professional
+    { platform: 'LinkedIn', username: 'riesling-lefluuf', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg', color: 'bg-blue-700', connectedSince: 'Jan 2024', category: 'professional', profileUrl: 'https://linkedin.com/in/riesling-lefluuf' },
+    { platform: 'AngelList', username: 'riesling_startup', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/angellist.svg', color: 'bg-gray-900', connectedSince: 'Feb 2024', category: 'professional', profileUrl: 'https://angel.co/u/riesling_startup' },
+    { platform: 'Glassdoor', username: 'Riesling L.', verified: false, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/glassdoor.svg', color: 'bg-green-600', connectedSince: 'Dec 2023', category: 'professional', profileUrl: 'https://glassdoor.com/profile/riesling-l' },
+    
+    // Creative
     { platform: 'TikTok', username: '@BigStinkyWines', verified: false, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/tiktok.svg', color: 'bg-gray-900', connectedSince: 'Oct 2023', category: 'creative', profileUrl: 'https://tiktok.com/@BigStinkyWines' },
-    { platform: 'YouTube', username: 'Wine & Tech Reviews', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/youtube.svg', color: 'bg-red-500', connectedSince: 'Sep 2023', category: 'creative', profileUrl: 'https://youtube.com/c/WineTechReviews' }
+    { platform: 'YouTube', username: 'Wine & Tech Reviews', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/youtube.svg', color: 'bg-red-500', connectedSince: 'Sep 2023', category: 'creative', profileUrl: 'https://youtube.com/c/WineTechReviews' },
+    { platform: 'Pinterest', username: 'WineAndTechVibes', verified: false, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/pinterest.svg', color: 'bg-red-600', connectedSince: 'May 2023', category: 'creative', profileUrl: 'https://pinterest.com/WineAndTechVibes' },
+    { platform: 'Behance', username: 'riesling_designs', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/behance.svg', color: 'bg-blue-500', connectedSince: 'Jun 2023', category: 'creative', profileUrl: 'https://behance.net/riesling_designs' },
+    { platform: 'Dribbble', username: 'BigStinkyDesigns', verified: false, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/dribbble.svg', color: 'bg-pink-600', connectedSince: 'Apr 2023', category: 'creative', profileUrl: 'https://dribbble.com/BigStinkyDesigns' },
+    
+    // Tech
+    { platform: 'GitHub', username: 'RieslingCodes', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg', color: 'bg-gray-800', connectedSince: 'Feb 2024', category: 'tech', profileUrl: 'https://github.com/RieslingCodes' },
+    { platform: 'Stack Overflow', username: 'BigStinkyCoder', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/stackoverflow.svg', color: 'bg-orange-500', connectedSince: 'Jan 2024', category: 'tech', profileUrl: 'https://stackoverflow.com/users/BigStinkyCoder' },
+    { platform: 'Steam', username: 'BigStinkyGamer', verified: false, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/steam.svg', color: 'bg-gray-700', connectedSince: 'Mar 2024', category: 'tech', profileUrl: 'https://steamcommunity.com/id/BigStinkyGamer' },
+    { platform: 'Twitch', username: 'BigStinkyStreams', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/twitch.svg', color: 'bg-purple-600', connectedSince: 'Dec 2023', category: 'tech', profileUrl: 'https://twitch.tv/BigStinkyStreams' },
+    { platform: 'Spotify', username: 'BigStinkyPlaylists', verified: false, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/spotify.svg', color: 'bg-green-500', connectedSince: 'Nov 2023', category: 'tech', profileUrl: 'https://open.spotify.com/user/BigStinkyPlaylists' },
+    { platform: 'Medium', username: '@bigstinky_tech', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/medium.svg', color: 'bg-gray-900', connectedSince: 'Oct 2023', category: 'tech', profileUrl: 'https://medium.com/@bigstinky_tech' }
   ]);
   
   const handleRemoveAccount = (index: number) => {
