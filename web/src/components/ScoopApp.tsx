@@ -1563,14 +1563,13 @@ export default function ScoopApp() {
                 </div>
               </div>
 
-              {/* Events Content */}
-              <div className="flex-1 flex flex-col bg-white">
-                <div className="p-4 border-b border-gray-200 flex-shrink-0">
-                  <div className="flex items-center justify-between mb-4">
-                    <button className="text-cyan-600 text-sm">📍 Phoenix, AZ</button>
-                  </div>
+              {/* Events Content - Filter Header */}
+              <div className="p-4 border-b border-gray-200 flex-shrink-0 bg-white">
+                <div className="flex items-center justify-between mb-4">
+                  <button className="text-cyan-600 text-sm">📍 Phoenix, AZ</button>
+                </div>
                 
-                <div className="flex space-x-2 mb-4 overflow-x-auto">
+                <div className="flex space-x-2 overflow-x-auto">
                   <button 
                     onClick={() => setEventFilter('upcoming')}
                     className={`px-3 py-1 rounded-full text-sm whitespace-nowrap ${
@@ -1596,9 +1595,10 @@ export default function ScoopApp() {
                     Discover
                   </button>
                 </div>
-                </div>
-                
-                <div className="flex-1 overflow-y-auto p-4">
+              </div>
+              
+              {/* Events Content - Scrollable Area */}
+              <div className="flex-1 overflow-y-auto p-4">
                 <div className="space-y-3">
                   
                   {eventFilter === 'upcoming' && events.filter(event => event.date === 'Tomorrow' || event.date === 'Saturday' || event.date === 'Sunday').map((event) => (
@@ -1834,7 +1834,6 @@ export default function ScoopApp() {
                     </div>
                   )}
                 </div>
-                </div>
               </div>
             </div>
           )}
@@ -1902,67 +1901,65 @@ export default function ScoopApp() {
                 </div>
               </div>
 
-              {/* Search Content */}
-              <div className="flex-1 flex flex-col bg-white">
-                {/* Search Bar */}
-                <div className="p-4 border-b border-gray-200 flex-shrink-0">
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <svg className="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"></path>
-                      </svg>
-                    </div>
-                    <input
-                      type="text"
-                      placeholder="Search for people, events, bars, happy hour..."
-                      value={searchQuery}
-                      onChange={(e) => {
-                        setSearchQuery(e.target.value);
-                        performSearch(e.target.value);
-                      }}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent"
-                    />
+              {/* Search Bar and Filters */}
+              <div className="p-4 border-b border-gray-200 flex-shrink-0 bg-white">
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg className="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"></path>
+                    </svg>
                   </div>
-                  
-                  {/* Search Filters */}
-                  <div className="flex space-x-2 mt-3">
-                    <button 
-                      onClick={() => setSearchFilter('all')}
-                      className={`px-3 py-1 rounded-full text-sm ${
-                        searchFilter === 'all' ? 'bg-cyan-400 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                      }`}
-                    >
-                      All
-                    </button>
-                    <button 
-                      onClick={() => setSearchFilter('events')}
-                      className={`px-3 py-1 rounded-full text-sm ${
-                        searchFilter === 'events' ? 'bg-cyan-400 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                      }`}
-                    >
-                      Events ({searchResults.events.length})
-                    </button>
-                    <button 
-                      onClick={() => setSearchFilter('people')}
-                      className={`px-3 py-1 rounded-full text-sm ${
-                        searchFilter === 'people' ? 'bg-cyan-400 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                      }`}
-                    >
-                      People ({searchResults.people.length})
-                    </button>
-                    <button 
-                      onClick={() => setSearchFilter('posts')}
-                      className={`px-3 py-1 rounded-full text-sm ${
-                        searchFilter === 'posts' ? 'bg-cyan-400 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                      }`}
-                    >
-                      Posts ({searchResults.posts.length})
-                    </button>
-                  </div>
+                  <input
+                    type="text"
+                    placeholder="Search for people, events, bars, happy hour..."
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value);
+                      performSearch(e.target.value);
+                    }}
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent"
+                  />
                 </div>
+                
+                {/* Search Filters */}
+                <div className="flex space-x-2 mt-3">
+                  <button 
+                    onClick={() => setSearchFilter('all')}
+                    className={`px-3 py-1 rounded-full text-sm ${
+                      searchFilter === 'all' ? 'bg-cyan-400 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                  >
+                    All
+                  </button>
+                  <button 
+                    onClick={() => setSearchFilter('events')}
+                    className={`px-3 py-1 rounded-full text-sm ${
+                      searchFilter === 'events' ? 'bg-cyan-400 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                  >
+                    Events ({searchResults.events.length})
+                  </button>
+                  <button 
+                    onClick={() => setSearchFilter('people')}
+                    className={`px-3 py-1 rounded-full text-sm ${
+                      searchFilter === 'people' ? 'bg-cyan-400 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                  >
+                    People ({searchResults.people.length})
+                  </button>
+                  <button 
+                    onClick={() => setSearchFilter('posts')}
+                    className={`px-3 py-1 rounded-full text-sm ${
+                      searchFilter === 'posts' ? 'bg-cyan-400 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                  >
+                    Posts ({searchResults.posts.length})
+                  </button>
+                </div>
+              </div>
 
-                {/* Search Results */}
-                <div className="flex-1 overflow-y-auto p-4">
+              {/* Search Results - Scrollable Area */}
+              <div className="flex-1 overflow-y-auto p-4">
                   {!searchQuery.trim() ? (
                     <div className="text-center py-12 text-gray-500">
                       <div className="text-lg mb-2">🔍</div>
@@ -2040,12 +2037,45 @@ export default function ScoopApp() {
                                       Unblock
                                     </button>
                                   ) : (
-                                    <button 
-                                      onClick={() => blockUser(person.name)}
-                                      className="bg-red-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-600"
-                                    >
-                                      Block
-                                    </button>
+                                    currentUser && currentUser.connections.includes(person.id) ? (
+                                      <button 
+                                        onClick={() => {
+                                          setTargetUser(person);
+                                          setShowRemoveFriendModal(true);
+                                        }}
+                                        className="bg-white text-gray-600 border border-gray-300 px-3 py-1 rounded-lg text-sm hover:bg-gray-50 transition-all duration-200 transform hover:scale-105 hover:rotate-45"
+                                        style={{
+                                          fontSize: '16px',
+                                          width: '32px',
+                                          height: '32px',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          justifyContent: 'center',
+                                          padding: '0'
+                                        }}
+                                      >
+                                        ×
+                                      </button>
+                                    ) : (
+                                      <button 
+                                        onClick={() => {
+                                          setTargetUser(person);
+                                          setShowBlockModal(true);
+                                        }}
+                                        className="bg-white text-gray-600 border border-gray-300 px-3 py-1 rounded-lg text-sm hover:bg-gray-50 transition-all duration-200 transform hover:scale-105 hover:rotate-45"
+                                        style={{
+                                          fontSize: '16px',
+                                          width: '32px',
+                                          height: '32px',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          justifyContent: 'center',
+                                          padding: '0'
+                                        }}
+                                      >
+                                        ×
+                                      </button>
+                                    )
                                   )}
                                 </div>
                               </div>
@@ -2102,7 +2132,6 @@ export default function ScoopApp() {
                       )}
                     </div>
                   )}
-                </div>
               </div>
             </div>
           )}
