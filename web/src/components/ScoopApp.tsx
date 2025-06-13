@@ -70,6 +70,11 @@ export default function ScoopApp() {
   const [showBlockedUsers, setShowBlockedUsers] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   
+  // Remove Friend Modal states
+  const [showRemoveFriendModal, setShowRemoveFriendModal] = useState(false);
+  const [showBlockModal, setShowBlockModal] = useState(false);
+  const [targetUser, setTargetUser] = useState<FakeUser | null>(null);
+  
   // Fake user network state
   const [allUsers, setAllUsers] = useState<FakeUser[]>([]);
   const [currentUser, setCurrentUser] = useState<FakeUser | null>(null);
@@ -118,6 +123,11 @@ export default function ScoopApp() {
   
   const isUserBlocked = (username: string) => {
     return blockedUsers.includes(username);
+  };
+  
+  const removeFriend = (userId: string) => {
+    setUserFriends(prev => prev.filter(friend => friend.id !== userId));
+    console.log(`Removed friend with ID: ${userId}`);
   };
   
   const [notifications, setNotifications] = useState([
@@ -218,7 +228,9 @@ export default function ScoopApp() {
         const user = users[0];
         setCurrentUser(user);
         const friends = getFriendsForUser(user.id);
-        setUserFriends(friends);
+        // Remove some friends to test both friend/non-friend scenarios
+        const limitedFriends = friends.slice(0, Math.max(1, friends.length - 2)); // Remove last 2 friends
+        setUserFriends(limitedFriends);
       }
     } catch (error) {
       console.error('Error initializing fake user network:', error);
@@ -2132,7 +2144,16 @@ export default function ScoopApp() {
                 </div>
                 <div className="absolute top-4 right-4 flex space-x-2">
                   <button 
-                    onClick={() => blockUser(selectedUser.name)}
+                    onClick={() => {
+                      setTargetUser(selectedUser);
+                      // Check if they are friends
+                      const areFriends = userFriends.some(friend => friend.id === selectedUser.id);
+                      if (areFriends) {
+                        setShowRemoveFriendModal(true);
+                      } else {
+                        setShowBlockModal(true);
+                      }
+                    }}
                     className="bg-white bg-opacity-20 p-2 rounded-full hover:bg-opacity-30 transition-colors"
                   >
                     <svg className="w-5 h-5 text-white transform rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2740,6 +2761,115 @@ export default function ScoopApp() {
             }}
             preSelectedFriend={currentScreen === 'user-profile' && selectedUser ? selectedUser.name : undefined}
           />
+        )}
+
+        {/* Remove Friend Modal */}
+        {showRemoveFriendModal && targetUser && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-lg w-full max-w-sm p-6">
+              <h2 className="text-xl font-bold text-gray-800 mb-4">Remove {targetUser.name} as a friend?</h2>
+              
+              <div className="mb-6">
+                <p className="text-sm text-gray-600 mb-3">What happens when you remove a friend:</p>
+                <ul className="text-sm text-gray-600 space-y-1 list-disc list-inside">
+                  <li>{targetUser.name} will be removed from your friends list</li>
+                  <li>You can both still see each other's public posts and profile</li>
+                  <li>{targetUser.name} can send you a new friend request anytime</li>
+                  <li>You can re-add {targetUser.name} as a friend later</li>
+                  <li>This won't notify {targetUser.name} directly</li>
+                </ul>
+              </div>
+              
+              <div className="flex space-x-3">
+                <button
+                  onClick={() => {
+                    removeFriend(targetUser.id);
+                    setShowRemoveFriendModal(false);
+                    setTargetUser(null);
+                    alert(`${targetUser.name} has been removed from your friends list.`);
+                  }}
+                  className="flex-1 bg-red-500 text-white py-2 rounded-lg font-medium hover:bg-red-600 transition-colors"
+                >
+                  Remove Friend
+                </button>
+                <button
+                  onClick={() => {
+                    setShowRemoveFriendModal(false);
+                  }}
+                  className="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg font-medium hover:bg-gray-400 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    setShowRemoveFriendModal(false);
+                    setShowBlockModal(true);
+                  }}
+                  className="flex-1 bg-gray-600 text-white py-2 rounded-lg font-medium hover:bg-gray-700 transition-colors"
+                >
+                  Block?
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Block Modal */}
+        {showBlockModal && targetUser && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-lg w-full max-w-sm p-6">
+              <h2 className="text-xl font-bold text-gray-800 mb-4">Block {targetUser.name}?</h2>
+              
+              <div className="mb-6">
+                <p className="text-sm text-gray-600 mb-3">
+                  {userFriends.some(friend => friend.id === targetUser.id) 
+                    ? "What happens when you block someone:" 
+                    : "Since you're not friends with " + targetUser.name + ", here's what blocking does:"}
+                </p>
+                <ul className="text-sm text-gray-600 space-y-1 list-disc list-inside">
+                  <li>{targetUser.name} won't be able to see your profile or posts</li>
+                  <li>You won't appear in {targetUser.name}'s search results</li>
+                  <li>{targetUser.name} can't send friend requests or messages</li>
+                  <li>{targetUser.name} can't comment on or interact with your content</li>
+                  <li>You can unblock {targetUser.name} later in settings</li>
+                </ul>
+              </div>
+              
+              <div className="flex space-x-3">
+                {userFriends.some(friend => friend.id === targetUser.id) && (
+                  <button
+                    onClick={() => {
+                      setShowBlockModal(false);
+                      setShowRemoveFriendModal(true);
+                    }}
+                    className="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg font-medium hover:bg-gray-400 transition-colors"
+                  >
+                    ← Back
+                  </button>
+                )}
+                <button
+                  onClick={() => {
+                    blockUser(targetUser.name);
+                    setShowBlockModal(false);
+                    setTargetUser(null);
+                    alert(`${targetUser.name} has been blocked.`);
+                  }}
+                  className="flex-1 bg-red-600 text-white py-2 rounded-lg font-medium hover:bg-red-700 transition-colors"
+                >
+                  Block User
+                </button>
+                <button
+                  onClick={() => {
+                    setShowBlockModal(false);
+                    setTargetUser(null);
+                  }}
+                  className="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg font-medium hover:bg-gray-400 transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
         )}
         
         {showEventDetails && selectedEvent && (
