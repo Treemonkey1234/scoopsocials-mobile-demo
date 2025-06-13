@@ -2145,6 +2145,56 @@ export default function ScoopApp() {
                     <span className="text-white text-lg">👥</span>
                   </button>
                 </div>
+                <div className="absolute top-4 right-4 flex space-x-2">
+                  <button 
+                    onClick={() => blockUser(selectedUser.name)}
+                    className="bg-white bg-opacity-20 p-2 rounded-full hover:bg-opacity-30 transition-colors"
+                  >
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728" />
+                    </svg>
+                  </button>
+                  <button 
+                    onClick={() => setShowCreateDropdown(!showCreateDropdown)}
+                    className="bg-white bg-opacity-20 p-2 rounded-full hover:bg-opacity-30 transition-colors"
+                  >
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                  </button>
+                  
+                  {showCreateDropdown && (
+                    <div className="absolute right-0 top-12 bg-white rounded-lg shadow-lg border border-gray-200 py-2 w-40 z-50">
+                      <button
+                        onClick={() => {
+                          setShowCreatePost(true);
+                          setShowCreateDropdown(false);
+                        }}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        📝 Create Post
+                      </button>
+                      <button
+                        onClick={() => {
+                          setShowCreateEvent(true);
+                          setShowCreateDropdown(false);
+                        }}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        📅 Create Event
+                      </button>
+                      <button
+                        onClick={() => {
+                          setShowCreateDropdown(false);
+                          alert('Add Friend functionality would open here');
+                        }}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        👥 Add Friend
+                      </button>
+                    </div>
+                  )}
+                </div>
                 <div className="w-20 h-20 bg-white rounded-full mx-auto mb-4 flex items-center justify-center">
                   <span className="text-cyan-600 text-2xl">{selectedUser.avatar}</span>
                 </div>
@@ -2317,7 +2367,7 @@ export default function ScoopApp() {
                   >
                     <div className="flex h-full" style={{ width: '300%' }}>
                       {/* Posts Section */}
-                      <div className="w-1/3 h-full overflow-y-auto scrollbar-hide pr-4" style={{ scrollSnapAlign: 'start' }}>
+                      <div className="w-1/3 h-full overflow-y-auto pr-4" style={{ scrollSnapAlign: 'start' }}>
                         <div className="space-y-4">
                           <div className="bg-white rounded-lg p-4 border border-gray-200">
                             <div className="flex items-start mb-3">
@@ -2340,11 +2390,74 @@ export default function ScoopApp() {
                               </div>
                             </div>
                           </div>
+                          <div className="bg-white rounded-lg p-4 border border-gray-200">
+                            <div className="flex items-start mb-3">
+                              <div className={`w-8 h-8 bg-gradient-to-r ${getAvatarGradient(selectedUser.name)} rounded-full flex items-center justify-center mr-3 text-white font-bold text-sm`}>
+                                {selectedUser.avatar}
+                              </div>
+                              <div className="flex-1">
+                                <div className="flex items-center mb-1">
+                                  <span className="font-semibold text-gray-800 text-sm">{selectedUser.name}</span>
+                                  <span className="text-gray-500 text-xs ml-2">• 1 day ago</span>
+                                </div>
+                                <p className="text-gray-700 text-sm mb-2">
+                                  Had a wonderful time at the local {selectedUser.interests[1].toLowerCase()} meetup yesterday. 
+                                  Met some incredible people and learned so much!
+                                </p>
+                                <div className="flex items-center space-x-4 text-xs text-gray-500">
+                                  <span>❤️ 23 likes</span>
+                                  <span>💬 7 comments</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="bg-white rounded-lg p-4 border border-gray-200">
+                            <div className="flex items-start mb-3">
+                              <div className={`w-8 h-8 bg-gradient-to-r ${getAvatarGradient(selectedUser.name)} rounded-full flex items-center justify-center mr-3 text-white font-bold text-sm`}>
+                                {selectedUser.avatar}
+                              </div>
+                              <div className="flex-1">
+                                <div className="flex items-center mb-1">
+                                  <span className="font-semibold text-gray-800 text-sm">{selectedUser.name}</span>
+                                  <span className="text-gray-500 text-xs ml-2">• 3 days ago</span>
+                                </div>
+                                <p className="text-gray-700 text-sm mb-2">
+                                  Looking forward to the weekend! Planning to check out some new places in {selectedUser.location.city}.
+                                  Any recommendations?
+                                </p>
+                                <div className="flex items-center space-x-4 text-xs text-gray-500">
+                                  <span>❤️ 8 likes</span>
+                                  <span>💬 12 comments</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="bg-white rounded-lg p-4 border border-gray-200">
+                            <div className="flex items-start mb-3">
+                              <div className={`w-8 h-8 bg-gradient-to-r ${getAvatarGradient(selectedUser.name)} rounded-full flex items-center justify-center mr-3 text-white font-bold text-sm`}>
+                                {selectedUser.avatar}
+                              </div>
+                              <div className="flex-1">
+                                <div className="flex items-center mb-1">
+                                  <span className="font-semibold text-gray-800 text-sm">{selectedUser.name}</span>
+                                  <span className="text-gray-500 text-xs ml-2">• 5 days ago</span>
+                                </div>
+                                <p className="text-gray-700 text-sm mb-2">
+                                  Great networking event last week! Connected with so many like-minded professionals.
+                                  Building real connections in our community.
+                                </p>
+                                <div className="flex items-center space-x-4 text-xs text-gray-500">
+                                  <span>❤️ 19 likes</span>
+                                  <span>💬 5 comments</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
 
                       {/* Groups Section */}
-                      <div className="w-1/3 h-full overflow-y-auto scrollbar-hide pr-4" style={{ scrollSnapAlign: 'start' }}>
+                      <div className="w-1/3 h-full overflow-y-auto pr-4" style={{ scrollSnapAlign: 'start' }}>
                         <div className="space-y-4">
                           <div className="bg-white rounded-lg p-4 border border-gray-200">
                             <div className="flex items-center mb-2">
@@ -2356,7 +2469,7 @@ export default function ScoopApp() {
                                 <p className="text-xs text-gray-500">Attended • Last week</p>
                               </div>
                             </div>
-                            <p className="text-gray-600 text-xs">{selectedUser.location.city} Convention Center</p>
+                            <p className="text-gray-600 text-xs">{selectedUser.location.city} Convention Center • 45 attended</p>
                           </div>
                           <div className="bg-white rounded-lg p-4 border border-gray-200">
                             <div className="flex items-center mb-2">
@@ -2368,12 +2481,49 @@ export default function ScoopApp() {
                                 <p className="text-xs text-gray-500">Going • This weekend</p>
                               </div>
                             </div>
+                            <p className="text-gray-600 text-xs">Downtown Community Center • 28 going</p>
+                          </div>
+                          <div className="bg-white rounded-lg p-4 border border-gray-200">
+                            <div className="flex items-center mb-2">
+                              <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mr-3">
+                                <span className="text-white text-sm font-bold">🎨</span>
+                              </div>
+                              <div className="flex-1">
+                                <p className="font-semibold text-gray-800 text-sm">Creative Workshop</p>
+                                <p className="text-xs text-gray-500">Created • Next month</p>
+                              </div>
+                            </div>
+                            <p className="text-gray-600 text-xs">Local Art Studio • 15 interested</p>
+                          </div>
+                          <div className="bg-white rounded-lg p-4 border border-gray-200">
+                            <div className="flex items-center mb-2">
+                              <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center mr-3">
+                                <span className="text-white text-sm font-bold">🍕</span>
+                              </div>
+                              <div className="flex-1">
+                                <p className="font-semibold text-gray-800 text-sm">Food Truck Friday</p>
+                                <p className="text-xs text-gray-500">Attended • 2 weeks ago</p>
+                              </div>
+                            </div>
+                            <p className="text-gray-600 text-xs">City Park • 120 attended</p>
+                          </div>
+                          <div className="bg-white rounded-lg p-4 border border-gray-200">
+                            <div className="flex items-center mb-2">
+                              <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-blue-500 rounded-lg flex items-center justify-center mr-3">
+                                <span className="text-white text-sm font-bold">📚</span>
+                              </div>
+                              <div className="flex-1">
+                                <p className="font-semibold text-gray-800 text-sm">Book Club Meeting</p>
+                                <p className="text-xs text-gray-500">Going • Next Tuesday</p>
+                              </div>
+                            </div>
+                            <p className="text-gray-600 text-xs">Local Library • 12 going</p>
                           </div>
                         </div>
                       </div>
 
                       {/* Likes Section */}
-                      <div className="w-1/3 h-full overflow-y-auto scrollbar-hide" style={{ scrollSnapAlign: 'start' }}>
+                      <div className="w-1/3 h-full overflow-y-auto" style={{ scrollSnapAlign: 'start' }}>
                         <div className="space-y-4">
                           <div className="bg-white rounded-lg p-4 border border-gray-200">
                             <div className="flex items-center mb-2">
@@ -2394,6 +2544,50 @@ export default function ScoopApp() {
                               <div className="flex-1">
                                 <p className="font-semibold text-gray-800 text-sm">Commented on Tech Meetup Event</p>
                                 <p className="text-xs text-gray-500">1 day ago</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="bg-white rounded-lg p-4 border border-gray-200">
+                            <div className="flex items-center mb-2">
+                              <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mr-3">
+                                <span className="text-white text-xs font-bold">👍</span>
+                              </div>
+                              <div className="flex-1">
+                                <p className="font-semibold text-gray-800 text-sm">Liked Mike's Coffee Shop Post</p>
+                                <p className="text-xs text-gray-500">2 days ago</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="bg-white rounded-lg p-4 border border-gray-200">
+                            <div className="flex items-center mb-2">
+                              <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center mr-3">
+                                <span className="text-white text-xs font-bold">💬</span>
+                              </div>
+                              <div className="flex-1">
+                                <p className="font-semibold text-gray-800 text-sm">Commented on Art Gallery Opening</p>
+                                <p className="text-xs text-gray-500">3 days ago</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="bg-white rounded-lg p-4 border border-gray-200">
+                            <div className="flex items-center mb-2">
+                              <div className="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center mr-3">
+                                <span className="text-white text-xs font-bold">❤️</span>
+                              </div>
+                              <div className="flex-1">
+                                <p className="font-semibold text-gray-800 text-sm">Liked Local Band Performance</p>
+                                <p className="text-xs text-gray-500">4 days ago</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="bg-white rounded-lg p-4 border border-gray-200">
+                            <div className="flex items-center mb-2">
+                              <div className="w-6 h-6 bg-teal-500 rounded-full flex items-center justify-center mr-3">
+                                <span className="text-white text-xs font-bold">💬</span>
+                              </div>
+                              <div className="flex-1">
+                                <p className="font-semibold text-gray-800 text-sm">Commented on Fitness Class Review</p>
+                                <p className="text-xs text-gray-500">5 days ago</p>
                               </div>
                             </div>
                           </div>
