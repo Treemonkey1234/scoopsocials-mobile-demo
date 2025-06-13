@@ -7,6 +7,7 @@ export default function Home() {
   const [verificationCode, setVerificationCode] = useState('');
   const [accountType, setAccountType] = useState<'free' | 'professional' | 'venue' | null>(null);
   const [previousScreen, setPreviousScreen] = useState('welcome');
+  const [isSigningIn, setIsSigningIn] = useState(false); // Track if user is signing in vs creating account
 
 
   const formatPhoneNumber = (text: string) => {
@@ -53,6 +54,7 @@ export default function Home() {
           <button
             onClick={() => {
               setPreviousScreen('welcome');
+              setIsSigningIn(false);
               setCurrentScreen('signup');
             }}
             className="w-full bg-white text-cyan-500 py-3 rounded-full text-base font-bold"
@@ -62,6 +64,7 @@ export default function Home() {
           <button
             onClick={() => {
               setPreviousScreen('welcome');
+              setIsSigningIn(true);
               setCurrentScreen('login');
             }}
             className="w-full border-2 border-white text-white py-3 rounded-full text-base font-semibold"
@@ -130,6 +133,7 @@ export default function Home() {
           <button
             onClick={() => {
               setPreviousScreen('signup');
+              setIsSigningIn(false);
               setCurrentScreen('verification');
             }}
             className="w-full bg-cyan-500 text-white py-3 rounded-xl text-lg font-bold mt-6"
@@ -181,6 +185,7 @@ export default function Home() {
           <button
             onClick={() => {
               setPreviousScreen('login');
+              setIsSigningIn(true);
               setCurrentScreen('verification');
             }}
             className="w-full bg-cyan-500 text-white py-4 rounded-xl text-lg font-bold"
@@ -256,7 +261,15 @@ export default function Home() {
         </div>
 
         <button
-          onClick={() => setCurrentScreen('account-type')}
+          onClick={() => {
+            if (isSigningIn) {
+              // Existing user - go straight to main app
+              window.open('https://treemonkey1234.github.io/scoopsocials-mobile-demo/web-demo/', '_blank');
+            } else {
+              // New user - continue to onboarding
+              setCurrentScreen('account-type');
+            }
+          }}
           className="w-full bg-cyan-500 text-white py-4 rounded-xl text-lg font-bold"
         >
           Verify

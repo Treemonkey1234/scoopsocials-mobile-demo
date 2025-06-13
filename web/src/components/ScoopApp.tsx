@@ -716,8 +716,8 @@ export default function ScoopApp() {
               </div>
 
               {/* Feed Content */}
-              <div className="flex-1 overflow-y-auto custom-scrollbar" style={{scrollbarWidth: 'thin', scrollbarColor: '#9CA3AF #F3F4F6'}}>
-                <div className="px-4 py-3 space-y-3 pb-4">
+              <div className="flex-1 overflow-y-auto p-4">
+                <div className="space-y-3 pb-4">
                   {posts.filter(post => !isUserBlocked(post.reviewer) && !isUserBlocked(post.reviewedPerson)).map((post) => (
                     <div key={post.id} className="rounded-lg shadow-md border border-cyan-200" style={{background: 'linear-gradient(145deg, #ffffff 0%, #f8fdff 100%)'}}>
                       <div className="flex">
@@ -1080,9 +1080,6 @@ export default function ScoopApp() {
                                   <span className="text-sm">5</span>
                                 </button>
                               </div>
-                              <div className="flex items-center">
-                                <span className="text-yellow-500">⭐⭐⭐⭐⭐</span>
-                              </div>
                             </div>
                           </div>
 
@@ -1108,9 +1105,6 @@ export default function ScoopApp() {
                                   <span className="text-sm">3</span>
                                 </button>
                               </div>
-                              <div className="flex items-center">
-                                <span className="text-yellow-500">⭐⭐⭐⭐⭐</span>
-                              </div>
                             </div>
                           </div>
 
@@ -1135,9 +1129,6 @@ export default function ScoopApp() {
                                   <span className="mr-1">💬</span>
                                   <span className="text-sm">2</span>
                                 </button>
-                              </div>
-                              <div className="flex items-center">
-                                <span className="text-yellow-500">⭐⭐⭐⭐⭐</span>
                               </div>
                             </div>
                           </div>
@@ -1250,7 +1241,6 @@ export default function ScoopApp() {
                               </div>
                               <p className="text-gray-700 mb-2 text-xs">Amazing Italian food! The pasta was homemade and the service was outstanding. 🍝</p>
                               <div className="flex items-center">
-                                <span className="text-yellow-500 mr-2 text-xs">⭐⭐⭐⭐⭐</span>
                                 <span className="text-xs text-gray-500">Tony's Italian Kitchen</span>
                               </div>
                             </div>
@@ -1267,7 +1257,6 @@ export default function ScoopApp() {
                               </div>
                               <p className="text-gray-700 mb-2 text-xs">Amazing developer to work with! Clean code and great communication throughout the project. 💻</p>
                               <div className="flex items-center">
-                                <span className="text-yellow-500 mr-2 text-xs">⭐⭐⭐⭐⭐</span>
                                 <span className="text-xs text-gray-500">Professional Review</span>
                               </div>
                             </div>
@@ -1453,7 +1442,7 @@ export default function ScoopApp() {
               </div>
               
               {/* Friends List */}
-              <div className="flex-1 overflow-y-auto p-4" style={{ maxHeight: 'calc(100vh - 300px)' }}>
+              <div className="flex-1 overflow-y-auto p-4">
                 <div className="space-y-3">
                   {getFilteredFriends().map((friend) => (
                     <div key={friend.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
@@ -3495,9 +3484,6 @@ export default function ScoopApp() {
                                   <span className="text-sm">3</span>
                                 </button>
                               </div>
-                              <div className="flex items-center">
-                                <span className="text-yellow-500">⭐⭐⭐⭐⭐</span>
-                              </div>
                             </div>
                           </div>
                           
@@ -3522,9 +3508,6 @@ export default function ScoopApp() {
                                   <span className="mr-1">💬</span>
                                   <span className="text-sm">5</span>
                                 </button>
-                              </div>
-                              <div className="flex items-center">
-                                <span className="text-yellow-500">⭐⭐⭐⭐⭐</span>
                               </div>
                             </div>
                           </div>
