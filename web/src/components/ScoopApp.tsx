@@ -1464,7 +1464,7 @@ export default function ScoopApp() {
                         <button 
                           onClick={() => {
                             setSelectedUser(friend);
-                            setShowUserProfile(true);
+                            setCurrentScreen('user-profile');
                             setUserProfileActiveTab(0);
                           }}
                           className="bg-gray-200 text-gray-700 px-3 py-1 rounded-lg text-xs hover:bg-gray-300"
@@ -1976,7 +1976,7 @@ export default function ScoopApp() {
                 </div>
 
                 {/* Search Results */}
-                <div className="flex-1 overflow-y-auto p-4" style={{height: 'calc(100vh - 200px)'}}>
+                <div className="flex-1 overflow-y-auto p-4">
                   {!searchQuery.trim() ? (
                     <div className="text-center py-12 text-gray-500">
                       <div className="text-lg mb-2">🔍</div>
@@ -2039,7 +2039,7 @@ export default function ScoopApp() {
                                   <button 
                                     onClick={() => {
                                       setSelectedUser(person);
-                                      setShowUserProfile(true);
+                                      setCurrentScreen('user-profile');
                                       setUserProfileActiveTab(0);
                                     }}
                                     className="bg-cyan-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-cyan-600"
@@ -2116,6 +2116,303 @@ export default function ScoopApp() {
                       )}
                     </div>
                   )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* User Profile Screen */}
+          {currentScreen === 'user-profile' && selectedUser && (
+            <div className="h-full flex flex-col" style={{background: 'linear-gradient(135deg, #f0fdff 0%, #e0f7fa 50%, #b2dfdb 100%)'}}>
+              
+              {/* Header */}
+              <div className="px-6 py-4 border-b border-cyan-300 flex-shrink-0 shadow-lg" style={{background: 'linear-gradient(135deg, #0891b2 0%, #0e7490 20%, #155e75 100%)'}}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <button 
+                      onClick={() => setCurrentScreen('search')}
+                      className="w-8 h-8 bg-white bg-opacity-20 rounded-lg flex items-center justify-center text-white hover:bg-opacity-30 transition-colors"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </button>
+                    <div>
+                      <h1 className="text-xl font-bold text-white drop-shadow-md">{selectedUser.name}</h1>
+                      <p className="text-xs text-cyan-100 opacity-90">@{selectedUser.username}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Profile Content */}
+              <div className="flex-1 overflow-y-auto">
+                {/* Profile Header Section */}
+                <div className="text-center p-6" style={{background: 'linear-gradient(135deg, #0891b2 0%, #0e7490 20%, #155e75 100%)'}}>
+                  <div className="w-20 h-20 bg-white rounded-full mx-auto mb-4 flex items-center justify-center">
+                    <span className={`text-2xl bg-gradient-to-r ${getAvatarGradient(selectedUser.name)} bg-clip-text text-transparent font-bold`}>
+                      {selectedUser.avatar}
+                    </span>
+                  </div>
+                  <h2 className="text-xl font-bold text-white">{selectedUser.name}</h2>
+                  <p className="opacity-90 text-sm text-cyan-100">@{selectedUser.username}</p>
+                  <div className="flex justify-center items-center mt-4 space-x-2">
+                    <span className="bg-green-500 text-white px-4 py-1 rounded-full text-sm font-medium">
+                      Trust Score: {selectedUser.trustScore} 📊
+                    </span>
+                    <span className="bg-blue-500 text-white px-3 py-1 rounded-full text-xs">✓ Verified</span>
+                  </div>
+                </div>
+                
+                <div className="p-4 bg-white">
+                  <p className="text-gray-700 text-sm mb-4">
+                    {selectedUser.occupation} from {selectedUser.location.city}, {selectedUser.location.state}. 
+                    Interests include {selectedUser.interests.slice(0, 3).join(', ')}.
+                  </p>
+                  
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    <span className="bg-green-500 text-white px-2 py-1 rounded text-xs">VERIFIED</span>
+                    <span className="bg-blue-500 text-white px-2 py-1 rounded text-xs">TRUSTED</span>
+                    <span className="bg-purple-500 text-white px-2 py-1 rounded text-xs">{selectedUser.interests[0].toUpperCase()}</span>
+                    <span className="bg-orange-500 text-white px-2 py-1 rounded text-xs">ACTIVE</span>
+                  </div>
+
+                  {/* Social Accounts Preview */}
+                  <div className="mb-4">
+                    <div className="flex justify-between items-center mb-3">
+                      <h3 className="font-semibold text-gray-800">Social Accounts</h3>
+                      <button 
+                        onClick={() => setShowSocialAccounts(true)}
+                        className="text-cyan-600 text-sm hover:text-cyan-700"
+                      >
+                        View all
+                      </button>
+                    </div>
+                    <div className="flex items-center justify-between mb-4">
+                      {/* Connected Accounts - Side by Side */}
+                      <div className="flex space-x-2">
+                        <button 
+                          onClick={() => window.open(`https://twitter.com/${selectedUser.username}`, '_blank')}
+                          className="w-11 h-11 bg-blue-400 rounded-lg flex items-center justify-center text-white text-sm p-1.5 relative hover:bg-blue-500 transition-colors"
+                        >
+                          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/twitter.svg" alt="Twitter" className="w-full h-full filter invert" />
+                          <div className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-green-500 rounded-full flex items-center justify-center">
+                            <span className="text-white text-xs">✓</span>
+                          </div>
+                        </button>
+                        
+                        <button 
+                          onClick={() => window.open(`https://linkedin.com/in/${selectedUser.username}`, '_blank')}
+                          className="w-11 h-11 bg-blue-600 rounded-lg flex items-center justify-center text-white text-sm p-1.5 relative hover:bg-blue-700 transition-colors"
+                        >
+                          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg" alt="LinkedIn" className="w-full h-full filter invert" />
+                          <div className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-green-500 rounded-full flex items-center justify-center">
+                            <span className="text-white text-xs">✓</span>
+                          </div>
+                        </button>
+                        
+                        <button 
+                          onClick={() => window.open(`https://github.com/${selectedUser.username}`, '_blank')}
+                          className="w-11 h-11 bg-gray-800 rounded-lg flex items-center justify-center text-white text-sm p-1.5 relative hover:bg-gray-900 transition-colors"
+                        >
+                          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg" alt="GitHub" className="w-full h-full filter invert" />
+                          <div className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-green-500 rounded-full flex items-center justify-center">
+                            <span className="text-white text-xs">✓</span>
+                          </div>
+                        </button>
+
+                        <button 
+                          onClick={() => window.open(`https://instagram.com/${selectedUser.username}`, '_blank')}
+                          className="w-11 h-11 bg-pink-500 rounded-lg flex items-center justify-center text-white text-sm p-1.5 relative hover:bg-pink-600 transition-colors"
+                        >
+                          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/instagram.svg" alt="Instagram" className="w-full h-full filter invert" />
+                          <div className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-green-500 rounded-full flex items-center justify-center">
+                            <span className="text-white text-xs">✓</span>
+                          </div>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Stats Grid */}
+                  <div className="grid grid-cols-3 gap-4 text-center mb-4">
+                    <div className="bg-gradient-to-br from-cyan-50 to-cyan-100 p-3 rounded-lg border border-cyan-200">
+                      <div className="text-lg font-bold text-cyan-600">12</div>
+                      <div className="text-xs text-cyan-600">Reviews</div>
+                    </div>
+                    <div 
+                      onClick={() => {
+                        const friends = getFriendsForUser(selectedUser.id);
+                        setSelectedUserFriends(friends);
+                        setShowUserFriends(true);
+                      }}
+                      className="bg-gradient-to-br from-blue-50 to-blue-100 p-3 rounded-lg border border-blue-200 cursor-pointer hover:from-blue-100 hover:to-blue-200 transition-colors"
+                    >
+                      <div className="text-lg font-bold text-blue-600">89</div>
+                      <div className="text-xs text-blue-600">Connections</div>
+                    </div>
+                    <div className="bg-gradient-to-br from-green-50 to-green-100 p-3 rounded-lg border border-green-200">
+                      <div className="text-lg font-bold text-green-600">8</div>
+                      <div className="text-xs text-green-600">Events</div>
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="grid grid-cols-2 gap-3 mb-4">
+                    <button 
+                      onClick={() => {
+                        const friends = getFriendsForUser(selectedUser.id);
+                        setSelectedUserFriends(friends);
+                        setShowUserFriends(true);
+                      }}
+                      className="bg-cyan-500 hover:bg-cyan-600 text-white py-3 px-4 rounded-lg font-medium text-sm flex items-center justify-center space-x-2 transition-colors"
+                    >
+                      <span>👥</span>
+                      <span>Friends</span>
+                    </button>
+                    <button 
+                      onClick={() => blockUser(selectedUser.name)}
+                      className="bg-red-500 hover:bg-red-600 text-white py-3 px-4 rounded-lg font-medium text-sm flex items-center justify-center space-x-2 transition-colors"
+                    >
+                      <span>🚫</span>
+                      <span>Block?</span>
+                    </button>
+                  </div>
+
+                  {/* Tab Navigation */}
+                  <div className="flex border-b border-gray-200 mb-4">
+                    <button 
+                      onClick={() => setUserProfileActiveTab(0)}
+                      className={`flex-1 py-3 px-4 text-sm font-medium border-b-2 transition-colors ${
+                        userProfileActiveTab === 0 
+                          ? 'border-cyan-500 text-cyan-600' 
+                          : 'border-transparent text-gray-500 hover:text-gray-700'
+                      }`}
+                    >
+                      Posts
+                    </button>
+                    <button 
+                      onClick={() => setUserProfileActiveTab(1)}
+                      className={`flex-1 py-3 px-4 text-sm font-medium border-b-2 transition-colors ${
+                        userProfileActiveTab === 1 
+                          ? 'border-cyan-500 text-cyan-600' 
+                          : 'border-transparent text-gray-500 hover:text-gray-700'
+                      }`}
+                    >
+                      Groups
+                    </button>
+                    <button 
+                      onClick={() => setUserProfileActiveTab(2)}
+                      className={`flex-1 py-3 px-4 text-sm font-medium border-b-2 transition-colors ${
+                        userProfileActiveTab === 2 
+                          ? 'border-cyan-500 text-cyan-600' 
+                          : 'border-transparent text-gray-500 hover:text-gray-700'
+                      }`}
+                    >
+                      Likes
+                    </button>
+                  </div>
+
+                  {/* Tab Content */}
+                  <div className="pb-4">
+                    {userProfileActiveTab === 0 && (
+                      // Posts Tab
+                      <div className="space-y-4">
+                        <div>
+                          <h4 className="text-sm font-semibold text-gray-600 mb-2">Recent Posts</h4>
+                          <div className="bg-white rounded-lg p-4 border border-gray-200 mb-3">
+                            <div className="flex items-start mb-3">
+                              <div className={`w-8 h-8 bg-gradient-to-r ${getAvatarGradient(selectedUser.name)} rounded-full flex items-center justify-center mr-3 text-white font-bold text-sm`}>
+                                {selectedUser.avatar}
+                              </div>
+                              <div className="flex-1">
+                                <div className="flex items-center mb-1">
+                                  <span className="font-semibold text-gray-800 text-sm">{selectedUser.name}</span>
+                                  <span className="text-gray-500 text-xs ml-2">• 2 hours ago</span>
+                                </div>
+                                <p className="text-gray-700 text-sm mb-2">
+                                  Just finished an amazing {selectedUser.interests[0].toLowerCase()} session! 
+                                  Really excited about the progress I'm making. 
+                                  Anyone else working on similar projects?
+                                </p>
+                                <div className="flex items-center space-x-4 text-xs text-gray-500">
+                                  <span>❤️ 15 likes</span>
+                                  <span>💬 3 comments</span>
+                                  <span>🔄 2 shares</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {userProfileActiveTab === 1 && (
+                      // Groups/Events Tab
+                      <div className="space-y-4">
+                        <div>
+                          <h4 className="text-sm font-semibold text-gray-600 mb-2">Recent Events</h4>
+                          <div className="bg-white rounded-lg p-4 border border-gray-200 mb-3">
+                            <div className="flex items-center mb-2">
+                              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center mr-3">
+                                <span className="text-white text-sm font-bold">💼</span>
+                              </div>
+                              <div className="flex-1">
+                                <p className="font-semibold text-gray-800 text-sm">Tech Networking Event</p>
+                                <p className="text-xs text-gray-500">Attended • Last week</p>
+                              </div>
+                            </div>
+                            <p className="text-gray-600 text-xs">{selectedUser.location.city} Convention Center • 45 attended</p>
+                          </div>
+                          
+                          <div className="bg-white rounded-lg p-4 border border-gray-200">
+                            <div className="flex items-center mb-2">
+                              <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-teal-500 rounded-lg flex items-center justify-center mr-3">
+                                <span className="text-white text-sm font-bold">🎯</span>
+                              </div>
+                              <div className="flex-1">
+                                <p className="font-semibold text-gray-800 text-sm">{selectedUser.interests[0]} Meetup</p>
+                                <p className="text-xs text-gray-500">Going • This weekend</p>
+                              </div>
+                            </div>
+                            <p className="text-gray-600 text-xs">Local Community Center • 23 going</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {userProfileActiveTab === 2 && (
+                      // Likes Tab
+                      <div className="space-y-4">
+                        <div>
+                          <h4 className="text-sm font-semibold text-gray-600 mb-2">Recent Activity</h4>
+                          <div className="bg-white rounded-lg p-4 border border-gray-200 mb-3">
+                            <div className="flex items-center mb-2">
+                              <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center mr-3">
+                                <span className="text-white text-xs font-bold">❤️</span>
+                              </div>
+                              <div className="flex-1">
+                                <p className="font-semibold text-gray-800 text-sm">Liked Sarah's Restaurant Review</p>
+                                <p className="text-xs text-gray-500">2 hours ago</p>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="bg-white rounded-lg p-4 border border-gray-200">
+                            <div className="flex items-center mb-2">
+                              <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center mr-3">
+                                <span className="text-white text-xs font-bold">💬</span>
+                              </div>
+                              <div className="flex-1">
+                                <p className="font-semibold text-gray-800 text-sm">Commented on Tech Meetup Event</p>
+                                <p className="text-xs text-gray-500">1 day ago</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -3021,7 +3318,7 @@ export default function ScoopApp() {
                           onClick={() => {
                             setShowUserFriends(false);
                             setSelectedUser(friend);
-                            setShowUserProfile(true);
+                            setCurrentScreen('user-profile');
                             setUserProfileActiveTab(0);
                           }}
                           className="bg-cyan-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-cyan-600"
