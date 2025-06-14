@@ -229,8 +229,8 @@ export default function ScoopApp() {
         const user = users[0];
         setCurrentUser(user);
         const friends = getFriendsForUser(user.id);
-        // Remove some friends to test both friend/non-friend scenarios
-        const limitedFriends = friends.slice(0, Math.max(1, friends.length - 2)); // Remove last 2 friends
+        // Keep most friends to test scrolling functionality
+        const limitedFriends = friends.slice(0, Math.max(15, friends.length - 1)); // Keep 15+ friends for scrolling
         setUserFriends(limitedFriends);
       }
     } catch (error) {
@@ -1499,9 +1499,9 @@ export default function ScoopApp() {
               
               {/* Friends List */}
               <div className="flex-1 overflow-y-auto p-4 pb-16">
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {getFilteredFriends().map((friend) => (
-                    <div key={friend.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div key={friend.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                       <div className="flex items-center space-x-3">
                         <div className={`w-12 h-12 bg-gradient-to-r ${getAvatarGradient(friend.name)} rounded-full flex items-center justify-center text-white font-bold`}>
                           {friend.avatar}
