@@ -2133,26 +2133,7 @@ export default function ScoopApp() {
                                       >
                                         ×
                                       </button>
-                                    ) : (
-                                      <button 
-                                        onClick={() => {
-                                          setTargetUser(person);
-                                          setShowBlockModal(true);
-                                        }}
-                                        className="bg-white text-gray-600 border border-gray-300 px-3 py-1 rounded-lg text-sm hover:bg-gray-50 transition-all duration-200 transform hover:scale-105 hover:rotate-45"
-                                        style={{
-                                          fontSize: '16px',
-                                          width: '32px',
-                                          height: '32px',
-                                          display: 'flex',
-                                          alignItems: 'center',
-                                          justifyContent: 'center',
-                                          padding: '0'
-                                        }}
-                                      >
-                                        ×
-                                      </button>
-                                    )
+                                    ) : null
                                   )}
                                 </div>
                               </div>
