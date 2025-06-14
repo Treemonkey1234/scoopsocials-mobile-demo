@@ -690,7 +690,7 @@ export default function ScoopApp() {
         </div>
 
         {/* Main Content */}
-        <div className={`flex-1 overflow-hidden ${isDarkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-300`} style={{maxHeight: 'calc(852px - 140px)', paddingBottom: '60px'}}>
+        <div className={`flex-1 overflow-hidden ${isDarkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-300`} style={{maxHeight: 'calc(852px - 100px)', paddingBottom: '20px'}}>
           
           {/* Home Feed Screen */}
           {currentScreen === 'home' && (
@@ -943,19 +943,19 @@ export default function ScoopApp() {
                 <h2 className="text-xl font-bold">Riesling LeFluuf</h2>
                 <p className="opacity-90 text-sm">@BigStinky</p>
                 
-                {/* Reviews/Connections/Events Counters - Moved above bio and made smaller */}
-                <div className="grid grid-cols-3 gap-2 text-center my-4 px-4">
-                  <div>
-                    <div className="text-lg font-bold text-cyan-600">127</div>
-                    <div className="text-xs text-gray-300">Reviews</div>
+                {/* Reviews/Connections/Events Counters - Horizontal layout */}
+                <div className="flex justify-center space-x-6 my-4 px-4">
+                  <div className="flex items-center space-x-1">
+                    <span className="text-lg font-bold text-cyan-600">127</span>
+                    <span className="text-sm text-gray-300">Reviews</span>
                   </div>
-                  <div>
-                    <div className="text-lg font-bold text-cyan-600">{currentUser?.connectionCount || 0}</div>
-                    <div className="text-xs text-gray-300">Connections</div>
+                  <div className="flex items-center space-x-1">
+                    <span className="text-lg font-bold text-cyan-600">{currentUser?.connectionCount || 0}</span>
+                    <span className="text-sm text-gray-300">Connections</span>
                   </div>
-                  <div>
-                    <div className="text-lg font-bold text-cyan-600">15</div>
-                    <div className="text-xs text-gray-300">Events</div>
+                  <div className="flex items-center space-x-1">
+                    <span className="text-lg font-bold text-cyan-600">15</span>
+                    <span className="text-sm text-gray-300">Events</span>
                   </div>
                 </div>
                 
@@ -1108,12 +1108,12 @@ export default function ScoopApp() {
                         setProfileActiveTab(newActiveIndex);
                       }
                     }}
-                    style={{ scrollSnapType: 'x mandatory', height: '320px' }}
+                    style={{ scrollSnapType: 'x mandatory', height: '400px' }}
                   >
                     <div className="flex h-full" style={{ width: '300%' }}>
                       {/* Posts Section */}
                       <div className="w-1/3 h-full overflow-y-auto scrollbar-hide pr-4" style={{ scrollSnapAlign: 'start' }}>
-                        <div className="space-y-4 pb-24">
+                        <div className="space-y-4 pb-4">
                           <div className="bg-white rounded-lg p-4 border border-gray-200">
                             <div className="flex items-center mb-3">
                               <div className="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center mr-3">
@@ -1193,7 +1193,7 @@ export default function ScoopApp() {
                       
                       {/* Groups Section - Public Events */}
                       <div className="w-1/3 h-full overflow-y-auto scrollbar-hide px-2" style={{ scrollSnapAlign: 'start' }}>
-                        <div className="space-y-4 pb-24">
+                        <div className="space-y-4 pb-4">
                           {/* Events I'm Attending */}
                           <div className="mb-4">
                             <h4 className="text-sm font-semibold text-gray-600 mb-2">Events I'm Attending</h4>
@@ -1281,7 +1281,7 @@ export default function ScoopApp() {
                       
                       {/* Likes Section - User Interactions */}
                       <div className="w-1/3 h-full overflow-y-auto scrollbar-hide pl-2" style={{ scrollSnapAlign: 'start' }}>
-                        <div className="space-y-4 pb-24">
+                        <div className="space-y-4 pb-4">
                           {/* Posts I've Liked */}
                           <div className="mb-4">
                             <h4 className="text-sm font-semibold text-gray-600 mb-2">Posts I've Liked</h4>
@@ -2497,7 +2497,7 @@ export default function ScoopApp() {
                         setUserProfileActiveTab(newActiveIndex);
                       }
                     }}
-                    style={{ scrollSnapType: 'x mandatory', height: '320px' }}
+                    style={{ scrollSnapType: 'x mandatory', height: '400px' }}
                   >
                     <div className="flex h-full" style={{ width: '300%' }}>
                       {/* Posts Section */}
