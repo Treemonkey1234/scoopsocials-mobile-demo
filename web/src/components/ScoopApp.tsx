@@ -757,7 +757,7 @@ export default function ScoopApp() {
 
               {/* Feed Content */}
               <div className="flex-1 overflow-y-auto p-4">
-                <div className="space-y-3 pb-4">
+                <div className="space-y-3 pb-20">
                   {posts.filter(post => !isUserBlocked(post.reviewer) && !isUserBlocked(post.reviewedPerson)).map((post) => (
                     <div key={post.id} className="rounded-lg shadow-md border border-cyan-200" style={{background: 'linear-gradient(145deg, #ffffff 0%, #f8fdff 100%)'}}>
                       <div className="flex">
@@ -1454,7 +1454,7 @@ export default function ScoopApp() {
               </div>
 
               {/* Friends Content */}
-              <div className="flex-1 overflow-hidden bg-white">
+              <div className="flex-1 flex flex-col bg-white">
                 <div className="p-4 border-b border-gray-200">
                 
                 {/* Search Bar */}
@@ -1498,7 +1498,7 @@ export default function ScoopApp() {
               </div>
               
               {/* Friends List */}
-              <div className="flex-1 overflow-y-auto p-4">
+              <div className="flex-1 overflow-y-auto p-4 pb-20">
                 <div className="space-y-3">
                   {getFilteredFriends().map((friend) => (
                     <div key={friend.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
@@ -1654,7 +1654,7 @@ export default function ScoopApp() {
               </div>
               
               {/* Events Content - Scrollable Area */}
-              <div className="flex-1 overflow-y-auto p-4">
+              <div className="flex-1 overflow-y-auto p-4 pb-20">
                 <div className="space-y-3">
                   
                   {eventFilter === 'upcoming' && events.filter(event => event.date === 'Tomorrow' || event.date === 'Saturday' || event.date === 'Sunday').map((event) => (
@@ -2037,7 +2037,7 @@ export default function ScoopApp() {
               </div>
 
               {/* Search Results - Scrollable Area */}
-              <div className="flex-1 overflow-y-auto p-4">
+              <div className="flex-1 overflow-y-auto p-4 pb-20">
                   {!searchQuery.trim() ? (
                     <div className="text-center py-12 text-gray-500">
                       <div className="text-lg mb-2">🔍</div>
