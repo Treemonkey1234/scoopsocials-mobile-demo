@@ -1066,7 +1066,7 @@ export default function ScoopApp() {
                 </div>
                 
                 {/* Horizontal Swipeable Sections */}
-                <div className="mb-6">
+                <div className="mb-6 mt-1">
                   {/* Tab Navigation */}
                   <div className="flex border-b border-gray-200 mb-4">
                     {['Posts', 'Groups', 'Likes'].map((tab, index) => (
