@@ -933,7 +933,9 @@ export default function ScoopApp() {
                     onClick={() => setShowCreateDropdown(!showCreateDropdown)}
                     className="w-12 h-12 bg-white shadow-lg border-2 border-cyan-100 rounded-xl flex items-center justify-center text-cyan-600 text-xl font-bold hover:bg-cyan-50 hover:text-cyan-700 transition-all duration-200 hover:scale-105"
                   >
-                    +
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 4v16m8-8H4"></path>
+                    </svg>
                   </button>
                   
                   {showCreateDropdown && (
@@ -1140,12 +1142,12 @@ export default function ScoopApp() {
                         setProfileActiveTab(newActiveIndex);
                       }
                     }}
-                    style={{ scrollSnapType: 'x mandatory', height: '480px' }}
+                    style={{ scrollSnapType: 'x mandatory', height: '400px' }}
                   >
                     <div className="flex h-full" style={{ width: '300%' }}>
                       {/* Posts Section */}
                       <div className="w-1/3 h-full overflow-y-auto scrollbar-hide pr-4" style={{ scrollSnapAlign: 'start' }}>
-                        <div className="space-y-4 pb-16">
+                        <div className="space-y-4 pb-32">
                           <div className="bg-white rounded-lg p-4 border border-gray-200">
                             <div className="flex items-center mb-3">
                               <div className="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center mr-3">
@@ -1225,7 +1227,7 @@ export default function ScoopApp() {
                       
                       {/* Groups Section - Public Events */}
                       <div className="w-1/3 h-full overflow-y-auto scrollbar-hide px-2" style={{ scrollSnapAlign: 'start' }}>
-                        <div className="space-y-4 pb-16">
+                        <div className="space-y-4 pb-32">
                           {/* Events I'm Attending */}
                           <div className="mb-4">
                             <h4 className="text-sm font-semibold text-gray-600 mb-2">Events I'm Attending</h4>
@@ -1313,7 +1315,7 @@ export default function ScoopApp() {
                       
                       {/* Likes Section - User Interactions */}
                       <div className="w-1/3 h-full overflow-y-auto scrollbar-hide pl-2" style={{ scrollSnapAlign: 'start' }}>
-                        <div className="space-y-4 pb-16">
+                        <div className="space-y-4 pb-32">
                           {/* Posts I've Liked */}
                           <div className="mb-4">
                             <h4 className="text-sm font-semibold text-gray-600 mb-2">Posts I've Liked</h4>
@@ -1650,55 +1652,71 @@ export default function ScoopApp() {
                 </div>
               </div>
 
-              {/* Events Content - Filter Header */}
+              {/* Events Content - Location Header */}
               <div className="p-4 border-b border-gray-200 flex-shrink-0 bg-white">
                 <div className="flex items-center justify-between mb-4">
                   <button className="text-cyan-600 text-sm">📍 Phoenix, AZ</button>
                 </div>
                 
-                <div className="flex space-x-2 overflow-x-auto">
-                  <button 
-                    onClick={() => setEventFilter('upcoming')}
-                    className={`px-3 py-1 rounded-full text-sm whitespace-nowrap ${
-                      eventFilter === 'upcoming' ? 'bg-cyan-400 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                    }`}
-                  >
-                    Upcoming
-                  </button>
-                  <button 
-                    onClick={() => setEventFilter('past')}
-                    className={`px-3 py-1 rounded-full text-sm whitespace-nowrap ${
-                      eventFilter === 'past' ? 'bg-cyan-400 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                    }`}
-                  >
-                    Past
-                  </button>
-                  <button 
-                    onClick={() => setEventFilter('discover')}
-                    className={`px-3 py-1 rounded-full text-sm whitespace-nowrap ${
-                      eventFilter === 'discover' ? 'bg-cyan-400 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                    }`}
-                  >
-                    Discover
-                  </button>
+                {/* Tab Navigation */}
+                <div className="flex border-b border-gray-200 mb-4">
+                  {['Upcoming', 'Past', 'Discover'].map((tab, index) => (
+                    <button
+                      key={tab}
+                      onClick={() => {
+                        setEventFilter(['upcoming', 'past', 'discover'][index]);
+                        const container = document.getElementById('events-content-container');
+                        if (container) {
+                          container.scrollTo({
+                            left: index * container.offsetWidth,
+                            behavior: 'smooth'
+                          });
+                        }
+                      }}
+                      className={`flex-1 py-2 text-center text-sm font-medium border-b-2 transition-colors ${
+                        (['upcoming', 'past', 'discover'][index] === eventFilter)
+                          ? 'text-cyan-500 border-b-2 border-cyan-500'
+                          : 'text-gray-500'
+                      }`}
+                    >
+                      {tab}
+                    </button>
+                  ))}
                 </div>
               </div>
               
-              {/* Events Content - Scrollable Area */}
-              <div className="flex-1 overflow-y-auto p-4 pb-16">
-                <div className="space-y-3">
+              {/* Horizontal Scrollable Events Content */}
+              <div 
+                id="events-content-container"
+                className="flex-1 overflow-x-auto overflow-y-hidden scrollbar-hide"
+                onScroll={(e) => {
+                  const container = e.currentTarget;
+                  const scrollLeft = container.scrollLeft;
+                  const containerWidth = container.offsetWidth;
+                  const newActiveIndex = Math.round(scrollLeft / containerWidth);
                   
-                  {eventFilter === 'upcoming' && events.filter(event => {
-                    // Handle both old hardcoded dates and new YYYY-MM-DD format dates
-                    if (event.date === 'Tomorrow' || event.date === 'Saturday' || event.date === 'Sunday') {
-                      return true;
-                    }
-                    // Check if the date is in YYYY-MM-DD format and is in the future
-                    const eventDate = new Date(event.date);
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
-                    return !isNaN(eventDate.getTime()) && eventDate >= today;
-                  }).map((event) => (
+                  const filters = ['upcoming', 'past', 'discover'];
+                  if (newActiveIndex >= 0 && newActiveIndex < filters.length && filters[newActiveIndex] !== eventFilter) {
+                    setEventFilter(filters[newActiveIndex]);
+                  }
+                }}
+                style={{ scrollSnapType: 'x mandatory', height: '480px' }}
+              >
+                <div className="flex h-full" style={{ width: '300%' }}>
+                  {/* Upcoming Events Section */}
+                  <div className="w-1/3 h-full overflow-y-auto p-4 pb-16" style={{ scrollSnapAlign: 'start' }}>
+                    <div className="space-y-3">
+                      {events.filter(event => {
+                        // Handle both old hardcoded dates and new YYYY-MM-DD format dates
+                        if (event.date === 'Tomorrow' || event.date === 'Saturday' || event.date === 'Sunday') {
+                          return true;
+                        }
+                        // Check if the date is in YYYY-MM-DD format and is in the future
+                        const eventDate = new Date(event.date);
+                        const today = new Date();
+                        today.setHours(0, 0, 0, 0);
+                        return !isNaN(eventDate.getTime()) && eventDate >= today;
+                      }).map((event) => (
                     <div key={event.id} className="bg-gradient-to-r from-green-400 to-green-600 text-white rounded-xl p-4 shadow-lg">
                       <div className="flex justify-between items-start mb-2">
                         <div className="flex-1">
@@ -1754,9 +1772,12 @@ export default function ScoopApp() {
                         </button>
                       </div>
                     </div>
-                  ))}
+                      ))}
+                    </div>
+                  </div>
                   
-                  {eventFilter === 'past' && (
+                  {/* Past Events Section */}
+                  <div className="w-1/3 h-full overflow-y-auto p-4 pb-16" style={{ scrollSnapAlign: 'start' }}>
                     <div className="space-y-3">
                       <div className="bg-gradient-to-r from-gray-400 to-gray-600 text-white rounded-xl p-4 shadow-lg">
                         <div className="flex justify-between items-start mb-2">
@@ -1811,9 +1832,10 @@ export default function ScoopApp() {
                         </div>
                       </div>
                     </div>
-                  )}
+                  </div>
                   
-                  {eventFilter === 'discover' && (
+                  {/* Discover Events Section */}
+                  <div className="w-1/3 h-full overflow-y-auto p-4 pb-16" style={{ scrollSnapAlign: 'start' }}>
                     <div className="space-y-3">
                       {/* Map View */}
                       <div className="bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-xl p-4 shadow-lg">
@@ -1951,7 +1973,7 @@ export default function ScoopApp() {
                         </div>
                       </div>
                     </div>
-                  )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -2176,17 +2198,7 @@ export default function ScoopApp() {
                                       >
                                         ×
                                       </button>
-                                    ) : (
-                                      <button 
-                                        onClick={() => {
-                                          setTargetUser(person);
-                                          setShowBlockModal(true);
-                                        }}
-                                        className="bg-red-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-600"
-                                      >
-                                        Block
-                                      </button>
-                                    )
+                                    ) : null
                                   )}
                                 </div>
                               </div>
@@ -2309,7 +2321,9 @@ export default function ScoopApp() {
                     onClick={() => setShowCreateDropdown(!showCreateDropdown)}
                     className="w-12 h-12 bg-white shadow-lg border-2 border-cyan-100 rounded-xl flex items-center justify-center text-cyan-600 text-xl font-bold hover:bg-cyan-50 hover:text-cyan-700 transition-all duration-200 hover:scale-105"
                   >
-                    +
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 4v16m8-8H4"></path>
+                    </svg>
                   </button>
                   
                   {showCreateDropdown && (
@@ -2529,7 +2543,7 @@ export default function ScoopApp() {
                         setUserProfileActiveTab(newActiveIndex);
                       }
                     }}
-                    style={{ scrollSnapType: 'x mandatory', height: '480px' }}
+                    style={{ scrollSnapType: 'x mandatory', height: '400px' }}
                   >
                     <div className="flex h-full" style={{ width: '300%' }}>
                       {/* Posts Section */}
@@ -2904,7 +2918,20 @@ export default function ScoopApp() {
             onClose={() => setShowCreateEvent(false)}
             onSubmit={(newEvent) => {
               setEvents([newEvent, ...events]);
-              alert('Event created successfully! It will appear in the events list.');
+              // Switch to upcoming tab and events page to show the new event
+              setEventFilter('upcoming');
+              setCurrentScreen('events');
+              // Scroll to upcoming tab if needed
+              setTimeout(() => {
+                const container = document.getElementById('events-content-container');
+                if (container) {
+                  container.scrollTo({
+                    left: 0, // First tab (upcoming)
+                    behavior: 'smooth'
+                  });
+                }
+              }, 100);
+              alert('Event created successfully! Check the Upcoming tab in Events.');
             }}
             preSelectedFriend={currentScreen === 'user-profile' && selectedUser ? selectedUser.name : undefined}
           />
@@ -3051,6 +3078,7 @@ export default function ScoopApp() {
             eventTitle={selectedEvent.title}
             eventId={selectedEvent.id}
             isUserBlocked={isUserBlocked}
+            allUsers={allUsers}
             onViewProfile={(userName) => {
               // Find the user by name in allUsers array
               const user = allUsers.find(u => u.name === userName);

@@ -9,81 +9,51 @@ interface Attendee {
   joinedDate: string;
 }
 
+interface FakeUser {
+  id: string;
+  name: string;
+  trustScore: number;
+}
+
 interface AttendeesModalProps {
   onClose: () => void;
   eventTitle: string;
   eventId: string;
   isUserBlocked?: (username: string) => boolean;
   onViewProfile?: (userName: string) => void;
+  allUsers?: FakeUser[];
 }
 
-const AttendeesModal: React.FC<AttendeesModalProps> = ({ onClose, eventTitle, isUserBlocked, onViewProfile }) => {
-  const [attendees] = useState<Attendee[]>([
-    {
-      id: '1',
-      name: 'Sarah Martinez',
-      trustScore: 88,
-      status: 'going',
-      avatar: '👩',
-      joinedDate: '2 days ago'
-    },
-    {
-      id: '2',
-      name: 'Mike Johnson',
-      trustScore: 92,
-      status: 'going',
-      avatar: '👨',
-      joinedDate: '3 days ago'
-    },
-    {
-      id: '3',
-      name: 'Emma Davis',
-      trustScore: 85,
-      status: 'going',
-      avatar: '👩',
-      joinedDate: '1 day ago'
-    },
-    {
-      id: '4',
-      name: 'David Kim',
-      trustScore: 90,
-      status: 'maybe',
-      avatar: '👨',
-      joinedDate: '4 days ago'
-    },
-    {
-      id: '5',
-      name: 'Rachel Brown',
-      trustScore: 87,
-      status: 'maybe',
-      avatar: '👩',
-      joinedDate: '2 days ago'
-    },
-    {
-      id: '6',
-      name: 'Alex Martinez',
-      trustScore: 89,
-      status: 'going',
-      avatar: '👨',
-      joinedDate: '5 days ago'
-    },
-    {
-      id: '7',
-      name: 'Jessica Wong',
-      trustScore: 95,
-      status: 'going',
-      avatar: '👩',
-      joinedDate: '1 week ago'
-    },
-    {
-      id: '8',
-      name: 'Tom Anderson',
-      trustScore: 67,
-      status: 'not_going',
-      avatar: '👨',
-      joinedDate: '3 days ago'
+const AttendeesModal: React.FC<AttendeesModalProps> = ({ onClose, eventTitle, isUserBlocked, onViewProfile, allUsers }) => {
+  const [attendees] = useState<Attendee[]>(() => {
+    // If allUsers is provided, use real user names, otherwise use fallback hardcoded names
+    if (allUsers && allUsers.length >= 8) {
+      const statuses = ['going', 'going', 'going', 'maybe', 'maybe', 'going', 'going', 'not_going'];
+      const avatars = ['👩', '👨', '👩', '👨', '👩', '👨', '👩', '👨'];
+      const joinDates = ['2 days ago', '3 days ago', '1 day ago', '4 days ago', '2 days ago', '5 days ago', '1 week ago', '3 days ago'];
+      
+      return allUsers.slice(1, 9).map((user, index) => ({
+        id: user.id,
+        name: user.name,
+        trustScore: user.trustScore,
+        status: statuses[index] as 'going' | 'maybe' | 'not_going',
+        avatar: avatars[index],
+        joinedDate: joinDates[index]
+      }));
     }
-  ]);
+    
+    // Fallback to hardcoded data
+    return [
+      { id: '1', name: 'Sarah Martinez', trustScore: 88, status: 'going', avatar: '👩', joinedDate: '2 days ago' },
+      { id: '2', name: 'Mike Johnson', trustScore: 92, status: 'going', avatar: '👨', joinedDate: '3 days ago' },
+      { id: '3', name: 'Emma Davis', trustScore: 85, status: 'going', avatar: '👩', joinedDate: '1 day ago' },
+      { id: '4', name: 'David Kim', trustScore: 90, status: 'maybe', avatar: '👨', joinedDate: '4 days ago' },
+      { id: '5', name: 'Rachel Brown', trustScore: 87, status: 'maybe', avatar: '👩', joinedDate: '2 days ago' },
+      { id: '6', name: 'Alex Martinez', trustScore: 89, status: 'going', avatar: '👨', joinedDate: '5 days ago' },
+      { id: '7', name: 'Jessica Wong', trustScore: 95, status: 'going', avatar: '👩', joinedDate: '1 week ago' },
+      { id: '8', name: 'Tom Anderson', trustScore: 67, status: 'not_going', avatar: '👨', joinedDate: '3 days ago' }
+    ];
+  });
 
   const [filter, setFilter] = useState<'all' | 'going' | 'maybe' | 'not_going'>('all');
 
