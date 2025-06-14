@@ -320,15 +320,17 @@ Experience Tab Cleanup ✅ COMPLETED
 - Focus on text-based experience sharing with proper interaction patterns
 
 📋 NEXT PRIORITY:
-1. Professional account dual-layer system implementation
-2. Connected accounts enhancement with social media categories and routing
-3. Trust & Verification Enhancements - mutual verification system
-4. AI Content Moderation system with user-friendly alerts and flagging
-5. Enhanced Trust Score Progression requirements and gamification features
-6. Community Features (Professional Account Tier) - Local Community Hubs
-7. Interest-Based Groups for professional account exclusive features
-8. Camera/QR Integration for event check-in and friend adding
-9. Add data persistence for settings (localStorage/database integration)
-10. Push Notifications for real-time engagement and verification alerts
+1. Add flag functionality to connected social accounts for reporting incorrect accounts
+2. Design and implement moderator/admin interface for handling reported flags
+3. Professional account dual-layer system implementation
+4. Connected accounts enhancement with social media categories and routing
+5. Trust & Verification Enhancements - mutual verification system
+6. AI Content Moderation system with user-friendly alerts and flagging
+7. Enhanced Trust Score Progression requirements and gamification features
+8. Community Features (Professional Account Tier) - Local Community Hubs
+9. Interest-Based Groups for professional account exclusive features
+10. Camera/QR Integration for event check-in and friend adding
+11. Add data persistence for settings (localStorage/database integration)
+12. Push Notifications for real-time engagement and verification alerts
 
 Last Updated: June 13, 2025
