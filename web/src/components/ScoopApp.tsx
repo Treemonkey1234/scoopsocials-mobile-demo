@@ -2213,7 +2213,7 @@ export default function ScoopApp() {
           {/* User Profile Screen */}
           {currentScreen === 'user-profile' && selectedUser && (
             <div className="h-full bg-white">
-              <div className="bg-gradient-to-r from-cyan-400 to-blue-400 p-6 text-center text-white relative">
+              <div className="bg-gradient-to-r from-cyan-400 to-blue-400 p-4 text-center text-white relative">
                 <div className="absolute top-4 left-4 flex space-x-2">
                   <button 
                     onClick={() => setCurrentScreen(previousScreen)}
@@ -2306,12 +2306,14 @@ export default function ScoopApp() {
                     </div>
                   )}
                 </div>
-                <div className="w-20 h-20 bg-white rounded-full mx-auto mb-4 flex items-center justify-center">
+                <div className="w-20 h-20 bg-white rounded-full mx-auto mb-2 flex items-center justify-center">
                   <span className="text-cyan-600 text-2xl">{selectedUser.avatar}</span>
                 </div>
-                <h2 className="text-xl font-bold">{selectedUser.name}</h2>
-                <p className="opacity-90 text-sm">@{selectedUser.username}</p>
-                <div className="flex justify-center items-center mt-4 space-x-2">
+                <div className="flex items-center justify-center space-x-2">
+                  <h2 className="text-xl font-bold">{selectedUser.name}</h2>
+                  <p className="opacity-90 text-sm">@{selectedUser.username}</p>
+                </div>
+                <div className="flex justify-center items-center mt-1 space-x-2">
                   <button 
                     onClick={() => setShowTrustBreakdown(true)}
                     className="bg-green-500 text-white px-4 py-1 rounded-full text-sm font-medium hover:bg-green-600 transition-colors"
@@ -2320,16 +2322,32 @@ export default function ScoopApp() {
                   </button>
                   <span className="bg-blue-500 text-white px-3 py-1 rounded-full text-xs">✓ Verified</span>
                 </div>
+                
+                {/* Reviews/Connections/Events Counters - Horizontal layout */}
+                <div className="flex justify-center space-x-6 px-4">
+                  <div className="flex items-center space-x-1">
+                    <span className="text-lg font-bold text-cyan-600">12</span>
+                    <span className="text-sm text-gray-300">Reviews</span>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <span className="text-lg font-bold text-cyan-600">89</span>
+                    <span className="text-sm text-gray-300">Connections</span>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <span className="text-lg font-bold text-cyan-600">8</span>
+                    <span className="text-sm text-gray-300">Events</span>
+                  </div>
+                </div>
               </div>
               
-              <div className="p-4">
-                <p className="text-gray-700 text-sm mb-4">
+              <div className="p-3">
+                <p className="text-gray-700 text-sm mb-3">
                   {selectedUser.occupation} from {selectedUser.location.city}, {selectedUser.location.state}. 
                   Interests include {selectedUser.interests.slice(0, 3).join(', ')}.
                 </p>
                 
-                <div className="mb-4">
-                  <p className="text-gray-600 text-xs font-medium mb-2 uppercase tracking-wide">Your Flavors</p>
+                <div className="mb-3">
+                  <p className="text-gray-600 text-xs font-medium mb-1 uppercase tracking-wide">Your Flavors</p>
                   <div className="flex flex-wrap gap-2">
                     <span className="bg-green-500 text-white px-2 py-1 rounded text-xs">VERIFIED</span>
                     <span className="bg-blue-500 text-white px-2 py-1 rounded text-xs">TRUSTED</span>
@@ -2339,7 +2357,7 @@ export default function ScoopApp() {
                 </div>
 
                 {/* Social Accounts Preview - Side by Side */}
-                <div className="mb-4">
+                <div>
                   <div className="flex justify-between items-center mb-3">
                     <h3 className="font-semibold text-gray-800">Social Accounts</h3>
                     <button 
@@ -2349,7 +2367,7 @@ export default function ScoopApp() {
                       View all
                     </button>
                   </div>
-                  <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center justify-between">
                     {/* Connected Accounts - Side by Side */}
                     <div className="flex space-x-2">
                       {/* Twitter */}
@@ -2418,27 +2436,10 @@ export default function ScoopApp() {
                   </div>
                 </div>
 
-                  <div className="grid grid-cols-3 gap-4 text-center mb-6">
-                  <div>
-                    <div className="text-xl font-bold text-cyan-600">12</div>
-                    <div className="text-xs text-gray-500">Reviews</div>
-                  </div>
-                  <div>
-                    <div className="text-xl font-bold text-cyan-600">89</div>
-                    <div className="text-xs text-gray-500">Connections</div>
-                  </div>
-                  <div>
-                    <div className="text-xl font-bold text-cyan-600">8</div>
-                    <div className="text-xs text-gray-500">Events</div>
-                  </div>
-                </div>
-
-
-                
                 {/* Horizontal Swipeable Sections */}
-                <div className="mb-6">
+                <div className="mt-1">
                   {/* Tab Navigation */}
-                  <div className="flex border-b border-gray-200 mb-4">
+                  <div className="flex border-b border-gray-200">
                     {['Posts', 'Groups', 'Likes'].map((tab, index) => (
                       <button
                         key={tab}
