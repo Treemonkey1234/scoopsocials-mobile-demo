@@ -690,7 +690,7 @@ export default function ScoopApp() {
         </div>
 
         {/* Main Content */}
-        <div className={`flex-1 overflow-hidden ${isDarkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-300`} style={{maxHeight: 'calc(852px - 100px)', paddingBottom: '20px'}}>
+        <div className={`flex-1 overflow-hidden ${isDarkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-300`} style={{maxHeight: 'calc(852px - 100px)'}}>
           
           {/* Home Feed Screen */}
           {currentScreen === 'home' && (
@@ -757,7 +757,7 @@ export default function ScoopApp() {
 
               {/* Feed Content */}
               <div className="flex-1 overflow-y-auto p-4">
-                <div className="space-y-3 pb-20">
+                <div className="space-y-3 pb-16">
                   {posts.filter(post => !isUserBlocked(post.reviewer) && !isUserBlocked(post.reviewedPerson)).map((post) => (
                     <div key={post.id} className="rounded-lg shadow-md border border-cyan-200" style={{background: 'linear-gradient(145deg, #ffffff 0%, #f8fdff 100%)'}}>
                       <div className="flex">
@@ -944,7 +944,7 @@ export default function ScoopApp() {
                 <p className="opacity-90 text-sm">@BigStinky</p>
                 
                 {/* Reviews/Connections/Events Counters - Horizontal layout */}
-                <div className="flex justify-center space-x-6 my-4 px-4">
+                <div className="flex justify-center space-x-6 my-2 px-4">
                   <div className="flex items-center space-x-1">
                     <span className="text-lg font-bold text-cyan-600">127</span>
                     <span className="text-sm text-gray-300">Reviews</span>
@@ -959,7 +959,7 @@ export default function ScoopApp() {
                   </div>
                 </div>
                 
-                <div className="flex justify-center items-center mt-2 space-x-2">
+                <div className="flex justify-center items-center mt-1 space-x-2">
                   <button 
                     onClick={() => setShowTrustBreakdown(true)}
                     className="bg-green-500 text-white px-4 py-1 rounded-full text-sm font-medium hover:bg-green-600 transition-colors"
@@ -971,12 +971,12 @@ export default function ScoopApp() {
               </div>
               
               <div className="p-4">
-                <p className="text-gray-700 text-sm mb-4">
+                <p className="text-gray-700 text-sm mb-3">
                   Software engineer passionate about building trust and connection in digital communities. Always looking to collaborate on meaningful projects.
                 </p>
                 
-                <div className="mb-4">
-                  <p className="text-gray-600 text-xs font-medium mb-2 uppercase tracking-wide">Your Flavors</p>
+                <div className="mb-3">
+                  <p className="text-gray-600 text-xs font-medium mb-1 uppercase tracking-wide">Your Flavors</p>
                   <div className="flex flex-wrap gap-2">
                     <span className="bg-green-500 text-white px-2 py-1 rounded text-xs">VERIFIED</span>
                     <span className="bg-blue-500 text-white px-2 py-1 rounded text-xs">OUTGOING</span>
@@ -986,7 +986,7 @@ export default function ScoopApp() {
                 </div>
 
                 {/* Social Accounts Preview - Side by Side */}
-                <div className="mb-4">
+                <div className="mb-3">
                   <div className="flex justify-between items-center mb-3">
                     <h3 className="font-semibold text-gray-800">Social Accounts</h3>
                     <button 
@@ -1108,12 +1108,12 @@ export default function ScoopApp() {
                         setProfileActiveTab(newActiveIndex);
                       }
                     }}
-                    style={{ scrollSnapType: 'x mandatory', height: '400px' }}
+                    style={{ scrollSnapType: 'x mandatory', height: '480px' }}
                   >
                     <div className="flex h-full" style={{ width: '300%' }}>
                       {/* Posts Section */}
                       <div className="w-1/3 h-full overflow-y-auto scrollbar-hide pr-4" style={{ scrollSnapAlign: 'start' }}>
-                        <div className="space-y-4 pb-4">
+                        <div className="space-y-4 pb-16">
                           <div className="bg-white rounded-lg p-4 border border-gray-200">
                             <div className="flex items-center mb-3">
                               <div className="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center mr-3">
@@ -1193,7 +1193,7 @@ export default function ScoopApp() {
                       
                       {/* Groups Section - Public Events */}
                       <div className="w-1/3 h-full overflow-y-auto scrollbar-hide px-2" style={{ scrollSnapAlign: 'start' }}>
-                        <div className="space-y-4 pb-4">
+                        <div className="space-y-4 pb-16">
                           {/* Events I'm Attending */}
                           <div className="mb-4">
                             <h4 className="text-sm font-semibold text-gray-600 mb-2">Events I'm Attending</h4>
@@ -1281,7 +1281,7 @@ export default function ScoopApp() {
                       
                       {/* Likes Section - User Interactions */}
                       <div className="w-1/3 h-full overflow-y-auto scrollbar-hide pl-2" style={{ scrollSnapAlign: 'start' }}>
-                        <div className="space-y-4 pb-4">
+                        <div className="space-y-4 pb-16">
                           {/* Posts I've Liked */}
                           <div className="mb-4">
                             <h4 className="text-sm font-semibold text-gray-600 mb-2">Posts I've Liked</h4>
@@ -1498,7 +1498,7 @@ export default function ScoopApp() {
               </div>
               
               {/* Friends List */}
-              <div className="flex-1 overflow-y-auto p-4 pb-20">
+              <div className="flex-1 overflow-y-auto p-4 pb-16">
                 <div className="space-y-3">
                   {getFilteredFriends().map((friend) => (
                     <div key={friend.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
@@ -1654,7 +1654,7 @@ export default function ScoopApp() {
               </div>
               
               {/* Events Content - Scrollable Area */}
-              <div className="flex-1 overflow-y-auto p-4 pb-20">
+              <div className="flex-1 overflow-y-auto p-4 pb-16">
                 <div className="space-y-3">
                   
                   {eventFilter === 'upcoming' && events.filter(event => event.date === 'Tomorrow' || event.date === 'Saturday' || event.date === 'Sunday').map((event) => (
@@ -2037,7 +2037,7 @@ export default function ScoopApp() {
               </div>
 
               {/* Search Results - Scrollable Area */}
-              <div className="flex-1 overflow-y-auto p-4 pb-20">
+              <div className="flex-1 overflow-y-auto p-4 pb-16">
                   {!searchQuery.trim() ? (
                     <div className="text-center py-12 text-gray-500">
                       <div className="text-lg mb-2">🔍</div>
