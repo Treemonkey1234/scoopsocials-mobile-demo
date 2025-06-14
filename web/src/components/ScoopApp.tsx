@@ -880,7 +880,7 @@ export default function ScoopApp() {
           {/* Profile Screen */}
           {currentScreen === 'profile' && (
             <div className="h-full bg-white">
-              <div className="bg-gradient-to-r from-cyan-400 to-blue-400 p-6 text-center text-white relative">
+              <div className="bg-gradient-to-r from-cyan-400 to-blue-400 p-4 text-center text-white relative">
                 <div className="absolute top-4 left-4 flex space-x-2">
                   <button 
                     onClick={() => setShowInbox(true)}
@@ -937,14 +937,16 @@ export default function ScoopApp() {
                     </div>
                   )}
                 </div>
-                <div className="w-20 h-20 bg-white rounded-full mx-auto mb-4 flex items-center justify-center">
+                <div className="w-20 h-20 bg-white rounded-full mx-auto mb-2 flex items-center justify-center">
                   <span className="text-cyan-600 text-2xl">👤</span>
                 </div>
-                <h2 className="text-xl font-bold">Riesling LeFluuf</h2>
-                <p className="opacity-90 text-sm">@BigStinky</p>
+                <div className="flex items-center justify-center space-x-2">
+                  <h2 className="text-xl font-bold">Riesling LeFluuf</h2>
+                  <p className="opacity-90 text-sm">@BigStinky</p>
+                </div>
                 
                 {/* Reviews/Connections/Events Counters - Horizontal layout */}
-                <div className="flex justify-center space-x-6 my-2 px-4">
+                <div className="flex justify-center space-x-6 px-4">
                   <div className="flex items-center space-x-1">
                     <span className="text-lg font-bold text-cyan-600">127</span>
                     <span className="text-sm text-gray-300">Reviews</span>
@@ -970,7 +972,7 @@ export default function ScoopApp() {
                 </div>
               </div>
               
-              <div className="p-4">
+              <div className="p-3">
                 <p className="text-gray-700 text-sm mb-3">
                   Software engineer passionate about building trust and connection in digital communities. Always looking to collaborate on meaningful projects.
                 </p>
