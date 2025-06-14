@@ -1065,7 +1065,6 @@ export default function ScoopApp() {
                   </div>
                 </div>
                 
-                
                 {/* Horizontal Swipeable Sections */}
                 <div className="mb-6">
                   {/* Tab Navigation */}
