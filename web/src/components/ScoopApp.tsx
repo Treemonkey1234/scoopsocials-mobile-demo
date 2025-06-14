@@ -986,7 +986,7 @@ export default function ScoopApp() {
                 </div>
 
                 {/* Social Accounts Preview - Side by Side */}
-                <div className="mb-3">
+                <div>
                   <div className="flex justify-between items-center mb-3">
                     <h3 className="font-semibold text-gray-800">Social Accounts</h3>
                     <button 
@@ -996,7 +996,7 @@ export default function ScoopApp() {
                       View all
                     </button>
                   </div>
-                  <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center justify-between">
                     {/* Connected Accounts - Side by Side */}
                     <div className="flex space-x-2">
                       {/* Twitter */}
