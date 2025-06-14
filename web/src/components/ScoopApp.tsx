@@ -1454,8 +1454,7 @@ export default function ScoopApp() {
               </div>
 
               {/* Friends Content */}
-              <div className="flex-1 flex flex-col bg-white">
-                <div className="p-4 border-b border-gray-200">
+              <div className="p-4 border-b border-gray-200 flex-shrink-0 bg-white">
                 
                 {/* Search Bar */}
                 <div className="mb-4">
@@ -1551,7 +1550,6 @@ export default function ScoopApp() {
                     </div>
                   )}
                 </div>
-              </div>
               </div>
             </div>
           )}
