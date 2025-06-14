@@ -232,7 +232,7 @@ onKeyPress={(e) => {
             </button>
             <button
               onClick={handleSubmit}
-              className="flex-1 bg-cyan-400 text-white py-2 rounded-lg font-medium hover:bg-cyan-500 transition-colors"
+              className="flex-1 bg-cyan-500 text-white py-2 rounded-lg font-medium hover:bg-cyan-600 transition-colors"
             >
               Review & Post
             </button>

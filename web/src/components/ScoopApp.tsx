@@ -439,6 +439,39 @@ export default function ScoopApp() {
         return { icon: '📢', color: 'bg-gray-500' };
     }
   };
+
+  const formatEventDate = (dateString: string) => {
+    // Handle legacy hardcoded dates
+    if (dateString === 'Tomorrow' || dateString === 'Saturday' || dateString === 'Sunday') {
+      return dateString;
+    }
+    
+    // Handle YYYY-MM-DD format dates
+    const eventDate = new Date(dateString);
+    if (!isNaN(eventDate.getTime())) {
+      const today = new Date();
+      const diffTime = eventDate.getTime() - today.getTime();
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      
+      if (diffDays === 0) return 'Today';
+      if (diffDays === 1) return 'Tomorrow';
+      if (diffDays === -1) return 'Yesterday';
+      
+      // For dates within a week, show day name
+      if (diffDays > 0 && diffDays <= 7) {
+        return eventDate.toLocaleDateString('en-US', { weekday: 'long' });
+      }
+      
+      // For other dates, show formatted date
+      return eventDate.toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric',
+        year: eventDate.getFullYear() !== today.getFullYear() ? 'numeric' : undefined
+      });
+    }
+    
+    return dateString; // Fallback
+  };
   
   const [posts, setPosts] = useState<Post[]>([
     {
@@ -898,11 +931,9 @@ export default function ScoopApp() {
                 <div className="absolute top-4 right-4">
                   <button 
                     onClick={() => setShowCreateDropdown(!showCreateDropdown)}
-                    className="bg-white bg-opacity-20 p-2 rounded-full hover:bg-opacity-30 transition-colors"
+                    className="w-12 h-12 bg-white shadow-lg border-2 border-cyan-100 rounded-xl flex items-center justify-center text-cyan-600 text-xl font-bold hover:bg-cyan-50 hover:text-cyan-700 transition-all duration-200 hover:scale-105"
                   >
-                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 4v16m8-8H4"></path>
-                    </svg>
+                    +
                   </button>
                   
                   {showCreateDropdown && (
@@ -1520,6 +1551,7 @@ export default function ScoopApp() {
                       <div className="flex space-x-2">
                         <button 
                           onClick={() => {
+                            setPreviousScreen(currentScreen);
                             setSelectedUser(friend);
                             setCurrentScreen('user-profile');
                             setUserProfileActiveTab(0);
@@ -1656,22 +1688,32 @@ export default function ScoopApp() {
               <div className="flex-1 overflow-y-auto p-4 pb-16">
                 <div className="space-y-3">
                   
-                  {eventFilter === 'upcoming' && events.filter(event => event.date === 'Tomorrow' || event.date === 'Saturday' || event.date === 'Sunday').map((event) => (
+                  {eventFilter === 'upcoming' && events.filter(event => {
+                    // Handle both old hardcoded dates and new YYYY-MM-DD format dates
+                    if (event.date === 'Tomorrow' || event.date === 'Saturday' || event.date === 'Sunday') {
+                      return true;
+                    }
+                    // Check if the date is in YYYY-MM-DD format and is in the future
+                    const eventDate = new Date(event.date);
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    return !isNaN(eventDate.getTime()) && eventDate >= today;
+                  }).map((event) => (
                     <div key={event.id} className="bg-gradient-to-r from-green-400 to-green-600 text-white rounded-xl p-4 shadow-lg">
                       <div className="flex justify-between items-start mb-2">
                         <div className="flex-1">
                           <h3 className="font-bold text-lg">{event.title}</h3>
-                          <p className="text-sm opacity-90">{event.date}, {event.time} - {event.endTime}</p>
+                          <p className="text-sm opacity-90">{formatEventDate(event.date)}, {event.time} - {event.endTime}</p>
                           <p className="text-xs opacity-75">{event.location}</p>
-                          <div className="flex items-center space-x-2 mt-1">
-                            <span className="inline-block bg-yellow-400 text-yellow-900 px-2 py-1 rounded-full text-xs font-medium">Upcoming</span>
-                            <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                          <div className="flex items-center space-x-2 mt-1 overflow-x-auto">
+                            <span className="inline-block bg-yellow-400 text-yellow-900 px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap">Upcoming</span>
+                            <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
                               event.isPrivate ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
                             }`}>
                               {event.isPrivate ? 'Private' : 'Public'}
                             </span>
                             {event.userRSVP && (
-                              <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                              <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
                                 event.userRSVP === 'going' ? 'bg-green-100 text-green-800' :
                                 event.userRSVP === 'maybe' ? 'bg-yellow-100 text-yellow-800' :
                                 'bg-red-100 text-red-800'
@@ -1803,9 +1845,9 @@ export default function ScoopApp() {
                             <h3 className="font-bold text-lg">Photography Meetup</h3>
                             <p className="text-sm opacity-90">Next Friday, 5:00 PM - 8:00 PM</p>
                             <p className="text-xs opacity-75">Papago Park</p>
-                            <div className="flex items-center space-x-2 mt-1">
-                              <span className="inline-block bg-orange-200 text-orange-800 px-2 py-1 rounded-full text-xs font-medium">New Discovery</span>
-                              <span className="inline-block bg-blue-200 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">Public</span>
+                            <div className="flex items-center space-x-2 mt-1 overflow-x-auto">
+                              <span className="inline-block bg-orange-200 text-orange-800 px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap">New Discovery</span>
+                              <span className="inline-block bg-blue-200 text-blue-800 px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap">Public</span>
                             </div>
                           </div>
                           <div className="text-right">
@@ -2098,6 +2140,7 @@ export default function ScoopApp() {
                                 <div className="flex space-x-2">
                                   <button 
                                     onClick={() => {
+                                      setPreviousScreen(currentScreen);
                                       setSelectedUser(person);
                                       setCurrentScreen('user-profile');
                                       setUserProfileActiveTab(0);
@@ -2133,7 +2176,17 @@ export default function ScoopApp() {
                                       >
                                         ×
                                       </button>
-                                    ) : null
+                                    ) : (
+                                      <button 
+                                        onClick={() => {
+                                          setTargetUser(person);
+                                          setShowBlockModal(true);
+                                        }}
+                                        className="bg-red-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-600"
+                                      >
+                                        Block
+                                      </button>
+                                    )
                                   )}
                                 </div>
                               </div>
@@ -2254,11 +2307,9 @@ export default function ScoopApp() {
                   </button>
                   <button 
                     onClick={() => setShowCreateDropdown(!showCreateDropdown)}
-                    className="bg-white bg-opacity-20 p-2 rounded-full hover:bg-opacity-30 transition-colors"
+                    className="w-12 h-12 bg-white shadow-lg border-2 border-cyan-100 rounded-xl flex items-center justify-center text-cyan-600 text-xl font-bold hover:bg-cyan-50 hover:text-cyan-700 transition-all duration-200 hover:scale-105"
                   >
-                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 4v16m8-8H4"></path>
-                    </svg>
+                    +
                   </button>
                   
                   {showCreateDropdown && (
@@ -2478,7 +2529,7 @@ export default function ScoopApp() {
                         setUserProfileActiveTab(newActiveIndex);
                       }
                     }}
-                    style={{ scrollSnapType: 'x mandatory', height: '400px' }}
+                    style={{ scrollSnapType: 'x mandatory', height: '480px' }}
                   >
                     <div className="flex h-full" style={{ width: '300%' }}>
                       {/* Posts Section */}
@@ -2978,6 +3029,19 @@ export default function ScoopApp() {
             onRSVP={handleRSVP}
             onViewAttendees={handleViewAttendees}
             isUserBlocked={isUserBlocked}
+            onViewProfile={(userName) => {
+              // Find the user by name in allUsers array
+              const user = allUsers.find(u => u.name === userName);
+              if (user) {
+                setPreviousScreen(currentScreen);
+                setSelectedUser(user);
+                setCurrentScreen('user-profile');
+                setUserProfileActiveTab(0);
+                // Close the event details modal
+                setShowEventDetails(false);
+                setSelectedEvent(null);
+              }
+            }}
           />
         )}
         
@@ -2987,6 +3051,16 @@ export default function ScoopApp() {
             eventTitle={selectedEvent.title}
             eventId={selectedEvent.id}
             isUserBlocked={isUserBlocked}
+            onViewProfile={(userName) => {
+              // Find the user by name in allUsers array
+              const user = allUsers.find(u => u.name === userName);
+              if (user) {
+                setPreviousScreen(currentScreen);
+                setSelectedUser(user);
+                setCurrentScreen('user-profile');
+                setUserProfileActiveTab(0);
+              }
+            }}
           />
         )}
         
@@ -3741,6 +3815,7 @@ export default function ScoopApp() {
                         <button 
                           onClick={() => {
                             setShowUserFriends(false);
+                            setPreviousScreen(currentScreen);
                             setSelectedUser(friend);
                             setCurrentScreen('user-profile');
                             setUserProfileActiveTab(0);

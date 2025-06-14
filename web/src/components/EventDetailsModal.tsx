@@ -18,9 +18,10 @@ interface EventDetailsModalProps {
   onRSVP: (eventId: string, status: 'going' | 'maybe' | 'not_going') => void;
   onViewAttendees: (eventId: string) => void;
   isUserBlocked?: (username: string) => boolean;
+  onViewProfile?: (userName: string) => void;
 }
 
-const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ onClose, event, onRSVP, onViewAttendees, isUserBlocked }) => {
+const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ onClose, event, onRSVP, onViewAttendees, isUserBlocked, onViewProfile }) => {
   const [userStatus, setUserStatus] = useState<'going' | 'maybe' | 'not_going' | null>(null);
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -79,7 +80,14 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ onClose, event, o
                 <div className="text-sm font-medium text-gray-900">Organized by</div>
                 <div className="text-sm text-gray-700">{event.organizer}</div>
               </div>
-              <button className="text-cyan-600 text-sm hover:text-cyan-700">
+              <button 
+                onClick={() => {
+                  // Extract name from organizer string (e.g., "John Doe (Trust: 85)" -> "John Doe")
+                  const organizerName = event.organizer.split(' (')[0];
+                  onViewProfile?.(organizerName);
+                }}
+                className="text-cyan-600 text-sm hover:text-cyan-700"
+              >
                 View Profile
               </button>
             </div>

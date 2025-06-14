@@ -333,4 +333,14 @@ Experience Tab Cleanup ✅ COMPLETED
 11. Add data persistence for settings (localStorage/database integration)
 12. Push Notifications for real-time engagement and verification alerts
 
-Last Updated: June 13, 2025
+📋 OUTSTANDING ISSUES & IMPROVEMENTS:
+- Fix quick block functionality on search page people results
+- Scroll side to side functionality on event page
+- Events need to post to upcoming events tab properly
+- View profile feature on event attendees
+- Investigate difference between user profile and friends profile scrolling functionality
+- Fix back button functionality on friend profile (currently returns to home page instead of previous page)
+- Make profile pages create event button consistent with create buttons on other pages
+- Discuss add friend button feature on create button when not viewing another user's profile
+
+Last Updated: June 14, 2025

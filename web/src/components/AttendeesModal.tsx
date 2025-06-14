@@ -14,9 +14,10 @@ interface AttendeesModalProps {
   eventTitle: string;
   eventId: string;
   isUserBlocked?: (username: string) => boolean;
+  onViewProfile?: (userName: string) => void;
 }
 
-const AttendeesModal: React.FC<AttendeesModalProps> = ({ onClose, eventTitle, isUserBlocked }) => {
+const AttendeesModal: React.FC<AttendeesModalProps> = ({ onClose, eventTitle, isUserBlocked, onViewProfile }) => {
   const [attendees] = useState<Attendee[]>([
     {
       id: '1',
@@ -147,25 +148,27 @@ const AttendeesModal: React.FC<AttendeesModalProps> = ({ onClose, eventTitle, is
         </div>
 
         {/* Filter Tabs */}
-        <div className="flex p-4 space-x-1 border-b border-gray-200">
-          {['all', 'going', 'maybe', 'not_going'].map((filterOption) => (
-            <button
-              key={filterOption}
-              onClick={() => setFilter(filterOption as any)}
-              className={`flex-1 py-2 px-3 rounded-lg text-xs font-medium transition-colors ${
-                filter === filterOption 
-                  ? 'bg-cyan-400 text-white' 
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              {filterOption === 'all' ? 'All' : getStatusLabel(filterOption)}
-              {filterOption !== 'all' && (
-                <span className="ml-1">
-                  ({filterOption === 'going' ? goingCount : filterOption === 'maybe' ? maybeCount : notGoingCount})
-                </span>
-              )}
-            </button>
-          ))}
+        <div className="p-4 border-b border-gray-200">
+          <div className="flex space-x-1 overflow-x-auto">
+            {['all', 'going', 'maybe', 'not_going'].map((filterOption) => (
+              <button
+                key={filterOption}
+                onClick={() => setFilter(filterOption as any)}
+                className={`flex-shrink-0 py-2 px-3 rounded-lg text-xs font-medium transition-colors whitespace-nowrap ${
+                  filter === filterOption 
+                    ? 'bg-cyan-400 text-white' 
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                {filterOption === 'all' ? 'All' : getStatusLabel(filterOption)}
+                {filterOption !== 'all' && (
+                  <span className="ml-1">
+                    ({filterOption === 'going' ? goingCount : filterOption === 'maybe' ? maybeCount : notGoingCount})
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Attendees List */}
@@ -188,7 +191,10 @@ const AttendeesModal: React.FC<AttendeesModalProps> = ({ onClose, eventTitle, is
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(attendee.status)}`}>
                     {getStatusLabel(attendee.status)}
                   </span>
-                  <button className="text-cyan-600 text-xs hover:text-cyan-700">
+                  <button 
+                    onClick={() => onViewProfile?.(attendee.name)}
+                    className="text-cyan-600 text-xs hover:text-cyan-700"
+                  >
                     View Profile
                   </button>
                 </div>
