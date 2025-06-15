@@ -16,9 +16,10 @@ interface SocialAccount {
 interface SocialAccountsModalProps {
   onClose: () => void;
   currentUserTrustScore?: number;
+  onFlagSubmission?: (flagData: any) => void;
 }
 
-const SocialAccountsModal: React.FC<SocialAccountsModalProps> = ({ onClose, currentUserTrustScore = 75 }) => {
+const SocialAccountsModal: React.FC<SocialAccountsModalProps> = ({ onClose, currentUserTrustScore = 75, onFlagSubmission }) => {
   const [accounts, setAccounts] = useState<SocialAccount[]>([
     // Social Media
     { platform: 'Twitter', username: '@BigStinky', verified: true, icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/twitter.svg', color: 'bg-blue-400', connectedSince: 'Mar 2024', category: 'social', profileUrl: 'https://twitter.com/BigStinky' },
@@ -66,6 +67,11 @@ const SocialAccountsModal: React.FC<SocialAccountsModalProps> = ({ onClose, curr
   const handleSubmitFlag = async (flagData: any) => {
     // In a real app, this would make an API call to submit the flag
     console.log('Flag submitted:', flagData);
+    
+    // Call the parent's flag submission handler if provided
+    if (onFlagSubmission) {
+      onFlagSubmission(flagData);
+    }
     
     // Hide the flagged account temporarily
     setAccounts(prev => prev.map(account => 

@@ -100,6 +100,9 @@ export default function ScoopApp() {
   
   // Profile tab state
   const [profileActiveTab, setProfileActiveTab] = useState(0);
+
+  // Flag Management state
+  const [flagPackages, setFlagPackages] = useState<any[]>([]);
   
   // Professional account layer state
   const [showProfessionalLayer, setShowProfessionalLayer] = useState(false);
@@ -248,6 +251,57 @@ export default function ScoopApp() {
       console.error('Error initializing fake user network:', error);
     }
   }, []);
+
+  // Flag management functions
+  const handleFlagSubmission = (flagData: any) => {
+    // Create a new flag package from the submission
+    const newFlag = {
+      id: `flag_${Date.now()}`,
+      flaggedUser: {
+        name: flagData.flaggedUserName || 'Unknown User',
+        username: flagData.accountId || '@unknown',
+        trustScore: Math.floor(Math.random() * 40) + 60, // Random trust score 60-100
+        avatar: '👤',
+        accountAge: 'Unknown',
+        flaggedAccount: {
+          platform: flagData.accountId?.split('-')[0] || 'Unknown',
+          username: flagData.accountId?.split('-')[1] || flagData.flaggedUserName || '@unknown',
+          profileUrl: flagData.actualProfileUrl
+        },
+        socialAccounts: []
+      },
+      flaggerUser: {
+        name: currentUser?.name || 'Current User',
+        username: currentUser?.username || '@current_user',
+        trustScore: currentUser?.trustScore || 85,
+        avatar: currentUser?.avatar || '👤',
+        flagHistory: {
+          flagsSubmitted: Math.floor(Math.random() * 20) + 1,
+          falseFlags: Math.floor(Math.random() * 3),
+          accuracy: Math.floor(Math.random() * 30) + 70
+        }
+      },
+      flagCategory: flagData.category,
+      evidence: flagData.evidence,
+      verificationInfo: flagData.actualProfileUrl || '',
+      submittedAt: 'Just now',
+      status: 'pending' as const,
+      mutualFriends: Math.floor(Math.random() * 10),
+      priority: (Math.random() > 0.7 ? 'high' : (Math.random() > 0.4 ? 'medium' : 'low')) as 'high' | 'medium' | 'low'
+    };
+
+    setFlagPackages(prev => [newFlag, ...prev]);
+    console.log('New flag submitted:', newFlag);
+  };
+
+  const handleFlagUpdate = (flagId: string, status: string, explanation: string) => {
+    setFlagPackages(prev => prev.map(flag => 
+      flag.id === flagId 
+        ? { ...flag, status: status as any }
+        : flag
+    ));
+    console.log('Flag updated:', { flagId, status, explanation });
+  };
 
   // Search function across all content
   const performSearch = (query: string) => {
@@ -3037,7 +3091,8 @@ export default function ScoopApp() {
         
         {showSocialAccounts && (
           <SocialAccountsModal 
-            onClose={() => setShowSocialAccounts(false)} 
+            onClose={() => setShowSocialAccounts(false)}
+            onFlagSubmission={handleFlagSubmission}
           />
         )}
         
@@ -4124,7 +4179,11 @@ export default function ScoopApp() {
 
         {/* Moderator Interface */}
         {showModeratorInterface && (
-          <ModeratorInterface onClose={() => setShowModeratorInterface(false)} />
+          <ModeratorInterface 
+            onClose={() => setShowModeratorInterface(false)}
+            flagPackages={flagPackages}
+            onUpdateFlag={handleFlagUpdate}
+          />
         )}
       </div>
     </div>

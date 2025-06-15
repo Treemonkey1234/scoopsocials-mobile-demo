@@ -46,16 +46,18 @@ interface FlagPackage {
 
 interface ModeratorInterfaceProps {
   onClose: () => void;
+  flagPackages?: FlagPackage[];
+  onUpdateFlag?: (flagId: string, status: string, explanation: string) => void;
 }
 
-const ModeratorInterface: React.FC<ModeratorInterfaceProps> = ({ onClose }) => {
+const ModeratorInterface: React.FC<ModeratorInterfaceProps> = ({ onClose, flagPackages: propFlagPackages, onUpdateFlag }) => {
   const [selectedFlag, setSelectedFlag] = useState<FlagPackage | null>(null);
   const [decision, setDecision] = useState<string>('');
   const [explanation, setExplanation] = useState<string>('');
   const [filterStatus, setFilterStatus] = useState<string>('pending');
 
-  // Sample flag data for testing
-  const [flagPackages, setFlagPackages] = useState<FlagPackage[]>([
+  // Default sample flag data for testing - use props if provided
+  const defaultFlagPackages: FlagPackage[] = [
     {
       id: 'flag_001',
       flaggedUser: {
@@ -130,24 +132,31 @@ const ModeratorInterface: React.FC<ModeratorInterfaceProps> = ({ onClose }) => {
       mutualFriends: 1,
       priority: 'medium'
     }
-  ]);
+  ];
+
+  const [flagPackages, setFlagPackages] = useState<FlagPackage[]>(propFlagPackages || defaultFlagPackages);
+
+  // Update flagPackages when props change
+  React.useEffect(() => {
+    if (propFlagPackages) {
+      setFlagPackages(propFlagPackages);
+    }
+  }, [propFlagPackages]);
 
   const handleDecision = async () => {
     if (!selectedFlag || !decision || explanation.trim().length < 10) return;
 
-    // In a real app, this would make an API call
-    console.log('Moderator decision:', {
-      flagId: selectedFlag.id,
-      decision,
-      explanation: explanation.trim()
-    });
-
-    // Update the flag status
-    setFlagPackages(prev => prev.map(flag => 
-      flag.id === selectedFlag.id 
+    // Use callback if provided, otherwise update local state
+    if (onUpdateFlag) {
+      onUpdateFlag(selectedFlag.id, decision, explanation.trim());
+    } else {
+      // Update the flag status locally
+      setFlagPackages(prev => prev.map(flag => 
+        flag.id === selectedFlag.id 
         ? { ...flag, status: decision as any }
         : flag
-    ));
+      ));
+    }
 
     // Reset form
     setSelectedFlag(null);
