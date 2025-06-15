@@ -58,16 +58,18 @@ const checkAuthRateLimit = async (identifier: string): Promise<void> => {
 // Generate JWT tokens
 const generateTokens = (userId: string) => {
   const payload = { userId };
+  const jwtSecret = process.env.JWT_SECRET || 'fallback-secret';
+  const refreshSecret = process.env.REFRESH_TOKEN_SECRET || 'fallback-refresh-secret';
   
   const accessToken = jwt.sign(
     payload,
-    process.env.JWT_SECRET as string,
+    jwtSecret,
     { expiresIn: process.env.JWT_EXPIRE_TIME || '24h' }
   );
   
   const refreshToken = jwt.sign(
     payload,
-    process.env.REFRESH_TOKEN_SECRET as string,
+    refreshSecret,
     { expiresIn: process.env.REFRESH_TOKEN_EXPIRE_TIME || '7d' }
   );
   

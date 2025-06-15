@@ -156,10 +156,11 @@ export const requireMinTrustScore = (minScore: number) => {
 export const requireModerator = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     if (!req.user) {
-      return res.status(401).json({ 
+      res.status(401).json({ 
         error: 'Authentication required',
         code: 'AUTH_REQUIRED'
       });
+      return;
     }
 
     // Check if user has moderator privileges
@@ -168,16 +169,17 @@ export const requireModerator = async (req: AuthRequest, res: Response, next: Ne
     const isModerator = req.user.accountType === 'VENUE' && req.user.trustScore >= 85;
     
     if (!isModerator) {
-      return res.status(403).json({ 
+      res.status(403).json({ 
         error: 'Moderator privileges required',
         code: 'MODERATOR_REQUIRED'
       });
+      return;
     }
 
     next();
   } catch (error) {
     logger.error('Moderator check error:', error);
-    return res.status(500).json({ 
+    res.status(500).json({ 
       error: 'Authorization check failed',
       code: 'AUTH_CHECK_ERROR'
     });
