@@ -153,6 +153,9 @@ router.post('/verify-phone', async (req, res, next) => {
         ...tokens
       });
     } else {
+      // Mark phone as recently verified for signup
+      await redis.set(`phone_verified:${phone}`, 'true', 600); // 10 minutes
+      
       res.json({
         message: 'Phone verified successfully',
         phone,

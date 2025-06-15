@@ -17,17 +17,7 @@ import { notFound } from './middleware/notFound';
 // Routes
 import authRoutes from './routes/auth';
 import userRoutes from './routes/users';
-import postRoutes from './routes/posts';
-import eventRoutes from './routes/events';
-import friendRoutes from './routes/friends';
-import flagRoutes from './routes/flags';
-import notificationRoutes from './routes/notifications';
-import uploadRoutes from './routes/upload';
-import paymentRoutes from './routes/payments';
-import moderatorRoutes from './routes/moderator';
-
-// Socket handlers
-import { setupSocketHandlers } from './sockets/socketHandlers';
+// Additional routes will be added as needed
 
 // Load environment variables
 dotenv.config();
@@ -99,17 +89,8 @@ app.get('/health', (req, res) => {
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/posts', postRoutes);
-app.use('/api/events', eventRoutes);
-app.use('/api/friends', friendRoutes);
-app.use('/api/flags', flagRoutes);
-app.use('/api/notifications', notificationRoutes);
-app.use('/api/upload', uploadRoutes);
-app.use('/api/payments', paymentRoutes);
-app.use('/api/moderator', moderatorRoutes);
 
-// Socket.IO setup
-setupSocketHandlers(io);
+// Additional routes will be mounted here as they're implemented
 
 // Store io instance globally for use in other modules
 app.set('io', io);
