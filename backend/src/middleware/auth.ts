@@ -13,7 +13,7 @@ export interface AuthRequest extends Request {
   };
 }
 
-export const authenticateToken = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const authenticateToken = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const authHeader = req.headers.authorization;
     const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
@@ -112,7 +112,7 @@ export const authenticateToken = async (req: AuthRequest, res: Response, next: N
 
 // Middleware to check if user has specific account type
 export const requireAccountType = (requiredTypes: string[]) => {
-  return (req: AuthRequest, res: Response, next: NextFunction) => {
+  return (req: AuthRequest, res: Response, next: NextFunction): void => {
     if (!req.user) {
       return res.status(401).json({ 
         error: 'Authentication required',
@@ -133,7 +133,7 @@ export const requireAccountType = (requiredTypes: string[]) => {
 
 // Middleware to check if user has minimum trust score
 export const requireMinTrustScore = (minScore: number) => {
-  return (req: AuthRequest, res: Response, next: NextFunction) => {
+  return (req: AuthRequest, res: Response, next: NextFunction): void => {
     if (!req.user) {
       return res.status(401).json({ 
         error: 'Authentication required',
@@ -153,7 +153,7 @@ export const requireMinTrustScore = (minScore: number) => {
 };
 
 // Middleware for moderators
-export const requireModerator = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const requireModerator = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     if (!req.user) {
       return res.status(401).json({ 
@@ -185,7 +185,7 @@ export const requireModerator = async (req: AuthRequest, res: Response, next: Ne
 };
 
 // Optional authentication - doesn't fail if no token provided
-export const optionalAuth = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const optionalAuth = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const authHeader = req.headers.authorization;
     const token = authHeader && authHeader.split(' ')[1];

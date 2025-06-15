@@ -61,13 +61,13 @@ const generateTokens = (userId: string) => {
   
   const accessToken = jwt.sign(
     payload,
-    process.env.JWT_SECRET!,
+    process.env.JWT_SECRET as string,
     { expiresIn: process.env.JWT_EXPIRE_TIME || '24h' }
   );
   
   const refreshToken = jwt.sign(
     payload,
-    process.env.REFRESH_TOKEN_SECRET!,
+    process.env.REFRESH_TOKEN_SECRET as string,
     { expiresIn: process.env.REFRESH_TOKEN_EXPIRE_TIME || '7d' }
   );
   
