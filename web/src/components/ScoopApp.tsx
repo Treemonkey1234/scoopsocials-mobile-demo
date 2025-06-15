@@ -1016,11 +1016,11 @@ export default function ScoopApp() {
                         style={{ transform: showProfessionalLayer ? 'translateX(-80px)' : 'translateX(0px)' }}
                         onTouchStart={(e) => {
                           const touch = e.touches[0];
-                          e.currentTarget.startX = touch.clientX;
+                          (e.currentTarget as any).startX = touch.clientX;
                         }}
                         onTouchEnd={(e) => {
                           const touch = e.changedTouches[0];
-                          const startX = e.currentTarget.startX || 0;
+                          const startX = (e.currentTarget as any).startX || 0;
                           const diffX = touch.clientX - startX;
                           
                           if (Math.abs(diffX) > 30) { // Minimum swipe distance
