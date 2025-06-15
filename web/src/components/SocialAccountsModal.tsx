@@ -120,7 +120,9 @@ const SocialAccountsModal: React.FC<SocialAccountsModalProps> = ({ onClose, curr
           className="p-1 text-gray-400 hover:text-red-500 transition-colors"
           title="Flag this account"
         >
-          🚩
+          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"></path>
+          </svg>
         </button>
       </div>
     </div>
