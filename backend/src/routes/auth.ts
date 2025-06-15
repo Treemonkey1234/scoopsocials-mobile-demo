@@ -57,21 +57,11 @@ const checkAuthRateLimit = async (identifier: string): Promise<void> => {
 
 // Generate JWT tokens
 const generateTokens = (userId: string) => {
-  const payload = { userId };
   const jwtSecret = process.env.JWT_SECRET || 'fallback-secret';
   const refreshSecret = process.env.REFRESH_TOKEN_SECRET || 'fallback-refresh-secret';
   
-  const accessToken = jwt.sign(
-    payload,
-    jwtSecret,
-    { expiresIn: process.env.JWT_EXPIRE_TIME || '24h' }
-  );
-  
-  const refreshToken = jwt.sign(
-    payload,
-    refreshSecret,
-    { expiresIn: process.env.REFRESH_TOKEN_EXPIRE_TIME || '7d' }
-  );
+  const accessToken = jwt.sign({ userId }, jwtSecret, { expiresIn: '24h' } as jwt.SignOptions);
+  const refreshToken = jwt.sign({ userId }, refreshSecret, { expiresIn: '7d' } as jwt.SignOptions);
   
   return { accessToken, refreshToken };
 };
@@ -207,11 +197,17 @@ router.post('/signup', async (req, res, next) => {
     // Create user
     const newUser = await prisma.user.create({
       data: {
-        ...userData,
+        phone: userData.phone!,
+        name: userData.name,
+        username: userData.username,
+        email: userData.email,
+        accountType: userData.accountType as any,
+        bio: userData.bio,
+        occupation: userData.occupation,
         phoneVerified: true,
         phoneVerifiedAt: new Date(),
         onboardingComplete: true,
-        location: userData.location || undefined,
+        location: userData.location,
         interests: userData.interests || []
       },
       select: {
@@ -315,7 +311,12 @@ router.post('/refresh', async (req, res, next) => {
     const { refreshToken } = refreshTokenSchema.parse(req.body);
     
     // Verify refresh token
-    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!) as { userId: string };
+    const refreshSecret = process.env.REFRESH_TOKEN_SECRET;
+    if (!refreshSecret) {
+      throw new UnauthorizedError('Server configuration error');
+    }
+    
+    const decoded = jwt.verify(refreshToken, refreshSecret) as { userId: string };
     
     // Check if refresh token exists in database
     const storedToken = await prisma.refreshToken.findUnique({
