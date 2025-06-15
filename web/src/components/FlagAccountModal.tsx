@@ -42,22 +42,12 @@ const FlagAccountModal: React.FC<FlagAccountModalProps> = ({
     {
       id: 'not_user_account',
       label: 'Account doesn\'t belong to this user',
-      description: 'This social media account belongs to someone else'
+      description: 'This social media account belongs to someone else or isn\'t owned by this user'
     },
     {
       id: 'fabricated_account',
       label: 'Account is fabricated/doesn\'t exist',
-      description: 'This account appears to be fake or non-existent'
-    },
-    {
-      id: 'exists_not_connected',
-      label: 'Account exists but not connected to user',
-      description: 'The account exists but isn\'t actually owned by this user'
-    },
-    {
-      id: 'misleading_professional',
-      label: 'Misleading professional account',
-      description: 'Professional credentials or status are misrepresented'
+      description: 'This account appears to be fake, non-existent, or completely made up'
     }
   ];
 
