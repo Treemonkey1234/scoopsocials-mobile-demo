@@ -9,6 +9,7 @@ import CreateEventModal from './CreateEventModal';
 import EventDetailsModal from './EventDetailsModal';
 import AttendeesModal from './AttendeesModal';
 import EventReviewModal from './EventReviewModal';
+import ModeratorInterface from './ModeratorInterface';
 import { getFakeUsers, getFriendsForUser, getRecommendedFriends, searchUsers, getNetworkAnalytics, FakeUser } from '../data/fakeUsers';
 
 interface NavigationProps {
@@ -68,6 +69,7 @@ export default function ScoopApp() {
   const [showInbox, setShowInbox] = useState(false);
   const [showCreateDropdown, setShowCreateDropdown] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showModeratorInterface, setShowModeratorInterface] = useState(false);
   const [showBlockedUsers, setShowBlockedUsers] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   
@@ -3457,6 +3459,19 @@ export default function ScoopApp() {
                       </div>
                       <span className="text-gray-400">→</span>
                     </button>
+                    <button 
+                      onClick={() => {
+                        setShowSettings(false);
+                        setShowModeratorInterface(true);
+                      }}
+                      className={`w-full flex items-center justify-between p-3 rounded-lg ${isDarkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-50 hover:bg-gray-100'} transition-colors`}
+                    >
+                      <div className="flex items-center">
+                        <span className="text-lg mr-3">⚖️</span>
+                        <span className={`${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>Moderator Interface</span>
+                      </div>
+                      <span className="text-gray-400">→</span>
+                    </button>
                   </div>
                 </div>
 
@@ -4105,6 +4120,11 @@ export default function ScoopApp() {
               </div>
             </div>
           </div>
+        )}
+
+        {/* Moderator Interface */}
+        {showModeratorInterface && (
+          <ModeratorInterface onClose={() => setShowModeratorInterface(false)} />
         )}
       </div>
     </div>
