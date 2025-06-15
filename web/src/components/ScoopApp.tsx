@@ -303,6 +303,57 @@ export default function ScoopApp() {
     console.log('Flag updated:', { flagId, status, explanation });
   };
 
+  const handlePostFlag = (flagData: any) => {
+    // Find the flagged post details
+    const flaggedPost = posts.find(post => post.id === flagData.postId);
+    
+    // Create a new flag package from the post flag
+    const newFlag = {
+      id: `flag_${Date.now()}`,
+      flaggedUser: {
+        name: flaggedPost?.reviewer || 'Unknown User',
+        username: `@${flaggedPost?.reviewer?.toLowerCase().replace(' ', '_')}` || '@unknown',
+        trustScore: Math.floor(Math.random() * 40) + 60,
+        avatar: '👤',
+        accountAge: 'Unknown',
+        flaggedAccount: {
+          platform: 'ScoopSocials Post',
+          username: flaggedPost?.reviewer || 'Unknown',
+          profileUrl: ''
+        },
+        socialAccounts: []
+      },
+      flaggerUser: {
+        name: currentUser?.name || 'Current User',
+        username: currentUser?.username || '@current_user',
+        trustScore: currentUser?.trustScore || 85,
+        avatar: currentUser?.avatar || '👤',
+        flagHistory: {
+          flagsSubmitted: Math.floor(Math.random() * 20) + 1,
+          falseFlags: Math.floor(Math.random() * 3),
+          accuracy: Math.floor(Math.random() * 30) + 70
+        }
+      },
+      flagCategory: `Post Content Violation: ${flagData.reason}`,
+      evidence: flagData.description || 'No additional details provided',
+      verificationInfo: `Post ID: ${flagData.postId}`,
+      submittedAt: 'Just now',
+      status: 'pending' as const,
+      mutualFriends: Math.floor(Math.random() * 10),
+      priority: (flagData.reason?.includes('harmful') || flagData.reason?.includes('abuse') ? 'high' : 'medium') as 'high' | 'medium' | 'low'
+    };
+
+    setFlagPackages(prev => [newFlag, ...prev]);
+    console.log('Post flag submitted:', newFlag);
+    
+    // Close the flag modal
+    setShowFlagModal(false);
+    setSelectedPost(null);
+    
+    // Show success message
+    alert('Thank you for your report. Our moderation team will review this content.');
+  };
+
   // Search function across all content
   const performSearch = (query: string) => {
     if (!query.trim()) {
@@ -3123,10 +3174,7 @@ export default function ScoopApp() {
               setShowFlagModal(false);
               setSelectedPost(null);
             }}
-            onSubmit={(flagData) => {
-              console.log('Post flagged:', flagData);
-              alert('Thank you for your report. Our moderation team will review this content.');
-            }}
+            onSubmit={handlePostFlag}
             postId={selectedPost.id}
           />
         )}
