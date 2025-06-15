@@ -30,7 +30,9 @@ The flag system is integrated into the Social Accounts functionality. Here's how
 
 ### Step 4: Use the Flag System
 1. **Flag Modal Features:**
-   - 4 flag categories (account ownership, fabricated, etc.)
+   - 2 clear flag categories:
+     * Account doesn't belong to this user
+     * Account is fabricated/doesn't exist
    - Evidence text field (20 character minimum)
    - Actual profile URL field
    - Daily flag limits based on trust score
