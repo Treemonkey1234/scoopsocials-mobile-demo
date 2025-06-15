@@ -331,12 +331,27 @@ export default function ScoopApp() {
 
   // Helper function to navigate to a user's profile
   const navigateToUserProfile = (userName: string) => {
-    const user = allUsers.find(u => u.name === userName);
+    // Extract just the name part before any parentheses (for event organizers)
+    const cleanName = userName.split(' (')[0].trim();
+    console.log('Navigating to user profile:', cleanName);
+    const user = allUsers.find(u => u.name === cleanName);
     if (user) {
+      console.log('Found user:', user);
       setPreviousScreen(currentScreen);
       setSelectedUser(user);
       setCurrentScreen('user-profile');
       setUserProfileActiveTab(0);
+    } else {
+      console.log('User not found in allUsers. Available users:', allUsers.map(u => u.name));
+      // Fallback: try to find user in userFriends
+      const friendUser = userFriends.find(f => f.name === cleanName);
+      if (friendUser) {
+        console.log('Found user in friends:', friendUser);
+        setPreviousScreen(currentScreen);
+        setSelectedUser(friendUser);
+        setCurrentScreen('user-profile');
+        setUserProfileActiveTab(0);
+      }
     }
   };
 
