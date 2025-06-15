@@ -15,8 +15,7 @@ import { errorHandler } from './middleware/errorHandler';
 import { notFound } from './middleware/notFound';
 
 // Routes
-import authRoutes from './routes/auth';
-import userRoutes from './routes/users';
+import authSimpleRoutes from './routes/auth-simple';
 // Additional routes will be added as needed
 
 // Load environment variables
@@ -87,8 +86,7 @@ app.get('/health', (req, res) => {
 });
 
 // API Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
+app.use('/api/auth', authSimpleRoutes);
 
 // Additional routes will be mounted here as they're implemented
 
