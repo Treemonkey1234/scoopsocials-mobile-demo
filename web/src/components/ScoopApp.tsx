@@ -334,6 +334,8 @@ export default function ScoopApp() {
     // Extract just the name part before any parentheses (for event organizers)
     const cleanName = userName.split(' (')[0].trim();
     console.log('Navigating to user profile:', cleanName);
+    console.log('All available users:', allUsers.map(u => u.name));
+    
     const user = allUsers.find(u => u.name === cleanName);
     if (user) {
       console.log('Found user:', user);
@@ -342,7 +344,7 @@ export default function ScoopApp() {
       setCurrentScreen('user-profile');
       setUserProfileActiveTab(0);
     } else {
-      console.log('User not found in allUsers. Available users:', allUsers.map(u => u.name));
+      console.log('User not found in allUsers.');
       // Fallback: try to find user in userFriends
       const friendUser = userFriends.find(f => f.name === cleanName);
       if (friendUser) {
@@ -351,6 +353,16 @@ export default function ScoopApp() {
         setSelectedUser(friendUser);
         setCurrentScreen('user-profile');
         setUserProfileActiveTab(0);
+      } else {
+        console.log('User not found anywhere. Creating a placeholder navigation...');
+        // For demo purposes, use the first available user as a placeholder
+        if (allUsers.length > 0) {
+          console.log('Using first available user as placeholder:', allUsers[0].name);
+          setPreviousScreen(currentScreen);
+          setSelectedUser(allUsers[0]);
+          setCurrentScreen('user-profile');
+          setUserProfileActiveTab(0);
+        }
       }
     }
   };
