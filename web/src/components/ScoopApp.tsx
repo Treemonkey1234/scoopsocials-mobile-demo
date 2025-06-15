@@ -950,7 +950,11 @@ export default function ScoopApp() {
           {/* Profile Screen */}
           {currentScreen === 'profile' && (
             <div className="h-full bg-white">
-              <div className="bg-gradient-to-r from-cyan-400 to-blue-400 p-4 text-center text-white relative">
+              <div className={`p-4 text-center text-white relative transition-all duration-500 ease-out ${
+                showProfessionalLayer 
+                  ? 'bg-gradient-to-r from-blue-500 to-blue-600' 
+                  : 'bg-gradient-to-r from-cyan-400 to-blue-400'
+              }`}>
                 <div className="absolute top-4 left-4 flex space-x-2">
                   <button 
                     onClick={() => setShowInbox(true)}
@@ -1009,49 +1013,55 @@ export default function ScoopApp() {
                 </div>
                 <div className="relative w-20 h-20 mx-auto mb-2">
                   {currentUser?.accountType === 'professional' ? (
-                    <div className="relative w-full h-full overflow-hidden">
-                      {/* Scrollable container for professional layer toggle */}
-                      <div 
-                        className="flex w-[160px] h-full transition-transform duration-300 ease-out"
-                        style={{ transform: showProfessionalLayer ? 'translateX(-80px)' : 'translateX(0px)' }}
-                        onTouchStart={(e) => {
-                          const touch = e.touches[0];
-                          (e.currentTarget as any).startX = touch.clientX;
-                        }}
-                        onTouchEnd={(e) => {
-                          const touch = e.changedTouches[0];
-                          const startX = (e.currentTarget as any).startX || 0;
-                          const diffX = touch.clientX - startX;
-                          
-                          if (Math.abs(diffX) > 30) { // Minimum swipe distance
-                            if (diffX > 0 && showProfessionalLayer) {
-                              setShowProfessionalLayer(false); // Swipe right to personal
-                            } else if (diffX < 0 && !showProfessionalLayer) {
-                              setShowProfessionalLayer(true); // Swipe left to professional
-                            }
-                          }
-                        }}
-                      >
-                        {/* Personal profile photo */}
-                        <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center flex-shrink-0">
-                          <span className="text-cyan-600 text-2xl">👤</span>
-                        </div>
+                    <div 
+                      className="relative w-full h-full"
+                      onTouchStart={(e) => {
+                        const touch = e.touches[0];
+                        (e.currentTarget as any).startX = touch.clientX;
+                      }}
+                      onTouchEnd={(e) => {
+                        const touch = e.changedTouches[0];
+                        const startX = (e.currentTarget as any).startX || 0;
+                        const diffX = touch.clientX - startX;
                         
-                        {/* Professional profile photo */}
-                        <div className="w-20 h-20 bg-blue-50 border-2 border-blue-400 rounded-full flex items-center justify-center flex-shrink-0">
-                          <span className="text-blue-600 text-2xl">💼</span>
-                        </div>
+                        if (Math.abs(diffX) > 30) { // Minimum swipe distance
+                          if (diffX > 0 && showProfessionalLayer) {
+                            setShowProfessionalLayer(false); // Swipe right to personal
+                          } else if (diffX < 0 && !showProfessionalLayer) {
+                            setShowProfessionalLayer(true); // Swipe left to professional
+                          }
+                        }
+                      }}
+                    >
+                      {/* Unified profile photo with state-based styling */}
+                      <div className={`w-full h-full rounded-full flex items-center justify-center transition-all duration-300 ease-out ${
+                        showProfessionalLayer 
+                          ? 'bg-blue-50 border-2 border-blue-400 shadow-lg' 
+                          : 'bg-white border-2 border-transparent'
+                      }`}>
+                        <span className={`text-2xl transition-colors duration-300 ${
+                          showProfessionalLayer ? 'text-blue-600' : 'text-cyan-600'
+                        }`}>
+                          {showProfessionalLayer ? '💼' : '👤'}
+                        </span>
                       </div>
                       
-                      {/* Swipe hint for professional users */}
+                      {/* Corner badge indicator for professional mode */}
+                      {showProfessionalLayer && (
+                        <div className="absolute -top-1 -right-1 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center transform transition-all duration-300 scale-100">
+                          <span className="text-white text-xs font-bold">PRO</span>
+                        </div>
+                      )}
+                      
+                      {/* Subtle swipe hint */}
                       <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2">
-                        <span className="text-xs text-white opacity-75">
+                        <span className="text-xs text-white opacity-60">
                           {showProfessionalLayer ? 'Professional View' : 'Swipe to toggle'}
                         </span>
                       </div>
                     </div>
                   ) : (
-                    <div className="w-full h-full bg-white rounded-full flex items-center justify-center">
+                    <div className="w-full h-full bg-white rounded-full flex items-center justify-center border-2 border-transparent">
                       <span className="text-cyan-600 text-2xl">👤</span>
                     </div>
                   )}
