@@ -318,10 +318,6 @@ export default function ScoopApp() {
         // Show only friends with personal access
         filtered = filtered.filter(friend => getProfessionalRelationshipType(friend.id) === 'personal_access');
         break;
-      case 'uncategorized':
-        // Show only uncategorized friends
-        filtered = filtered.filter(friend => getProfessionalRelationshipType(friend.id) === 'uncategorized');
-        break;
       default:
         // Show all friends
         break;
@@ -342,17 +338,18 @@ export default function ScoopApp() {
   };
 
   // Professional account friend relationship management
-  const getProfessionalRelationshipType = (friendId: string): 'professional_only' | 'personal_access' | 'uncategorized' => {
+  const getProfessionalRelationshipType = (friendId: string): 'professional_only' | 'personal_access' => {
     // For demo purposes, randomly assign some relationships
     // In a real app, this would be stored in database
+    // Default to personal_access, some are professional_only
     const hash = friendId.split('').reduce((a, b) => {
       a = ((a << 5) - a) + b.charCodeAt(0);
       return a & a;
     }, 0);
     
-    if (Math.abs(hash) % 3 === 0) return 'professional_only';
-    if (Math.abs(hash) % 3 === 1) return 'personal_access';
-    return 'uncategorized';
+    // 30% professional_only, 70% personal_access (default)
+    if (Math.abs(hash) % 10 < 3) return 'professional_only';
+    return 'personal_access';
   };
 
   const updateFriendCategory = (friendId: string, category: 'professional_only' | 'personal_access') => {
@@ -1012,33 +1009,44 @@ export default function ScoopApp() {
                 </div>
                 <div className="relative w-20 h-20 mx-auto mb-2">
                   {currentUser?.accountType === 'professional' ? (
-                    <div 
-                      className="relative w-full h-full cursor-pointer"
-                      onClick={() => setShowProfessionalLayer(!showProfessionalLayer)}
-                    >
-                      {/* Professional layer indicator */}
-                      {showProfessionalLayer && (
-                        <div className="absolute -right-2 top-0 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center z-10">
-                          <span className="text-white text-xs">💼</span>
+                    <div className="relative w-full h-full overflow-hidden">
+                      {/* Scrollable container for professional layer toggle */}
+                      <div 
+                        className="flex w-[160px] h-full transition-transform duration-300 ease-out"
+                        style={{ transform: showProfessionalLayer ? 'translateX(-80px)' : 'translateX(0px)' }}
+                        onTouchStart={(e) => {
+                          const touch = e.touches[0];
+                          e.currentTarget.startX = touch.clientX;
+                        }}
+                        onTouchEnd={(e) => {
+                          const touch = e.changedTouches[0];
+                          const startX = e.currentTarget.startX || 0;
+                          const diffX = touch.clientX - startX;
+                          
+                          if (Math.abs(diffX) > 30) { // Minimum swipe distance
+                            if (diffX > 0 && showProfessionalLayer) {
+                              setShowProfessionalLayer(false); // Swipe right to personal
+                            } else if (diffX < 0 && !showProfessionalLayer) {
+                              setShowProfessionalLayer(true); // Swipe left to professional
+                            }
+                          }
+                        }}
+                      >
+                        {/* Personal profile photo */}
+                        <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center flex-shrink-0">
+                          <span className="text-cyan-600 text-2xl">👤</span>
                         </div>
-                      )}
-                      
-                      {/* Main profile photo */}
-                      <div className="w-full h-full bg-white rounded-full flex items-center justify-center relative">
-                        <span className="text-cyan-600 text-2xl">👤</span>
                         
-                        {/* Professional layer overlay - partially visible when active */}
-                        {showProfessionalLayer && (
-                          <div className="absolute right-0 top-0 w-16 h-16 bg-blue-50 border-2 border-blue-400 rounded-full flex items-center justify-center transform translate-x-2">
-                            <span className="text-blue-600 text-lg">💼</span>
-                          </div>
-                        )}
+                        {/* Professional profile photo */}
+                        <div className="w-20 h-20 bg-blue-50 border-2 border-blue-400 rounded-full flex items-center justify-center flex-shrink-0">
+                          <span className="text-blue-600 text-2xl">💼</span>
+                        </div>
                       </div>
                       
                       {/* Swipe hint for professional users */}
                       <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2">
                         <span className="text-xs text-white opacity-75">
-                          {showProfessionalLayer ? 'Professional View' : 'Tap to toggle'}
+                          {showProfessionalLayer ? 'Professional View' : 'Swipe to toggle'}
                         </span>
                       </div>
                     </div>
@@ -1049,7 +1057,7 @@ export default function ScoopApp() {
                   )}
                 </div>
                 <div className="flex items-center justify-center space-x-2">
-                  <h2 className="text-xl font-bold">{currentUser?.name || 'User'}</h2>
+                  <h2 className="text-xl font-bold">Riesling LeFluuf</h2>
                   {currentUser?.accountType === 'professional' && (
                     <span className="bg-blue-500 text-white px-2 py-1 rounded-full text-xs font-medium">
                       PRO
@@ -1061,7 +1069,7 @@ export default function ScoopApp() {
                     </span>
                   )}
                 </div>
-                <p className="opacity-90 text-sm">@{currentUser?.username || 'username'}</p>
+                <p className="opacity-90 text-sm">@BigStinky</p>
                 {currentUser?.accountType === 'professional' && showProfessionalLayer && (
                   <p className="text-xs text-white opacity-75 mt-1">
                     Viewing how clients see your profile
@@ -1619,14 +1627,6 @@ export default function ScoopApp() {
                       >
                         👥 Personal ({userFriends.filter(f => getProfessionalRelationshipType(f.id) === 'personal_access').length})
                       </button>
-                      <button 
-                        onClick={() => setFriendsFilter('uncategorized')}
-                        className={`px-3 py-1 rounded-full text-sm whitespace-nowrap ${
-                          friendsFilter === 'uncategorized' ? 'bg-yellow-400 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                        }`}
-                      >
-                        ⚙️ Uncategorized ({userFriends.filter(f => getProfessionalRelationshipType(f.id) === 'uncategorized').length})
-                      </button>
                     </>
                   )}
                   <button 
@@ -1677,8 +1677,7 @@ export default function ScoopApp() {
                             }}
                             className="bg-blue-500 text-white px-2 py-1 rounded-lg text-xs hover:bg-blue-600"
                           >
-                            {getProfessionalRelationshipType(friend.id) === 'professional_only' ? '💼' : 
-                             getProfessionalRelationshipType(friend.id) === 'personal_access' ? '👥' : '⚙️'}
+                            {getProfessionalRelationshipType(friend.id) === 'professional_only' ? '💼' : '👥'}
                           </button>
                         )}
                         <button 
@@ -4001,7 +4000,7 @@ export default function ScoopApp() {
         {/* Friend Categorization Modal */}
         {showFriendCategorization && friendToCategorizе && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg max-w-md w-full max-h-96">
+            <div className="bg-white rounded-lg max-w-md w-full max-h-[80vh] overflow-y-auto">
               {/* Header */}
               <div className="bg-blue-500 text-white p-4 rounded-t-lg">
                 <div className="flex items-center justify-between">
