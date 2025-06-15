@@ -99,6 +99,12 @@ export default function ScoopApp() {
   // Profile tab state
   const [profileActiveTab, setProfileActiveTab] = useState(0);
   
+  // Professional account layer state
+  const [showProfessionalLayer, setShowProfessionalLayer] = useState(false);
+  const [viewingUserProfile, setViewingUserProfile] = useState<FakeUser | null>(null);
+  const [showFriendCategorization, setShowFriendCategorization] = useState(false);
+  const [friendToCategorizе, setFriendToCategorizе] = useState<FakeUser | null>(null);
+  
   // Other user profile viewing state
   const [showUserProfile, setShowUserProfile] = useState(false);
   const [selectedUser, setSelectedUser] = useState<FakeUser | null>(null);
@@ -224,11 +230,11 @@ export default function ScoopApp() {
       setAllUsers(users);
       setNetworkStats(stats);
       
-      // Set the first user as current user for demo
+      // Set Riesling LeFluuf as current user for demo (professional account)
       if (users.length > 0) {
-        const user = users[0];
-        setCurrentUser(user);
-        const friends = getFriendsForUser(user.id);
+        const rieslingUser = users.find(u => u.name === 'Riesling Lefluuf') || users[0];
+        setCurrentUser(rieslingUser);
+        const friends = getFriendsForUser(rieslingUser.id);
         // Keep most friends to test scrolling functionality
         const limitedFriends = friends.slice(0, Math.max(15, friends.length - 1)); // Keep 15+ friends for scrolling
         setUserFriends(limitedFriends);
@@ -304,6 +310,18 @@ export default function ScoopApp() {
         // Sort by join date (most recent first)
         filtered = filtered.sort((a, b) => new Date(b.joinDate).getTime() - new Date(a.joinDate).getTime());
         break;
+      case 'professional':
+        // Show only friends categorized as professional-only
+        filtered = filtered.filter(friend => getProfessionalRelationshipType(friend.id) === 'professional_only');
+        break;
+      case 'personal':
+        // Show only friends with personal access
+        filtered = filtered.filter(friend => getProfessionalRelationshipType(friend.id) === 'personal_access');
+        break;
+      case 'uncategorized':
+        // Show only uncategorized friends
+        filtered = filtered.filter(friend => getProfessionalRelationshipType(friend.id) === 'uncategorized');
+        break;
       default:
         // Show all friends
         break;
@@ -321,6 +339,28 @@ export default function ScoopApp() {
       setCurrentScreen('user-profile');
       setUserProfileActiveTab(0);
     }
+  };
+
+  // Professional account friend relationship management
+  const getProfessionalRelationshipType = (friendId: string): 'professional_only' | 'personal_access' | 'uncategorized' => {
+    // For demo purposes, randomly assign some relationships
+    // In a real app, this would be stored in database
+    const hash = friendId.split('').reduce((a, b) => {
+      a = ((a << 5) - a) + b.charCodeAt(0);
+      return a & a;
+    }, 0);
+    
+    if (Math.abs(hash) % 3 === 0) return 'professional_only';
+    if (Math.abs(hash) % 3 === 1) return 'personal_access';
+    return 'uncategorized';
+  };
+
+  const updateFriendCategory = (friendId: string, category: 'professional_only' | 'personal_access') => {
+    // In a real app, this would update the database
+    console.log(`Updated friend ${friendId} to category: ${category}`);
+    // For demo, we'll just close the modal
+    setShowFriendCategorization(false);
+    setFriendToCategorizе(null);
   };
 
   const getAvatarGradient = (name: string): string => {
@@ -970,13 +1010,63 @@ export default function ScoopApp() {
                     </div>
                   )}
                 </div>
-                <div className="w-20 h-20 bg-white rounded-full mx-auto mb-2 flex items-center justify-center">
-                  <span className="text-cyan-600 text-2xl">👤</span>
+                <div className="relative w-20 h-20 mx-auto mb-2">
+                  {currentUser?.accountType === 'professional' ? (
+                    <div 
+                      className="relative w-full h-full cursor-pointer"
+                      onClick={() => setShowProfessionalLayer(!showProfessionalLayer)}
+                    >
+                      {/* Professional layer indicator */}
+                      {showProfessionalLayer && (
+                        <div className="absolute -right-2 top-0 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center z-10">
+                          <span className="text-white text-xs">💼</span>
+                        </div>
+                      )}
+                      
+                      {/* Main profile photo */}
+                      <div className="w-full h-full bg-white rounded-full flex items-center justify-center relative">
+                        <span className="text-cyan-600 text-2xl">👤</span>
+                        
+                        {/* Professional layer overlay - partially visible when active */}
+                        {showProfessionalLayer && (
+                          <div className="absolute right-0 top-0 w-16 h-16 bg-blue-50 border-2 border-blue-400 rounded-full flex items-center justify-center transform translate-x-2">
+                            <span className="text-blue-600 text-lg">💼</span>
+                          </div>
+                        )}
+                      </div>
+                      
+                      {/* Swipe hint for professional users */}
+                      <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2">
+                        <span className="text-xs text-white opacity-75">
+                          {showProfessionalLayer ? 'Professional View' : 'Tap to toggle'}
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="w-full h-full bg-white rounded-full flex items-center justify-center">
+                      <span className="text-cyan-600 text-2xl">👤</span>
+                    </div>
+                  )}
                 </div>
                 <div className="flex items-center justify-center space-x-2">
-                  <h2 className="text-xl font-bold">Riesling LeFluuf</h2>
-                  <p className="opacity-90 text-sm">@BigStinky</p>
+                  <h2 className="text-xl font-bold">{currentUser?.name || 'User'}</h2>
+                  {currentUser?.accountType === 'professional' && (
+                    <span className="bg-blue-500 text-white px-2 py-1 rounded-full text-xs font-medium">
+                      PRO
+                    </span>
+                  )}
+                  {currentUser?.accountType === 'venue' && (
+                    <span className="bg-purple-500 text-white px-2 py-1 rounded-full text-xs font-medium">
+                      VENUE
+                    </span>
+                  )}
                 </div>
+                <p className="opacity-90 text-sm">@{currentUser?.username || 'username'}</p>
+                {currentUser?.accountType === 'professional' && showProfessionalLayer && (
+                  <p className="text-xs text-white opacity-75 mt-1">
+                    Viewing how clients see your profile
+                  </p>
+                )}
                 
                 {/* Reviews/Connections/Events Counters - Horizontal layout */}
                 <div className="flex justify-center space-x-6 px-4">
@@ -1502,18 +1592,46 @@ export default function ScoopApp() {
                 </div>
                 
                 {/* Friend Categories */}
-                <div className="flex space-x-2 mb-4">
+                <div className="flex space-x-2 mb-4 overflow-x-auto">
                   <button 
                     onClick={() => setFriendsFilter('all')}
-                    className={`px-3 py-1 rounded-full text-sm ${
+                    className={`px-3 py-1 rounded-full text-sm whitespace-nowrap ${
                       friendsFilter === 'all' ? 'bg-cyan-400 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                     }`}
                   >
                     All ({userFriends.length})
                   </button>
+                  {currentUser?.accountType === 'professional' && (
+                    <>
+                      <button 
+                        onClick={() => setFriendsFilter('professional')}
+                        className={`px-3 py-1 rounded-full text-sm whitespace-nowrap ${
+                          friendsFilter === 'professional' ? 'bg-blue-400 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                        }`}
+                      >
+                        💼 Professional ({userFriends.filter(f => getProfessionalRelationshipType(f.id) === 'professional_only').length})
+                      </button>
+                      <button 
+                        onClick={() => setFriendsFilter('personal')}
+                        className={`px-3 py-1 rounded-full text-sm whitespace-nowrap ${
+                          friendsFilter === 'personal' ? 'bg-green-400 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                        }`}
+                      >
+                        👥 Personal ({userFriends.filter(f => getProfessionalRelationshipType(f.id) === 'personal_access').length})
+                      </button>
+                      <button 
+                        onClick={() => setFriendsFilter('uncategorized')}
+                        className={`px-3 py-1 rounded-full text-sm whitespace-nowrap ${
+                          friendsFilter === 'uncategorized' ? 'bg-yellow-400 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                        }`}
+                      >
+                        ⚙️ Uncategorized ({userFriends.filter(f => getProfessionalRelationshipType(f.id) === 'uncategorized').length})
+                      </button>
+                    </>
+                  )}
                   <button 
                     onClick={() => setFriendsFilter('reciprocal')}
-                    className={`px-3 py-1 rounded-full text-sm ${
+                    className={`px-3 py-1 rounded-full text-sm whitespace-nowrap ${
                       friendsFilter === 'reciprocal' ? 'bg-cyan-400 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                     }`}
                   >
@@ -1521,7 +1639,7 @@ export default function ScoopApp() {
                   </button>
                   <button 
                     onClick={() => setFriendsFilter('recent')}
-                    className={`px-3 py-1 rounded-full text-sm ${
+                    className={`px-3 py-1 rounded-full text-sm whitespace-nowrap ${
                       friendsFilter === 'recent' ? 'bg-cyan-400 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                     }`}
                   >
@@ -1551,6 +1669,18 @@ export default function ScoopApp() {
                         </div>
                       </div>
                       <div className="flex space-x-2">
+                        {currentUser?.accountType === 'professional' && (
+                          <button 
+                            onClick={() => {
+                              setFriendToCategorizе(friend);
+                              setShowFriendCategorization(true);
+                            }}
+                            className="bg-blue-500 text-white px-2 py-1 rounded-lg text-xs hover:bg-blue-600"
+                          >
+                            {getProfessionalRelationshipType(friend.id) === 'professional_only' ? '💼' : 
+                             getProfessionalRelationshipType(friend.id) === 'personal_access' ? '👥' : '⚙️'}
+                          </button>
+                        )}
                         <button 
                           onClick={() => {
                             setPreviousScreen(currentScreen);
@@ -3863,6 +3993,71 @@ export default function ScoopApp() {
                 <p className="text-xs text-gray-500 text-center">
                   These are {selectedUser?.name}'s connections in their network
                 </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Friend Categorization Modal */}
+        {showFriendCategorization && friendToCategorizе && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg max-w-md w-full max-h-96">
+              {/* Header */}
+              <div className="bg-blue-500 text-white p-4 rounded-t-lg">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold">Categorize Friend</h3>
+                  <button 
+                    onClick={() => setShowFriendCategorization(false)}
+                    className="text-white hover:text-gray-200"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+
+              {/* Content */}
+              <div className="p-4">
+                <div className="text-center mb-4">
+                  <div className={`w-16 h-16 bg-gradient-to-r ${getAvatarGradient(friendToCategorizе.name)} rounded-full mx-auto mb-2 flex items-center justify-center text-white font-bold text-lg`}>
+                    {friendToCategorizе.avatar}
+                  </div>
+                  <h4 className="font-semibold text-gray-800">{friendToCategorizе.name}</h4>
+                  <p className="text-sm text-gray-600">Choose how they can view your profile</p>
+                </div>
+
+                <div className="space-y-3">
+                  <button
+                    onClick={() => updateFriendCategory(friendToCategorizе.id, 'professional_only')}
+                    className="w-full p-4 border-2 border-blue-200 rounded-lg hover:border-blue-400 transition-colors text-left"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <span className="text-2xl">💼</span>
+                      <div>
+                        <div className="font-medium text-gray-800">Professional Only</div>
+                        <div className="text-sm text-gray-600">They can only see your professional content and posts</div>
+                      </div>
+                    </div>
+                  </button>
+
+                  <button
+                    onClick={() => updateFriendCategory(friendToCategorizе.id, 'personal_access')}
+                    className="w-full p-4 border-2 border-green-200 rounded-lg hover:border-green-400 transition-colors text-left"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <span className="text-2xl">👥</span>
+                      <div>
+                        <div className="font-medium text-gray-800">Personal Access</div>
+                        <div className="text-sm text-gray-600">They can see both your professional and personal content</div>
+                      </div>
+                    </div>
+                  </button>
+                </div>
+
+                <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                  <p className="text-xs text-yellow-800">
+                    <strong>Note:</strong> You can change this anytime in your friends list. Professional friends will only see business-related content by default.
+                  </p>
+                </div>
               </div>
             </div>
           </div>

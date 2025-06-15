@@ -22,6 +22,7 @@ export interface FakeUser {
   connectionCount: number;
   isOnline: boolean;
   lastSeen: Date;
+  accountType: 'free' | 'professional' | 'venue';
 }
 
 export interface Connection {
@@ -33,6 +34,8 @@ export interface Connection {
   mutualFriendsCount: number;
   interactionFrequency: 'high' | 'medium' | 'low';
   connectionSource: 'mutual_friends' | 'location' | 'interests' | 'work' | 'random';
+  // Professional account friend categorization (only relevant when one user is professional)
+  professionalRelationshipType?: 'professional_only' | 'personal_access' | 'uncategorized';
 }
 
 export class FakeUserNetworkGenerator {
@@ -137,7 +140,8 @@ export class FakeUserNetworkGenerator {
         connections: [],
         connectionCount: 0,
         isOnline: faker.datatype.boolean({ probability: 0.15 }),
-        lastSeen: faker.date.recent({ days: 30 })
+        lastSeen: faker.date.recent({ days: 30 }),
+        accountType: this.getAccountType()
       };
       
       this.users.push(user);
@@ -145,9 +149,10 @@ export class FakeUserNetworkGenerator {
     
     // Then generate the rest with random names
     for (let i = postNames.length; i < this.TOTAL_USERS; i++) {
+      const fullName = faker.person.fullName();
       const user: FakeUser = {
         id: faker.string.uuid(),
-        name: faker.person.fullName(),
+        name: fullName,
         username: faker.internet.userName(),
         email: faker.internet.email(),
         age: faker.number.int({ min: 18, max: 65 }),
@@ -161,11 +166,12 @@ export class FakeUserNetworkGenerator {
         activityLevel: this.getActivityLevel(),
         trustScore: faker.number.int({ min: 65, max: 98 }),
         bio: faker.lorem.sentences(2),
-        avatar: this.generateAvatar(faker.person.fullName()),
+        avatar: this.generateAvatar(fullName),
         connections: [],
         connectionCount: 0,
         isOnline: faker.datatype.boolean({ probability: 0.15 }),
-        lastSeen: faker.date.recent({ days: 30 })
+        lastSeen: faker.date.recent({ days: 30 }),
+        accountType: fullName === 'Riesling Lefluuf' ? 'professional' : this.getAccountType()
       };
       
       this.users.push(user);
@@ -205,6 +211,13 @@ export class FakeUserNetworkGenerator {
     if (rand < 0.2) return 'high';
     if (rand < 0.6) return 'medium';
     return 'low';
+  }
+
+  private getAccountType(): 'free' | 'professional' | 'venue' {
+    const rand = faker.number.float();
+    if (rand < 0.8) return 'free';        // 80% free accounts
+    if (rand < 0.95) return 'professional'; // 15% professional accounts
+    return 'venue';                        // 5% venue accounts
   }
 
   private generateAvatar(name: string): string {
