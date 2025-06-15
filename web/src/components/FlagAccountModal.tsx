@@ -62,9 +62,7 @@ const FlagAccountModal: React.FC<FlagAccountModalProps> = ({
 
   const validateForm = (): boolean => {
     return selectedCategory !== '' && 
-           evidence.trim().length >= 20 && 
-           actualProfileUrl.trim().length > 0 &&
-           actualProfileUrl.startsWith('http');
+           evidence.trim().length >= 20;
   };
 
   const handleSubmit = async () => {
@@ -174,21 +172,20 @@ const FlagAccountModal: React.FC<FlagAccountModalProps> = ({
             </div>
           </div>
 
-          {/* Actual Profile URL */}
+          {/* Profile Verification Info */}
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Actual Profile URL for Verification *
+              Profile Verification Info (Optional)
             </label>
             <input
-              type="url"
+              type="text"
               value={actualProfileUrl}
               onChange={(e) => setActualProfileUrl(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="https://..."
-              required
+              placeholder="Real username or profile URL (e.g., @realusername or https://...)"
             />
             <div className="text-xs text-gray-500 mt-1">
-              Provide the real profile URL to help moderators verify
+              Provide the actual username or profile URL to help moderators verify. Current account shows: <strong>{account.username}</strong>
             </div>
           </div>
 

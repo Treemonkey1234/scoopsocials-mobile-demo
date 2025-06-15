@@ -111,7 +111,7 @@ const SocialAccountsModal: React.FC<SocialAccountsModalProps> = ({ onClose, curr
           )}
         </div>
       </div>
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center">
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -122,7 +122,6 @@ const SocialAccountsModal: React.FC<SocialAccountsModalProps> = ({ onClose, curr
         >
           🚩
         </button>
-        <span className="text-gray-400">→</span>
       </div>
     </div>
   );
