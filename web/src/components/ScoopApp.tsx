@@ -1053,12 +1053,6 @@ export default function ScoopApp() {
                         </div>
                       )}
                       
-                      {/* Subtle swipe hint */}
-                      <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2">
-                        <span className="text-xs text-white opacity-60">
-                          {showProfessionalLayer ? 'Professional View' : 'Swipe to toggle'}
-                        </span>
-                      </div>
                     </div>
                   ) : (
                     <div className="w-full h-full bg-white rounded-full flex items-center justify-center border-2 border-transparent">
