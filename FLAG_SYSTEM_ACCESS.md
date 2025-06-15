@@ -33,15 +33,15 @@ The flag system is integrated into the Social Accounts functionality. Here's how
    - 2 clear flag categories:
      * Account doesn't belong to this user
      * Account is fabricated/doesn't exist
-   - Evidence text field (20 character minimum)
-   - Actual profile URL field
+   - Evidence text field (20 character minimum) - **Required**
+   - Profile verification info (username or URL) - **Optional**
    - Daily flag limits based on trust score
    - False flag consequences warning
 
 2. **Test the Workflow:**
-   - Select a flag category
-   - Enter evidence (minimum 20 characters)
-   - Provide a profile URL
+   - Select a flag category (required)
+   - Enter evidence (minimum 20 characters, required)
+   - Optionally provide verification info (username or URL)
    - Submit the flag
    - Account disappears from view (hidden until moderation)
 
