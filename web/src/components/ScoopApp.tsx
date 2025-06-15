@@ -105,6 +105,9 @@ export default function ScoopApp() {
   const [showFriendCategorization, setShowFriendCategorization] = useState(false);
   const [friendToCategorizе, setFriendToCategorizе] = useState<FakeUser | null>(null);
   
+  // Friend categorization state
+  const [friendCategories, setFriendCategories] = useState<Record<string, 'professional_only' | 'personal_access'>>({});
+  
   // Other user profile viewing state
   const [showUserProfile, setShowUserProfile] = useState(false);
   const [selectedUser, setSelectedUser] = useState<FakeUser | null>(null);
@@ -339,7 +342,12 @@ export default function ScoopApp() {
 
   // Professional account friend relationship management
   const getProfessionalRelationshipType = (friendId: string): 'professional_only' | 'personal_access' => {
-    // For demo purposes, randomly assign some relationships
+    // Check if we have a stored categorization for this friend
+    if (friendCategories[friendId]) {
+      return friendCategories[friendId];
+    }
+    
+    // For demo purposes, randomly assign some relationships as fallback
     // In a real app, this would be stored in database
     // Default to personal_access, some are professional_only
     const hash = friendId.split('').reduce((a, b) => {
@@ -353,9 +361,15 @@ export default function ScoopApp() {
   };
 
   const updateFriendCategory = (friendId: string, category: 'professional_only' | 'personal_access') => {
-    // In a real app, this would update the database
+    // Update the friend categorization state
+    setFriendCategories(prev => ({
+      ...prev,
+      [friendId]: category
+    }));
+    
     console.log(`Updated friend ${friendId} to category: ${category}`);
-    // For demo, we'll just close the modal
+    
+    // Close the modal
     setShowFriendCategorization(false);
     setFriendToCategorizе(null);
   };
